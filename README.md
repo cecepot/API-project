@@ -1,4 +1,4 @@
-# Esinam Potakey Project One
+# Escapism
 
 ## Database Schema Design
 
