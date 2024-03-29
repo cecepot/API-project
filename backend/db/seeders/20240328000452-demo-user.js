@@ -15,17 +15,26 @@ module.exports = {
       {
         email: 'demo@user.io',
         username: 'Demo-lition',
-        hashedPassword: bcrypt.hashSync('password')
+        hashedPassword: bcrypt.hashSync('password'),
+        //ADD FIRSTNAME AND LASTNAME TO SEED
+        firstName: 'Demo',
+        lastName: 'Lition'
       },
       {
         email: 'user1@user.io',
         username: 'FakeUser1',
-        hashedPassword: bcrypt.hashSync('password2')
+        hashedPassword: bcrypt.hashSync('password2'),
+        //ADD FIRSTNAME AND LASTNAME TO SEED
+        firstName: 'Fake',
+        lastName: 'User'
       },
       {
         email: 'user2@user.io',
         username: 'FakeUser2',
-        hashedPassword: bcrypt.hashSync('password3')
+        hashedPassword: bcrypt.hashSync('password3'),
+        //ADD FIRSTNAME AND LASTNAME TO SEED
+        firstName: 'FakeTwo',
+        lastName: 'UserTwo'
       }
     ], { validate: true });
   },

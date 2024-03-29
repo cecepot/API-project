@@ -36,7 +36,23 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           len: [60, 60]
         }
-      }
+      },
+      //ADDING FIRST AND LAST NAME ATTRIBUTES
+      firstName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate:{
+          notEmpty: true
+        }
+      },
+      lastName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate:{
+          notEmpty: true
+        }
+      },
+      //DONE ADDING ATTRIBUTES
     },
     {
       sequelize,

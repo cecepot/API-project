@@ -31,6 +31,16 @@ module.exports = {
         type: Sequelize.STRING.BINARY,
         allowNull: false
       },
+      //ADDING FIRST AND LAST NAME ATTRIBUTES
+      firstName: {
+        type: Sequelize.STRING(60),
+        allowNull: false,
+      },
+      lastName: {
+        type: Sequelize.STRING(100),
+        allowNull: false,
+      },
+      //DONE ADDING ATTRIBUTES
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
