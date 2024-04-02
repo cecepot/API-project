@@ -48,7 +48,18 @@ const validateSpot = [
         .withMessage('Price per day must be a positive number'),
     handleValidationErrors
 ];
-
+const validateReview = [
+    check('review')
+        .exists({ checkFalsy: true })
+        .not()
+        .withMessage('Review text is required'),
+    check('stars')
+        .exists({ checkFalsy: true })
+        .not()
+        .isInt({ min: 0, max: 5 })//work on this
+        .withMessage("Stars must be an integer from 1 to 5"),
+    handleValidationErrors
+];
 
 //GET ALL SPOTS
 router.get('/', async (req, res) => {
@@ -373,11 +384,12 @@ router.get('/:spotId/reviews', async (req, res, next) => {
         where: {
             spotId: Id
         },
-        include:[
-            {model: User,
+        include: [
+            {
+                model: User,
                 attributes: ['id', 'firstName', 'lastName']
             },
-            {model: ReviewImage}
+            { model: ReviewImage }
         ]
     })
 
@@ -387,7 +399,39 @@ router.get('/:spotId/reviews', async (req, res, next) => {
 
 
 //CREATE A REVIEW FOR A SPOT BASED ON THE SPOT'S ID
+router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res, next) => {
+    const Id = req.params.spotId
+    const currentUserId= req.user.id
+    const { review, stars } = req.body
+    const verifyId = await Spot.findByPk(Id)
+    //ERROR IF SPOT ID DOES NOT EXIST
 
+    if (!verifyId) {
+        //console.log('hello')
+        const err = new Error
+        err.status = 404
+        err.title = "Couldn't find a Spot with the specified id"
+        err.message = "Spot couldn't be found"
+        return next(err)
+    }
+
+    const newReview = await Review.create({
+        review,
+        stars,
+        spotId: Id,
+        userId: currentUserId
+    })
+
+    const displayedReview ={}
+    displayedReview.review = newReview.review
+    displayedReview.stars = newReview.stars
+    res.statusCode = 201
+    res.json(displayedReview)
+
+    //work on this later
+    //Error response: Review from the current user already exists for the Spot
+    // only one review can be made by a useron a spot
+})
 
 
 

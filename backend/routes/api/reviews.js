@@ -11,11 +11,11 @@ const router = express.Router();
 
 
 const validateReview = [
-    check('stars')
+    check('review')
         .exists({ checkFalsy: true })
         .not()
         .withMessage('Review text is required'),
-    check('review')
+    check('stars')
         .exists({ checkFalsy: true })
         .not()
         .isInt({ min: 0, max: 5 })
