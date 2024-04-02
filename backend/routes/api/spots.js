@@ -78,7 +78,7 @@ router.get('/', async (req, res) => {
 // //GET ALL SPOTS BY CURRENT USER
 router.get('/current', requireAuth, async (req, res, next) => {
     // ========= REFACTOR =============
-    // NOTE: find out how to test this route on postman
+     // NOTE: this code has (NOT) been tested!!!!
     const allSpots = await Spot.findAll({
         include: [{
             model: Review,
@@ -125,9 +125,27 @@ router.get('/:spotId', async (req, res, next) => {
 })
 
 // //CREATE A SPOT
-// router.post('/', async (req, res, next)=>{
-//     const {address, city, state, country, lat, lng, name, description, price} = req.body
-// })
+router.post('/', requireAuth, async (req, res, next) => {
+// ========= REFACTOR =============
+    // NOTE: this code has (NOT) been tested!!!!
+    // You need to redo some validations
+    // Modify validations after you're done setting up spots routes
+
+    const { address, city, state, country, lat, lng, name, description, price } = req.body
+    const newSpot = await Spot.create({
+        address,
+        city,
+        state,
+        country,
+        lat,
+        lng,
+        name,
+        description,
+        price
+    })
+
+    return res.json(newSpot)
+})
 
 // //ADD AN IMAGE TO A SPOT BASED ON THE SPOT'S ID
 // router.post()
