@@ -29,16 +29,16 @@ router.get('/current', requireAuth, async (req, res) => {
 
     const currentUserId = req.user.id
     const Reviews = await Review.findAll({
-           where:{userId:currentUserId},
-           include:[
+        where: { userId: currentUserId },
+        include: [
             {
-                model:User,
-                attributes:['id', 'firstName', 'lastName']
+                model: User,
+                attributes: ['id', 'firstName', 'lastName']
             },
             {
-                model:Spot,
-                attributes:{
-                    exclude:['description', 'createdAt', 'updatedAt']
+                model: Spot,
+                attributes: {
+                    exclude: ['description', 'createdAt', 'updatedAt']
                 }
             },
             {
@@ -47,14 +47,40 @@ router.get('/current', requireAuth, async (req, res) => {
             }
         ]
     })
-res.json({Reviews})
+    res.json({ Reviews })
 })
 
 
 
-
-
 //ADD AN IMAGE TO A REVIEW BASED ON THE REVIEW'S ID
+router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
+    const Id = req.params.reviewId
+    const { url } = req.body
+    const review = await Review.findByPk(Id)
+    //ERROR IF REVIEW ID DOES NOT EXISt
+    if (!review) {
+        //console.log('hello')
+        const err = new Error
+        err.status = 404
+        err.title = "Couldn't find a Review with the specified id"
+        err.message = "Review couldn't be found"
+        return next(err)
+    }
+    //⬇️⬇️⬇️⬇️⬇️
+    //Error response: Cannot add any more images because there is a maximum
+    // of 10 images per resource
+    const newImage = await ReviewImage.create({
+        url,
+        reviewId: Id
+    })
+
+    const reviewImage = {}
+    reviewImage.id = newImage.id
+    reviewImage.url = newImage.url
+
+    res.json(reviewImage)
+})
+
 
 //EDIT A REVIEW
 
