@@ -148,7 +148,20 @@ router.post('/', requireAuth, async (req, res, next) => {
 })
 
 // //ADD AN IMAGE TO A SPOT BASED ON THE SPOT'S ID
-// router.post()
+router.post('/:spotId/images', requireAuth, async(res, req, next)=>{
+    // ========= REFACTOR =============
+    // NOTE: this code has (NOT) been tested!!!!
+    const Id = req.params.spotId
+    const {url, preview} = req.body
+
+    const newImage = await SpotImage.create({
+        url,
+        preview,
+        spotId: Id
+    })
+
+    res.json(newImage)
+})
 
 // //EDIT A SPOT
 // router.put()
