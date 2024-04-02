@@ -152,7 +152,16 @@ router.post('/:spotId/images', requireAuth, async (res, req, next) => {
     // ========= REFACTOR =============
     // NOTE: this code has (NOT) been tested!!!!
     const Id = req.params.spotId
+
+    //verify whether or not the id actually exists
+    const verifyId = await Spot.findByPk(Id)
+    if (!verifyId){
+        return res.json({
+            "message": "Spot couldn't be found"
+        })
+    }
     const { url, preview } = req.body
+
 
     const newImage = await SpotImage.create({
         url,
@@ -173,22 +182,44 @@ router.put('/:spotId', requireAuth, async (res, req, next) => {
 
 
     const editedSpot = await Spot.findByPk(Id)
-        if(address) editedSpot.address = address
-        if(city) editedSpot.city = city
-        if(state) editedSpot.state = state
-        if(country) editedSpot.country = country
-        if(lat) editedSpot.lat = lat
-        if(lng) editedSpot.lng = lng
-        if(name) editedSpot.name = name
-        if(description) editedSpot.description = description
-        if(price) editedSpot.price = price
 
+    if (!editedSpot) {
+        return res.json({
+            "message": "Spot couldn't be found"
+        })
+    }
+    if (address) editedSpot.address = address
+    if (city) editedSpot.city = city
+    if (state) editedSpot.state = state
+    if (country) editedSpot.country = country
+    if (lat) editedSpot.lat = lat
+    if (lng) editedSpot.lng = lng
+    if (name) editedSpot.name = name
+    if (description) editedSpot.description = description
+    if (price) editedSpot.price = price
+    await editedSpot.save()
 
-    res.json(editedSpot)
+    return res.json(editedSpot)
 })
 
 // //DELETE A SPOT
-// router.delete()
+router.delete('/:spotId', requireAuth, async (req, res, next) => {
+ // ========= REFACTOR =============
+    // NOTE: this code has (NOT) been tested!!!!
+
+    const Id = req.params.spotId
+    const deletedSpot = await Spot.findByPk(Id)
+    if(!deletedSpot){
+        return res.json({
+            "message": "Spot couldn't be found"
+          })
+    }
+    await deletedSpot.destroy()
+
+    return res.json({
+        "message": "Successfully deleted"
+      })
+})
 
 
 module.exports = router;
