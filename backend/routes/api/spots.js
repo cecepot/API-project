@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { User, Spot, Review, SpotImage } = require('../../db/models');
+const { User, Spot, Review, SpotImage, sequelize } = require('../../db/models');
 const { Association } = require('sequelize');
 
 const router = express.Router();
@@ -55,18 +55,18 @@ const validateSpot = [
 //GET ALL SPOTS
 router.get('/', async (req, res) => {
 
-// ========= REFACTOR =============
-// NOTE: this code is close enough to working.
-// You need to rework the avgRating and PreviewImage
-// associations to be a closer match with what is expected
+    // ========= REFACTOR =============
+    // NOTE: this code is close enough to working.
+    // You need to rework the avgRating and PreviewImage
+    // associations to be a closer match with what is expected
     const allSpots = await Spot.findAll({
         include: [{
             model: Review,
-             attributes:[ ['stars', 'avgRating']]
+            attributes: [['stars', 'avgRating']]
         },
         {
             model: SpotImage,
-            attributes:[ ['url', 'previewImage']]
+            attributes: [['url', 'previewImage']]
         }]
     })
 
@@ -77,28 +77,57 @@ router.get('/', async (req, res) => {
 
 // //GET ALL SPOTS BY CURRENT USER
 router.get('/current', requireAuth, async (req, res, next) => {
-
-        const allSpots = await Spot.findAll({
-            include: [{
-                model: Review,
-                 attributes:[ ['stars', 'avgRating']]
-            },
-            {
-                model: SpotImage,
-                attributes:[ ['url', 'previewImage']]
-            }]
-        })
-
-
-        return res.json(allSpots)
-
+    // ========= REFACTOR =============
+    // NOTE: find out how to test this route on postman
+    const allSpots = await Spot.findAll({
+        include: [{
+            model: Review,
+            attributes: [['stars', 'avgRating']]
+        },
+        {
+            model: SpotImage,
+            attributes: [['url', 'previewImage']]
+        }]
     })
 
+
+    return res.json(allSpots)
+
+})
+
 // //GET DETAILS OF A SPOT BY ID
-// router.get()
+router.get('/:spotId', async (req, res, next) => {
+
+    const spotId = req.params.spotId
+
+    const spotDetails = await Spot.findByPk(spotId,
+        {
+            include: [
+                {
+                    model: Review,
+                    attributes: [[sequelize.fn('COUNT', sequelize.col('review')), 'numReviews'], ['stars', 'avgStarRating']]
+                },
+                {
+                    model: SpotImage,
+                    attributes: ['id', 'url', 'preview']
+                },
+                {
+                    model: User,//alias this as Owner
+                    attributes: ['id', 'firstName', 'lastName']
+                }
+            ]
+        }
+    )
+
+
+    return res.json(spotDetails)
+
+})
 
 // //CREATE A SPOT
-// router.post()
+// router.post('/', async (req, res, next)=>{
+//     const {address, city, state, country, lat, lng, name, description, price} = req.body
+// })
 
 // //ADD AN IMAGE TO A SPOT BASED ON THE SPOT'S ID
 // router.post()
