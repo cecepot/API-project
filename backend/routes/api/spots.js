@@ -28,14 +28,12 @@ const validateSpot = [
     check('lat')
         .notEmpty()
         .exists({ checkFalsy: true })
-        .isLength({ min: -90 })
-        .isLength({ max: 90 })
+        .isLength({ min: -90, max: 90 })
         .withMessage('Latitude must be within -90 and 90'),
     check('lng')
         .notEmpty()
         .exists({ checkFalsy: true })
-        .isLength({ min: -180 })
-        .isLength({ max: 180 })
+        .isLength({ min: -180, max: 180 })
         .withMessage('Longitude must be within -180 and 180'),
     check('name')
         .notEmpty()
@@ -57,65 +55,154 @@ router.get('/', async (req, res) => {
 
     // ========= REFACTOR =============
     // NOTE: this code is close enough to working.
-    // You need to rework the avgRating and PreviewImage
-    // associations to be a closer match with what is expected
-    const allSpots = await Spot.findAll({
-        include: [{
-            model: Review,
-            attributes: [['stars', 'avgRating']]
-        },
-        {
-            model: SpotImage,
-            attributes: [['url', 'previewImage']]
-        }]
+    //revisit the average rating when you are done with the reviews routes
+    //to stop sequelize from wrapping the responce in the instance of the model
+    // and receive a plain response instead,
+    // pass { raw: true } as an option to the finder method🙄.
+
+
+    //*** ISSUE WITH PREVIEW! it duplicates get all spots when the spot has
+    // multiple images
+
+    //revisit preview. if preview === true,  preview = url?
+    const Spots = await Spot.findAll({
+        attributes: [
+            'id',
+            'ownerId',
+            'address',
+            'city',
+            'state',
+            'country',
+            'lat',
+            'lng',
+            'name',
+            'price',
+            'createdAt',
+            'updatedAt',
+            [sequelize.col('Reviews.stars'), 'avgRating'],
+            [sequelize.col('SpotImages.url'), 'preview']
+        ],
+        raw: true,
+        include: [
+            {
+                model: Review,
+                required: true,
+                attributes: []
+            },
+            {
+                model: SpotImage,
+                required: true,
+                attributes: []
+            }
+        ]
     })
 
-
-    return res.json(allSpots)
-
+    res.json({ Spots })
 })
 
 // //GET ALL SPOTS BY CURRENT USER
 router.get('/current', requireAuth, async (req, res, next) => {
     // ========= REFACTOR =============
-    // NOTE: this code has (NOT) been tested!!!!
-    const allSpots = await Spot.findAll({
-        include: [{
-            model: Review,
-            attributes: [['stars', 'avgRating']]
-        },
-        {
-            model: SpotImage,
-            attributes: [['url', 'previewImage']]
-        }]
+    // NOTE: this has been tested on one user. It works
+    // logout and test on other users
+    const userId = req.user.id
+
+    const Spots = await Spot.findAll({
+        attributes: [
+            'id',
+            'ownerId',
+            'address',
+            'city',
+            'state',
+            'country',
+            'lat',
+            'lng',
+            'name',
+            'price',
+            'createdAt',
+            'updatedAt',
+            [sequelize.col('Reviews.stars'), 'avgRating'],
+            [sequelize.col('SpotImages.url'), 'preview']
+        ],
+        raw: true,
+        include: [
+            {
+                model: Review,
+                required: true,
+                attributes: []
+            },
+            {
+                model: SpotImage,
+                required: true,
+                attributes: []
+            }
+        ],
+        where: { ownerId: userId }
     })
 
-
-    return res.json(allSpots)
+    res.json({ Spots })
 
 })
 
 // //GET DETAILS OF A SPOT BY ID
 router.get('/:spotId', async (req, res, next) => {
-
+    // ========= REFACTOR =============
+    // NOTE: this has been tested on one user. It works
+    // use either nested:false (in the model) or raw:true as a query option, to get rid of query name
+    //come back and see if you can make a single call to the database
     const spotId = req.params.spotId
+
+    const verifyId = await Spot.findByPk(spotId)
+    //ERROR IF SPOT ID DOES NOT EXIST
+
+    if (!verifyId) {
+        //console.log('hello')
+        const err = new Error
+        err.status = 404
+        err.title = "Couldn't find a Spot with the specified id"
+        err.message = "Spot couldn't be found"
+        return next(err)
+    }
+
 
     const spotDetails = await Spot.findByPk(spotId,
         {
+            attributes: [
+                'id',
+                'ownerId',
+                'address',
+                'city',
+                'state',
+                'country',
+                'lat',
+                'lng',
+                'name',
+                'price',
+                'createdAt',
+                'updatedAt',
+                [sequelize.fn('COUNT', sequelize.col('Reviews.review')), 'numReviews'],
+                [sequelize.col('Reviews.stars'), 'avgStarRating']
+            ],
+            // raw: true,
             include: [
                 {
                     model: Review,
-                    attributes: [[sequelize.fn('COUNT', sequelize.col('review')), 'numReviews'], ['stars', 'avgStarRating']]
+                    // attributes: [[sequelize.fn('COUNT', sequelize.col('review')), 'numReviews'], ['stars', 'avgStarRating']]
+                    attributes: [],
+                    nested: false
                 },
                 {
                     model: SpotImage,
-                    attributes: ['id', 'url', 'preview']
+                    attributes: ['id', 'url', 'preview'],
+                    // nested: true
                 },
                 {
-                    model: User,//alias this as Owner
+                    model: User,
+                    as: 'Owner',//alias this as Owner when making changes to validations and constraints
                     attributes: ['id', 'firstName', 'lastName']
                 }
-            ]
+            ],
+
         }
     )
 
@@ -125,14 +212,17 @@ router.get('/:spotId', async (req, res, next) => {
 })
 
 // //CREATE A SPOT
-router.post('/', requireAuth, async (req, res, next) => {
+router.post('/', [requireAuth, validateSpot], async (req, res, next) => {
     // ========= REFACTOR =============
     // NOTE: this code has (NOT) been tested!!!!
     // You need to redo some validations
     // Modify validations after you're done setting up spots routes
+    //check validations for lng, lat and price
+    const userId = req.user.id
 
     const { address, city, state, country, lat, lng, name, description, price } = req.body
     const newSpot = await Spot.create({
+        ownerId: userId,
         address,
         city,
         state,
@@ -143,83 +233,130 @@ router.post('/', requireAuth, async (req, res, next) => {
         description,
         price
     })
+    res.statusCode = 201
+
+    if (!newSpot) {
+        return next(err)
+    }
 
     return res.json(newSpot)
 })
 
 // //ADD AN IMAGE TO A SPOT BASED ON THE SPOT'S ID
-router.post('/:spotId/images', requireAuth, async (res, req, next) => {
+router.post('/:spotId/images', requireAuth, async (req, res, next) => {
     // ========= REFACTOR =============
     // NOTE: this code has (NOT) been tested!!!!
     const Id = req.params.spotId
 
+    const userId = req.user.id
     //verify whether or not the id actually exists
     const verifyId = await Spot.findByPk(Id)
-    if (!verifyId){
-        return res.json({
-            "message": "Spot couldn't be found"
-        })
+
+    //ERROR HANDLING (works✅)// find out how to display just the error message
+    if (!verifyId) {
+        const err = new Error
+        err.status = 404
+        err.message = "Spot couldn't be found"
+        err.title = " Couldn't find a Spot with the specified id"
+        return next(err)
     }
+
     const { url, preview } = req.body
 
+    //AUTHORIZATION (works✅)
+    if (verifyId.ownerId === userId) {
+        const newImage = await SpotImage.create({
+            url,
+            preview,
+            spotId: Id
+        })
 
-    const newImage = await SpotImage.create({
-        url,
-        preview,
-        spotId: Id
-    })
+        res.json(newImage)
 
-    res.json(newImage)
+    }
+
+
+
+
 })
 
 // //EDIT A SPOT
-router.put('/:spotId', requireAuth, async (res, req, next) => {
+router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
     // ========= REFACTOR =============
     // NOTE: this code has (NOT) been tested!!!!
-    const Id = req.params.spotId
+    //console.log(req.params)
+    let spotId = req.params.spotId
     const { address, city, state, country, lat, lng, name, description, price } = req.body
 
 
+    const userId = req.user.id
+    const editedSpot = await Spot.findByPk(spotId)
 
-    const editedSpot = await Spot.findByPk(Id)
-
+    //ERROR HANDLING
     if (!editedSpot) {
-        return res.json({
-            "message": "Spot couldn't be found"
-        })
+        const err = new Error
+        err.status = 404
+        err.message = "Spot couldn't be found"
+        err.title = " Couldn't find a Spot with the specified id"
+        return next(err)
     }
-    if (address) editedSpot.address = address
-    if (city) editedSpot.city = city
-    if (state) editedSpot.state = state
-    if (country) editedSpot.country = country
-    if (lat) editedSpot.lat = lat
-    if (lng) editedSpot.lng = lng
-    if (name) editedSpot.name = name
-    if (description) editedSpot.description = description
-    if (price) editedSpot.price = price
-    await editedSpot.save()
 
+    //AUTHORIZATION(works to some extent)
+    if (userId === editedSpot.ownerId) {
+        if (address) editedSpot.address = address
+        if (city) editedSpot.city = city
+        if (state) editedSpot.state = state
+        if (country) editedSpot.country = country
+        if (lat) editedSpot.lat = lat
+        if (lng) editedSpot.lng = lng
+        if (name) editedSpot.name = name
+        if (description) editedSpot.description = description
+        if (price) editedSpot.price = price
+        await editedSpot.save()
+    }
     return res.json(editedSpot)
 })
 
 // //DELETE A SPOT
 router.delete('/:spotId', requireAuth, async (req, res, next) => {
- // ========= REFACTOR =============
+    // ========= REFACTOR =============
     // NOTE: this code has (NOT) been tested!!!!
-
+    // DELETES the spot but you need to check the get spots route.
+    // spots are being created in the database but not all spots are appearing
+    // after the request is made ❕❗❗❗//
     const Id = req.params.spotId
     const deletedSpot = await Spot.findByPk(Id)
-    if(!deletedSpot){
-        return res.json({
-            "message": "Spot couldn't be found"
-          })
-    }
-    await deletedSpot.destroy()
+    const userId = req.user.id
 
-    return res.json({
-        "message": "Successfully deleted"
-      })
+
+    //ERROR
+    if (!deletedSpot) {
+        const err = new Error
+        err.status = 404
+        err.message = "Spot couldn't be found"
+        err.title = " Couldn't find a Spot with the specified id"
+        return next(err)
+    }
+
+    //AUTHORIZATION
+    if (deletedSpot.ownerId === userId) {
+        await deletedSpot.destroy()
+        return res.json({
+            "message": "Successfully deleted"
+        })
+    }else{
+        return res.json({
+            "message": "You are not authorized to perform this action"
+        })
+    }
+
 })
+
+
+
+
+
+
 
 
 module.exports = router;
