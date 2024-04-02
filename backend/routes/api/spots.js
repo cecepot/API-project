@@ -28,7 +28,7 @@ const validateSpot = [
     check('lat')
         .notEmpty()
         .exists({ checkFalsy: true })
-        .isLength({ min: -90, max: 90 })
+        .isLength({ min: -90, max: 90 })//you should not be using is lenght.Try isfloat instead
         .withMessage('Latitude must be within -90 and 90'),
     check('lng')
         .notEmpty()
