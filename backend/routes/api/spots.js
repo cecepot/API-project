@@ -78,7 +78,7 @@ router.get('/', async (req, res) => {
 // //GET ALL SPOTS BY CURRENT USER
 router.get('/current', requireAuth, async (req, res, next) => {
     // ========= REFACTOR =============
-     // NOTE: this code has (NOT) been tested!!!!
+    // NOTE: this code has (NOT) been tested!!!!
     const allSpots = await Spot.findAll({
         include: [{
             model: Review,
@@ -126,7 +126,7 @@ router.get('/:spotId', async (req, res, next) => {
 
 // //CREATE A SPOT
 router.post('/', requireAuth, async (req, res, next) => {
-// ========= REFACTOR =============
+    // ========= REFACTOR =============
     // NOTE: this code has (NOT) been tested!!!!
     // You need to redo some validations
     // Modify validations after you're done setting up spots routes
@@ -148,11 +148,11 @@ router.post('/', requireAuth, async (req, res, next) => {
 })
 
 // //ADD AN IMAGE TO A SPOT BASED ON THE SPOT'S ID
-router.post('/:spotId/images', requireAuth, async(res, req, next)=>{
+router.post('/:spotId/images', requireAuth, async (res, req, next) => {
     // ========= REFACTOR =============
     // NOTE: this code has (NOT) been tested!!!!
     const Id = req.params.spotId
-    const {url, preview} = req.body
+    const { url, preview } = req.body
 
     const newImage = await SpotImage.create({
         url,
@@ -164,7 +164,28 @@ router.post('/:spotId/images', requireAuth, async(res, req, next)=>{
 })
 
 // //EDIT A SPOT
-// router.put()
+router.put('/:spotId', requireAuth, async (res, req, next) => {
+    // ========= REFACTOR =============
+    // NOTE: this code has (NOT) been tested!!!!
+    const Id = req.params.spotId
+    const { address, city, state, country, lat, lng, name, description, price } = req.body
+
+
+
+    const editedSpot = await Spot.findByPk(Id)
+        if(address) editedSpot.address = address
+        if(city) editedSpot.city = city
+        if(state) editedSpot.state = state
+        if(country) editedSpot.country = country
+        if(lat) editedSpot.lat = lat
+        if(lng) editedSpot.lng = lng
+        if(name) editedSpot.name = name
+        if(description) editedSpot.description = description
+        if(price) editedSpot.price = price
+
+
+    res.json(editedSpot)
+})
 
 // //DELETE A SPOT
 // router.delete()
