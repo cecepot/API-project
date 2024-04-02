@@ -3,77 +3,111 @@ const bcrypt = require('bcryptjs');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { User } = require('../../db/models');
+const { User, Spot, Review, SpotImage } = require('../../db/models');
+const { Association } = require('sequelize');
 
 const router = express.Router();
 
 const validateSpot = [
-    check('ownerId')
-        .exists({ checkFalsy: true }
-        .withMessage('')),
     check('address')
+        .exists({ checkFalsy: true })
         .notEmpty()
-        .exists({ checkFalsy: true }
-        .withMessage('')),
+        .withMessage('Street address is required'),
     check('city')
         .notEmpty()
-        .exists({ checkFalsy: true }
-        .withMessage('')),
+        .exists({ checkFalsy: true })
+        .withMessage('City is required'),
     check('state')
         .notEmpty()
-        .exists({ checkFalsy: true }
-        .withMessage('')),
+        .exists({ checkFalsy: true })
+        .withMessage('State is required'),
     check('country')
         .notEmpty()
-        .exists({ checkFalsy: true }
-        .withMessage('')),
+        .exists({ checkFalsy: true })
+        .withMessage('Country is required'),
     check('lat')
         .notEmpty()
-        .exists({ checkFalsy: true }
-        .isLength({ min: -90})
-        .isLength({ max: 90})
-        .withMessage('')),
+        .exists({ checkFalsy: true })
+        .isLength({ min: -90 })
+        .isLength({ max: 90 })
+        .withMessage('Latitude must be within -90 and 90'),
     check('lng')
         .notEmpty()
-        .exists({ checkFalsy: true }
+        .exists({ checkFalsy: true })
         .isLength({ min: -180 })
-        .isLength({ max: 180})
-        .withMessage('')),
+        .isLength({ max: 180 })
+        .withMessage('Longitude must be within -180 and 180'),
     check('name')
         .notEmpty()
-        .exists({ checkFalsy: true }
-        .withMessage('')),
+        .exists({ checkFalsy: true })
+        .withMessage('Name must be less than 50 characters'),
     check('description')
-        .exists({ checkFalsy: true }
-        .withMessage('')),
+        .exists({ checkFalsy: true })
+        .withMessage('Description is required'),
     check('price')
         .notEmpty()
-        .exists({ checkFalsy: true }
-        .withMessage('')),
+        .exists({ checkFalsy: true })
+        .withMessage('Price per day must be a positive number'),
     handleValidationErrors
-]
+];
 
 
 //GET ALL SPOTS
-router.get()
+router.get('/', async (req, res) => {
 
-//GET ALL SPOTS BY CURRENT USER
-router.get()
+// ========= REFACTOR =============
+// NOTE: this code is close enough to working.
+// You need to rework the avgRating and PreviewImage
+// associations to be a closer match with what is expected
+    const allSpots = await Spot.findAll({
+        include: [{
+            model: Review,
+             attributes:[ ['stars', 'avgRating']]
+        },
+        {
+            model: SpotImage,
+            attributes:[ ['url', 'previewImage']]
+        }]
+    })
 
-//GET DETAILS OF A SPOT BY ID
-router.get()
 
-//CREATE A SPOT
-router.post()
+    return res.json(allSpots)
 
-//ADD AN IMAGE TO A SPOT BASED ON THE SPOT'S ID
-router.post()
+})
 
-//EDIT A SPOT
-router.put()
+// //GET ALL SPOTS BY CURRENT USER
+router.get('/current', requireAuth, async (req, res, next) => {
 
-//DELETE A SPOT
-router.delete()
+        const allSpots = await Spot.findAll({
+            include: [{
+                model: Review,
+                 attributes:[ ['stars', 'avgRating']]
+            },
+            {
+                model: SpotImage,
+                attributes:[ ['url', 'previewImage']]
+            }]
+        })
+
+
+        return res.json(allSpots)
+
+    })
+
+// //GET DETAILS OF A SPOT BY ID
+// router.get()
+
+// //CREATE A SPOT
+// router.post()
+
+// //ADD AN IMAGE TO A SPOT BASED ON THE SPOT'S ID
+// router.post()
+
+// //EDIT A SPOT
+// router.put()
+
+// //DELETE A SPOT
+// router.delete()
 
 
 module.exports = router;

@@ -24,6 +24,15 @@ module.exports = (sequelize, DataTypes) => {
         }
       )
 
+      Spot.hasMany(
+        models.Review,
+        {
+          foreignKey: 'spotId',
+          onDelete: 'CASCADE',
+          hooks: true
+        }
+      )
+
         Spot.belongsToMany(
           models.User,
           {
@@ -33,14 +42,14 @@ module.exports = (sequelize, DataTypes) => {
           }
         )
 
-        Spot.belongsToMany(
-          models.User,
-          {
-            through: models.Review,
-            foreignKey: 'spotId',
-            otherKey: 'userId'
-          }
-        )
+        // Spot.belongsToMany(
+        //   models.User,
+        //   {
+        //     through: models.Review,
+        //     foreignKey: 'spotId',
+        //     otherKey: 'userId'
+        //   }
+        // )
     }
   }
   Spot.init({
