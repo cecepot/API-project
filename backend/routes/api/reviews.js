@@ -18,7 +18,7 @@ const validateReview = [
     check('stars')
         .exists({ checkFalsy: true })
         .not()
-        .isInt({ min: 0, max: 5 })
+        .isInt({ gt: -1, lt: 6 })
         .withMessage("Stars must be an integer from 1 to 5"),
     handleValidationErrors
 ];
@@ -83,9 +83,65 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
 
 
 //EDIT A REVIEW
+router.put('/:reviewId', requireAuth, validateReview, async (req, res, next) => {
+    let reviewId = req.params.reviewId
+    const { review, stars } = req.body
+
+
+    const userId = req.user.id
+    const editedReview = await Review.findByPk(reviewId)
+
+    //ERROR HANDLING
+    if (!editedReview) {
+        const err = new Error
+        err.status = 404
+        err.message = "Couldn't find a Review with the specified id"
+        err.title = "Review couldn't be found"
+        return next(err)
+    }
+
+    //AUTHORIZATION(works to some extent)
+    if (userId === editedReview.userId) {
+        if (review) editedReview.review = review
+        if (stars) editedReview.stars = stars
+        await editedReview.save()
+    }
+    return res.json(editedReview)
+})
+
 
 //DELETE A REVIEW
+router.delete('/:reviewId', requireAuth, async (req, res, next) => {
+    // ========= REFACTOR =============
+    // NOTE: works perfectly 10/10 chef's kiss,😘
+    //wish all my other routes would work like this
+    const Id = req.params.reviewId
+    const deletedReview = await Review.findByPk(Id)
+    const userId = req.user.id
 
+
+    //ERROR
+    if (!deletedReview) {
+        const err = new Error
+        err.status = 404
+        err.message = "Review couldn't be found"
+        err.title = " Couldn't find a Review with the specified id"
+        return next(err)
+    }
+
+    //AUTHORIZATION
+    if (deletedReview.userId === userId) {
+        await deletedReview.destroy()
+        return res.json({
+            "message": "Successfully deleted"
+        })
+    } else {
+        return res.json({
+            "message": "You are not authorized to perform this action"
+        })
+    }
+
+})
 
 
 
