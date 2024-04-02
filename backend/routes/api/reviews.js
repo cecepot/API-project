@@ -43,16 +43,16 @@ router.get('/current', requireAuth, async (req, res) => {
             },
             {
                 model: ReviewImage,
-                
+
             }
         ]
     })
 res.json({Reviews})
 })
 
-//GET ALL REVIEWS BY A SPOT'S ID
 
-//CREATE A REVIEW FOR A SPOT BASED ON THE SPOT'S ID
+
+
 
 //ADD AN IMAGE TO A REVIEW BASED ON THE REVIEW'S ID
 

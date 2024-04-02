@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { User, Spot, Review, SpotImage, sequelize } = require('../../db/models');
+const { User, Spot, Review, SpotImage, sequelize, ReviewImage } = require('../../db/models');
 const { Association } = require('sequelize');
 
 const router = express.Router();
@@ -344,7 +344,7 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
         return res.json({
             "message": "Successfully deleted"
         })
-    }else{
+    } else {
         return res.json({
             "message": "You are not authorized to perform this action"
         })
@@ -354,7 +354,39 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
 
 
 
+//GET ALL REVIEWS BY A SPOT'S ID
+router.get('/:spotId/reviews', async (req, res, next) => {
+    const Id = req.params.spotId
+    const verifyId = await Spot.findByPk(Id)
+    //ERROR IF SPOT ID DOES NOT EXIST
 
+    if (!verifyId) {
+        //console.log('hello')
+        const err = new Error
+        err.status = 404
+        err.title = "Couldn't find a Spot with the specified id"
+        err.message = "Spot couldn't be found"
+        return next(err)
+    }
+
+    const Reviews = await Review.findAll({
+        where: {
+            spotId: Id
+        },
+        include:[
+            {model: User,
+                attributes: ['id', 'firstName', 'lastName']
+            },
+            {model: ReviewImage}
+        ]
+    })
+
+
+    res.json({ Reviews })
+})
+
+
+//CREATE A REVIEW FOR A SPOT BASED ON THE SPOT'S ID
 
 
 
