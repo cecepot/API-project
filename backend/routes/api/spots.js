@@ -4,7 +4,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { User, Spot, Review, SpotImage, sequelize, ReviewImage } = require('../../db/models');
-const { Association } = require('sequelize');
+const { Association, fn } = require('sequelize');
 
 const router = express.Router();
 
@@ -28,12 +28,12 @@ const validateSpot = [
     check('lat')
         .notEmpty()
         .exists({ checkFalsy: true })
-        .isLength({ min: -90, max: 90 })//you should not be using is lenght.Try isfloat instead
+        .isFloat({ min: -90, max: 90 })//you should not be using is lenght.Try isfloat instead
         .withMessage('Latitude must be within -90 and 90'),
     check('lng')
         .notEmpty()
         .exists({ checkFalsy: true })
-        .isLength({ min: -180, max: 180 })
+        .isFloat({ min: -180, max: 180 })
         .withMessage('Longitude must be within -180 and 180'),
     check('name')
         .notEmpty()
@@ -45,6 +45,7 @@ const validateSpot = [
     check('price')
         .notEmpty()
         .exists({ checkFalsy: true })
+        .isFloat({min: 0})
         .withMessage('Price per day must be a positive number'),
     handleValidationErrors
 ];
@@ -74,7 +75,7 @@ router.get('/', async (req, res) => {
 
     //*** ISSUE WITH PREVIEW! it duplicates get all spots when the spot has
     // multiple images
-
+    // found out the importance of using the group option
     //revisit preview. if preview === true,  preview = url?
     const Spots = await Spot.findAll({
         attributes: [
@@ -87,23 +88,23 @@ router.get('/', async (req, res) => {
             'lat',
             'lng',
             'name',
+            'description',
             'price',
             'createdAt',
             'updatedAt',
-            [sequelize.col('Reviews.stars'), 'avgRating'],
-            [sequelize.col('SpotImages.url'), 'preview']
+            [sequelize.fn('avg', sequelize.col('Reviews.stars')), 'avgRating'],
+            [sequelize.col('SpotImages.url'), 'previewImage']
         ],
-        raw: true,
+        group: ['Reviews.spotId'],
+
         include: [
             {
                 model: Review,
-                required: true,
-                attributes: []
+                attributes: [],
             },
             {
                 model: SpotImage,
-                required: true,
-                attributes: []
+                attributes: [],
             }
         ]
     })
@@ -129,23 +130,23 @@ router.get('/current', requireAuth, async (req, res, next) => {
             'lat',
             'lng',
             'name',
+            'description',
             'price',
             'createdAt',
             'updatedAt',
-            [sequelize.col('Reviews.stars'), 'avgRating'],
-            [sequelize.col('SpotImages.url'), 'preview']
+            [sequelize.fn('avg', sequelize.col('Reviews.stars')), 'avgRating'],
+            [sequelize.col('SpotImages.url'), 'previewImage']
         ],
-        raw: true,
+        group: ['Reviews.spotId'],
+
         include: [
             {
                 model: Review,
-                required: true,
-                attributes: []
+                attributes: [],
             },
             {
                 model: SpotImage,
-                required: true,
-                attributes: []
+                attributes: [],
             }
         ],
         where: { ownerId: userId }
@@ -156,16 +157,18 @@ router.get('/current', requireAuth, async (req, res, next) => {
 })
 
 // //GET DETAILS OF A SPOT BY ID
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 router.get('/:spotId', async (req, res, next) => {
     // ========= REFACTOR =============
-    // NOTE: this has been tested on one user. It works
+    // It works
     // use either nested:false (in the model) or raw:true as a query option, to get rid of query name
     //come back and see if you can make a single call to the database
+    // This approach used lazy loading which produced the results I wanted.
+    // Refactor to see if less calls can be made to the database
     const spotId = req.params.spotId
 
     const verifyId = await Spot.findByPk(spotId)
     //ERROR IF SPOT ID DOES NOT EXIST
-
     if (!verifyId) {
         //console.log('hello')
         const err = new Error
@@ -175,54 +178,57 @@ router.get('/:spotId', async (req, res, next) => {
         return next(err)
     }
 
-
-    const spotDetails = await Spot.findByPk(spotId,
-        {
-            attributes: [
-                'id',
-                'ownerId',
-                'address',
-                'city',
-                'state',
-                'country',
-                'lat',
-                'lng',
-                'name',
-                'price',
-                'createdAt',
-                'updatedAt',
-                [sequelize.fn('COUNT', sequelize.col('Reviews.review')), 'numReviews'],
-                [sequelize.col('Reviews.stars'), 'avgStarRating']
-            ],
-            // raw: true,
-            include: [
-                {
-                    model: Review,
-                    // attributes: [[sequelize.fn('COUNT', sequelize.col('review')), 'numReviews'], ['stars', 'avgStarRating']]
-                    attributes: [],
-                    nested: false
-                },
-                {
-                    model: SpotImage,
-                    attributes: ['id', 'url', 'preview'],
-                    // nested: true
-                },
-                {
-                    model: User,
-                    as: 'Owner',//alias this as Owner when making changes to validations and constraints
-                    attributes: ['id', 'firstName', 'lastName']
-                }
-            ],
-
+    const owner = await User.findOne({
+        where: {
+            id: verifyId.ownerId
+        },
+        attributes: ['id', 'firstName', 'lastName']
+    })
+    const allSpotImages = await SpotImage.findAll({
+        where: {
+            spotId: verifyId.id
         }
-    )
+    })
+    const allReviews = await Review.findAll({
+       where:{
+        spotId : verifyId.id
+       }
+    })
+    const numReviews = allReviews.length
 
+    let sum = 0
+    allReviews.forEach((review)=>{
+        sum += review.stars
+    })
 
-    return res.json(spotDetails)
+    const avgStarRating = sum / numReviews
+
+    let payload = {
+        id: verifyId.id,
+        ownerId: verifyId.ownerId,
+        address: verifyId.address,
+        city: verifyId.city,
+        state: verifyId.state,
+        country: verifyId.country,
+        lat: verifyId.lat,
+        lng: verifyId.lng,
+        name: verifyId.name,
+        description: verifyId.description,
+        price: verifyId.price,
+        createdAt: verifyId.createdAt,
+        updatedAt: verifyId.updatedAt,
+        numReviews,
+        avgStarRating,
+        SpotImages:allSpotImages,
+        Owner:{...owner.toJSON()},
+    }
+
+    res.json(payload)
 
 })
 
 // //CREATE A SPOT
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 router.post('/', [requireAuth, validateSpot], async (req, res, next) => {
     // ========= REFACTOR =============
     // NOTE: this code has (NOT) been tested!!!!
@@ -279,15 +285,16 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
         const newImage = await SpotImage.create({
             url,
             preview,
-            spotId: Id
+            spotId: parseInt(Id)
         })
-
-        res.json(newImage)
-
+        const payload = {
+            url: newImage.url,
+            preview: newImage.preview
+        }
+        return res.json(payload)
+    }else{
+        return res.json('You are not authorized to perform this activity')
     }
-
-
-
 
 })
 
@@ -312,19 +319,19 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
         return next(err)
     }
 
-    //AUTHORIZATION(works to some extent)
-    if (userId === editedSpot.ownerId) {
-        if (address) editedSpot.address = address
-        if (city) editedSpot.city = city
-        if (state) editedSpot.state = state
-        if (country) editedSpot.country = country
-        if (lat) editedSpot.lat = lat
-        if (lng) editedSpot.lng = lng
-        if (name) editedSpot.name = name
-        if (description) editedSpot.description = description
-        if (price) editedSpot.price = price
+    // WORK ON AUTHORIZATION(works to some extent)
+
+        if (address !== undefined) {editedSpot.address = address}
+        if (city !== undefined) {editedSpot.city = city}
+        if (state !== undefined) {editedSpot.state = state}
+        if (country !== undefined) {editedSpot.country = country}
+        if (lat !== undefined) {editedSpot.lat = lat}
+        if (lng !== undefined) {editedSpot.lng = lng}
+        if (name !== undefined) {editedSpot.name = name}
+        if (description !== undefined) {editedSpot.description = description}
+        if (price !== undefined) {editedSpot.price = price}
         await editedSpot.save()
-    }
+
     return res.json(editedSpot)
 })
 
@@ -401,7 +408,7 @@ router.get('/:spotId/reviews', async (req, res, next) => {
 //CREATE A REVIEW FOR A SPOT BASED ON THE SPOT'S ID
 router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res, next) => {
     const Id = req.params.spotId
-    const currentUserId= req.user.id
+    const currentUserId = req.user.id
     const { review, stars } = req.body
     const verifyId = await Spot.findByPk(Id)
     //ERROR IF SPOT ID DOES NOT EXIST
@@ -422,7 +429,7 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res, ne
         userId: currentUserId
     })
 
-    const displayedReview ={}
+    const displayedReview = {}
     displayedReview.review = newReview.review
     displayedReview.stars = newReview.stars
     res.statusCode = 201
