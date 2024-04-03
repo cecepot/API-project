@@ -52,12 +52,12 @@ const validateSpot = [
 const validateReview = [
     check('review')
         .exists({ checkFalsy: true })
-        .not()
+        .notEmpty()
         .withMessage('Review text is required'),
     check('stars')
         .exists({ checkFalsy: true })
-        .not()
-        .isInt({ min: 0, max: 5 })//work on this
+        .notEmpty()
+        .isFloat({ min: 0, max: 5 })//work on this, make min 1
         .withMessage("Stars must be an integer from 1 to 5"),
     handleValidationErrors
 ];
@@ -161,7 +161,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
                 attributes: [],
             }
         ],
-        where: {ownerId: userId}
+        where: { ownerId: userId }
     })
 
     const Images = await SpotImage.findAll()
@@ -434,12 +434,21 @@ router.get('/:spotId/reviews', async (req, res, next) => {
                 model: User,
                 attributes: ['id', 'firstName', 'lastName']
             },
-            { model: ReviewImage }
+            {
+                model: ReviewImage,
+                attributes: ['id', 'url']
+            }
         ]
     })
 
 
-    res.json({ Reviews })
+
+
+
+    const payload = {
+        Reviews
+    }
+    res.json(payload)
 })
 
 
@@ -450,7 +459,7 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res, ne
     const { review, stars } = req.body
     const verifyId = await Spot.findByPk(Id)
     //ERROR IF SPOT ID DOES NOT EXIST
-
+    console.log(stars)
     if (!verifyId) {
         //console.log('hello')
         const err = new Error
@@ -463,15 +472,15 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res, ne
     const newReview = await Review.create({
         review,
         stars,
-        spotId: Id,
+        spotId: parseInt(Id),
         userId: currentUserId
     })
 
-    const displayedReview = {}
-    displayedReview.review = newReview.review
-    displayedReview.stars = newReview.stars
+    // const displayedReview = {}
+    // displayedReview.review = newReview.review
+    // displayedReview.stars = newReview.stars
     res.statusCode = 201
-    res.json(displayedReview)
+    res.json(newReview)
 
     //work on this later
     //Error response: Review from the current user already exists for the Spot
