@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { Review, Spot, User, ReviewImage } = require('../../db/models');
+const { Review, Spot, User, ReviewImage, SpotImage } = require('../../db/models');
 const { Association } = require('sequelize');
 
 
@@ -13,12 +13,12 @@ const router = express.Router();
 const validateReview = [
     check('review')
         .exists({ checkFalsy: true })
-        .not()
+        .notEmpty()
         .withMessage('Review text is required'),
     check('stars')
         .exists({ checkFalsy: true })
-        .not()
-        .isInt({ gt: -1, lt: 6 })
+        .notEmpty()
+        .isFloat({ min: 0, max: 5 })
         .withMessage("Stars must be an integer from 1 to 5"),
     handleValidationErrors
 ];
@@ -26,6 +26,7 @@ const validateReview = [
 
 //GET ALL REVIEWS OF THE CURRENT USER
 router.get('/current', requireAuth, async (req, res) => {
+
 
     const currentUserId = req.user.id
     const Reviews = await Review.findAll({
@@ -47,7 +48,27 @@ router.get('/current', requireAuth, async (req, res) => {
             }
         ]
     })
-    res.json({ Reviews })
+    const Images = await SpotImage.findAll()
+    const reviews = []
+ Reviews.forEach((review)=>{
+    let rev = review.toJSON()
+    console.log(rev.Spot)
+    let images = []
+    for (let ele of Images) {
+        if (ele.spotId === rev.Spot.id) {
+            images.push(ele.url)
+        }
+    }
+    //console.log(images)
+    rev.Spot.previewImage = images
+    reviews.push(rev)
+ })
+
+    const payload ={
+        reviews
+    }
+
+    res.json(payload)
 })
 
 
