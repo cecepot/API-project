@@ -90,6 +90,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
     //⬇️⬇️⬇️⬇️⬇️
     //Error response: Cannot add any more images because there is a maximum
     // of 10 images per resource
+    //add authorization
     const newImage = await ReviewImage.create({
         url,
         reviewId: Id
@@ -126,8 +127,12 @@ router.put('/:reviewId', requireAuth, validateReview, async (req, res, next) => 
         if (review) editedReview.review = review
         if (stars) editedReview.stars = stars
         await editedReview.save()
+        return res.json(editedReview)
+    }else{
+        return res.json({
+            "message": "You are not authorized to perform this action"
+        })
     }
-    return res.json(editedReview)
 })
 
 
