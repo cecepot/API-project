@@ -77,7 +77,7 @@ router.get('/', async (req, res) => {
     // multiple images
     // found out the importance of using the group option
     //revisit preview. if preview === true,  preview = url?
-    const Spots = await Spot.findAll({
+    const spots = await Spot.findAll({
         attributes: [
             'id',
             'ownerId',
@@ -92,8 +92,7 @@ router.get('/', async (req, res) => {
             'price',
             'createdAt',
             'updatedAt',
-            [sequelize.fn('avg', sequelize.col('Reviews.stars')), 'avgRating'],
-            [sequelize.col('SpotImages.url'), 'previewImage']
+            [sequelize.fn('avg', sequelize.col('Reviews.stars')), 'avgRating']
         ],
         group: ['Reviews.spotId'],
 
@@ -101,15 +100,33 @@ router.get('/', async (req, res) => {
             {
                 model: Review,
                 attributes: [],
-            },
-            {
-                model: SpotImage,
-                attributes: [],
             }
         ]
     })
 
-    res.json({ Spots })
+    const Images = await SpotImage.findAll()
+    const Spots =[]
+
+    spots.forEach(async (spot)=>{
+        //console.log(previewImage)
+        spot = spot.toJSON()
+        let images =[]
+        for(let ele of Images){
+            if(ele.spotId === spot.id){
+                images.push(ele.url)
+            }
+        }
+        //console.log(images)
+        spot.previewImage = images
+        Spots.push(spot)
+    })
+   console.log(Spots)
+    const payload = {
+        Spots,
+        // previewImage
+    }
+
+    res.json( payload )
 })
 
 // //GET ALL SPOTS BY CURRENT USER
@@ -299,7 +316,7 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
 })
 
 // //EDIT A SPOT
-router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
+router.put('/:spotId', requireAuth,validateSpot, async (req, res, next) => {
     // ========= REFACTOR =============
     // NOTE: this code has (NOT) been tested!!!!
     //console.log(req.params)
@@ -319,8 +336,8 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
         return next(err)
     }
 
-    // WORK ON AUTHORIZATION(works to some extent)
-
+    //AUTHORIZATION(works to some extent)
+    if (parseInt(userId) === editedSpot.ownerId) {
         if (address !== undefined) {editedSpot.address = address}
         if (city !== undefined) {editedSpot.city = city}
         if (state !== undefined) {editedSpot.state = state}
@@ -331,7 +348,9 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
         if (description !== undefined) {editedSpot.description = description}
         if (price !== undefined) {editedSpot.price = price}
         await editedSpot.save()
-
+    }else{
+        return res.json('You are not authorized to perform this activity')
+    }
     return res.json(editedSpot)
 })
 
