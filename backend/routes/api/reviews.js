@@ -52,14 +52,14 @@ router.get('/current', requireAuth, async (req, res) => {
     const reviews = []
  Reviews.forEach((review)=>{
     let rev = review.toJSON()
-    console.log(rev.Spot)
+
     let images = []
     for (let ele of Images) {
         if (ele.spotId === rev.Spot.id) {
             images.push(ele.url)
         }
     }
-    //console.log(images)
+
     rev.Spot.previewImage = images
     reviews.push(rev)
  })
@@ -80,7 +80,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
     const review = await Review.findByPk(Id)
     //ERROR IF REVIEW ID DOES NOT EXISt
     if (!review) {
-        //console.log('hello')
+      
         const err = new Error
         err.status = 404
         err.title = "Couldn't find a Review with the specified id"

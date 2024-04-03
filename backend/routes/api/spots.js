@@ -108,7 +108,7 @@ router.get('/', async (req, res) => {
     const Spots = []
 
     spots.forEach(async (spot) => {
-        //console.log(previewImage)
+
         spot = spot.toJSON()
         let images = []
         for (let ele of Images) {
@@ -116,11 +116,11 @@ router.get('/', async (req, res) => {
                 images.push(ele.url)
             }
         }
-        //console.log(images)
+
         spot.previewImage = images
         Spots.push(spot)
     })
-    console.log(Spots)
+
     const payload = {
         Spots,
         // previewImage
@@ -168,7 +168,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
     const Spots = []
 
     spots.forEach(async (spot) => {
-        //console.log(previewImage)
+
         spot = spot.toJSON()
         let images = []
         for (let ele of Images) {
@@ -176,11 +176,11 @@ router.get('/current', requireAuth, async (req, res, next) => {
                 images.push(ele.url)
             }
         }
-        //console.log(images)
+
         spot.previewImage = images
         Spots.push(spot)
     })
-    console.log(Spots)
+
     const payload = {
         Spots,
         // previewImage
@@ -206,7 +206,7 @@ router.get('/:spotId', async (req, res, next) => {
     const verifyId = await Spot.findByPk(spotId)
     //ERROR IF SPOT ID DOES NOT EXIST
     if (!verifyId) {
-        //console.log('hello')
+
         const err = new Error
         err.status = 404
         err.title = "Couldn't find a Spot with the specified id"
@@ -338,7 +338,7 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
 router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
     // ========= REFACTOR =============
     // NOTE: this code has (NOT) been tested!!!!
-    //console.log(req.params)
+
     let spotId = req.params.spotId
     const { address, city, state, country, lat, lng, name, description, price } = req.body
 
@@ -417,7 +417,7 @@ router.get('/:spotId/reviews', async (req, res, next) => {
     //ERROR IF SPOT ID DOES NOT EXIST
 
     if (!verifyId) {
-        //console.log('hello')
+
         const err = new Error
         err.status = 404
         err.title = "Couldn't find a Spot with the specified id"
@@ -459,9 +459,8 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res, ne
     const { review, stars } = req.body
     const verifyId = await Spot.findByPk(Id)
     //ERROR IF SPOT ID DOES NOT EXIST
-    console.log(stars)
+
     if (!verifyId) {
-        //console.log('hello')
         const err = new Error
         err.status = 404
         err.title = "Couldn't find a Spot with the specified id"
