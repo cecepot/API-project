@@ -49,7 +49,7 @@ module.exports = {
         url: 'http://foo5.com',
         preview:true,
       }
-    ])
+    ], { validate: true })
   },
 
   async down(queryInterface, Sequelize) {

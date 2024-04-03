@@ -49,7 +49,7 @@ module.exports = {
         review:'review four',
           stars: 3
       }
-    ])
+    ],{ validate: true })
   },
 
   async down(queryInterface, Sequelize) {
