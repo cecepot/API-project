@@ -80,7 +80,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
     const review = await Review.findByPk(Id)
     //ERROR IF REVIEW ID DOES NOT EXISt
     if (!review) {
-      
+
         const err = new Error
         err.status = 404
         err.title = "Couldn't find a Review with the specified id"
@@ -117,8 +117,8 @@ router.put('/:reviewId', requireAuth, validateReview, async (req, res, next) => 
     if (!editedReview) {
         const err = new Error
         err.status = 404
-        err.message = "Couldn't find a Review with the specified id"
-        err.title = "Review couldn't be found"
+        err.message = "Review couldn't be found"
+        err.title = "Couldn't find a Review with the specified id"
         return next(err)
     }
 
