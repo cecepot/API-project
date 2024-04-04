@@ -469,7 +469,7 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res, ne
 
 
 
-//GET ALL BOOKINGS FOR A SPOT BASED ON THE SPOT'S ID
+//GET ALL BOOKINGS FOR A SPOT BASED ON THE SPOT'S ID✅
 // ========================================================================
 router.get('/:spotId/bookings', async (req, res, next) => {
     /*~ (1)Get the current user's id from the request object~*/
@@ -477,7 +477,15 @@ router.get('/:spotId/bookings', async (req, res, next) => {
     /*~ (2)Get the spotId from the request object~*/
     const spotId = parseInt(req.params.spotId)
     //*~Find out who owns the spot~*
-    const isOwner = await Spot.findByPk(spotId,{attributes:['ownerId']})
+    const spotExists = await Spot.findByPk(spotId)
+    /*~[ERROR HANDLING]~*/
+    if (!spotExists) {
+        const err = new Error
+        err.status = 404
+        err.title = "Couldn't find a Spot with the specified id"
+        err.message = "Spot couldn't be found"
+        return next(err)
+    }
     //console.log(isOwner)<====an object with property ownerId
     /*~ (3)Make a request to the database to findAll bookings where userId === current user's id ~*/
     const allBookings = await Booking.findAll({where:{spotId:spotId}})
@@ -493,7 +501,7 @@ router.get('/:spotId/bookings', async (req, res, next) => {
         /*~(7)Push the booking into Bookings array ~*/
             let jBooking = booking.toJSON()
             /*~[❗❗❗If you are NOT the owner of the spot❗❗❗]~*/
-            if(currentUserId !== isOwner.ownerId){
+            if(currentUserId !== spotExists.ownerId){
                 /*~ (8a)Create a pushedBookings object with the desired attributes~*/
                 let pushedBooking ={
                     spotId:jBooking.spotId,
@@ -505,7 +513,7 @@ router.get('/:spotId/bookings', async (req, res, next) => {
             }
             /*~[❗❗❗If you are NOT the owner of the spot❗❗❗]~*/
              /*~[❕❕❕If you ARE the owner of the spot❕❕❕]~*/
-             if(currentUserId === isOwner.ownerId){
+             if(currentUserId === spotExists.ownerId){
                 /*~ (8b)Create a pushedBookings object with the desired attributes~*/
                 let pushedBooking ={
                   User:{...JCurrentUser},
