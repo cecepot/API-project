@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate:{
         notEmpty: true,
-        //isAfter: sequelize.literal('CURRENT_TIMESTAMP')
+        isDate: true
       }
     },
     endDate: {
@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate:{
         notEmpty: true,
-        //isAfter: sequelize.literal('CURRENT_TIMESTAMP')
+        isDate: true
       }
     },
   },

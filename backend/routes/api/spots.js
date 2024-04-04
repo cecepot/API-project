@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { User, Spot, Review, SpotImage, sequelize, ReviewImage } = require('../../db/models');
+const { User, Spot, Review, SpotImage, sequelize, ReviewImage, Booking } = require('../../db/models');
 const { Association, fn } = require('sequelize');
 
 const router = express.Router();
@@ -465,6 +465,38 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res, ne
     // only one review can be made by a useron a spot
 })
 
+
+
+
+
+//GET ALL BOOKINGS FOR A SPOT BASED ON THE SPOT'S ID
+// ========================================================================
+router.get('/:spotId/bookings', async(req, res, next)=>{
+const currentUser = req.user.id
+const reqSpotId = parseInt(req.params.spotId)
+let payload ={}
+let Booking =[]
+const booking= await Booking.findAll({
+    where:{
+        spotId: reqSpotId
+    }
+
+})
+
+const isSpotId = await Spot.findByPk(reqSpotId,{
+    attributes:['ownerId']
+})
+console.log(isSpotId)
+// if(currentUser !== isSpotId ){
+
+// }
+payload={
+    Bookings
+}
+
+
+
+})
 
 
 module.exports = router;
