@@ -233,7 +233,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
 
     const spots = await Spot.findAll({
         where: {
-            OwnerId: userId
+            ownerId: userId
         }
 
     })
