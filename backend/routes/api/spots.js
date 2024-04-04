@@ -471,32 +471,32 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res, ne
 
 //GET ALL BOOKINGS FOR A SPOT BASED ON THE SPOT'S ID
 // ========================================================================
-router.get('/:spotId/bookings', async(req, res, next)=>{
-const currentUser = req.user.id
-const reqSpotId = parseInt(req.params.spotId)
-let payload ={}
-let Booking =[]
-const booking= await Booking.findAll({
-    where:{
-        spotId: reqSpotId
-    }
+// router.get('/:spotId/bookings', async(req, res, next)=>{
+// const currentUser = req.user.id
+// const reqSpotId = parseInt(req.params.spotId)
+// let payload ={}
+// let Booking =[]
+// const booking= await Booking.findAll({
+//     where:{
+//         spotId: reqSpotId
+//     }
 
-})
+// })
 
-const isSpotId = await Spot.findByPk(reqSpotId,{
-    attributes:['ownerId']
-})
-console.log(isSpotId)
-// if(currentUser !== isSpotId ){
+// const isSpotId = await Spot.findByPk(reqSpotId,{
+//     attributes:['ownerId']
+// })
+// console.log(isSpotId)
+// // if(currentUser !== isSpotId ){
 
+// // }
+// payload={
+//     Bookings
 // }
-payload={
-    Bookings
-}
 
 
 
-})
+// })
 
 
 module.exports = router;
