@@ -10,6 +10,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Booking.belongsTo(
+        models.User,
+        {foreignKey: 'userId'}
+      )
+
+      Booking.belongsTo(
+        models.Spot,
+        {foreignKey: 'spotId'}
+      )
     }
   }
   Booking.init({
@@ -24,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate:{
         notEmpty: true,
-        isAfter: sequelize.literal('CURRENT_TIMESTAMP')
+        //isAfter: sequelize.literal('CURRENT_TIMESTAMP')
       }
     },
     endDate: {
@@ -32,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate:{
         notEmpty: true,
-        isAfter: sequelize.literal('CURRENT_TIMESTAMP')
+        //isAfter: sequelize.literal('CURRENT_TIMESTAMP')
       }
     },
   },

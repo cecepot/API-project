@@ -36,23 +36,23 @@ module.exports = (sequelize, DataTypes) => {
         }
       )
 
-        Spot.belongsToMany(
-          models.User,
-          {
-            through: models.Booking,
-            foreignKey: 'spotId',
-            otherKey: 'userId'
-          }
-        )
+      Spot.hasMany(
+        models.Booking,
+        {
+          foreignKey: 'spotId',
+          onDelete: 'CASCADE',
+          hooks: true
+        }
+      )
 
-        // Spot.belongsToMany(
-        //   models.User,
-        //   {
-        //     through: models.Review,
-        //     foreignKey: 'spotId',
-        //     otherKey: 'userId'
-        //   }
-        // )
+      // Spot.belongsToMany(
+      //   models.User,
+      //   {
+      //     through: models.Review,
+      //     foreignKey: 'spotId',
+      //     otherKey: 'userId'
+      //   }
+      // )
     }
   }
   Spot.init({
@@ -111,7 +111,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allownull: false,
       validate: {
-        len:[2, 50],
+        len: [2, 50],
         notEmpty: true
       }
     },
