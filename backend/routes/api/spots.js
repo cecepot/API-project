@@ -77,38 +77,67 @@ router.get('/', async (req, res) => {
     // multiple images
     // found out the importance of using the group option
     //revisit preview. if preview === true,  preview = url?
-    const spots = await Spot.findAll({
-        attributes: [
-            'id',
-            'ownerId',
-            'address',
-            'city',
-            'state',
-            'country',
-            'lat',
-            'lng',
-            'name',
-            'description',
-            'price',
-            'createdAt',
-            'updatedAt',
-            [sequelize.fn('avg', sequelize.col('Reviews.stars')), 'avgRating']
-        ],
-        group: ['Reviews.spotId'],
+    // const spots = await Spot.findAll({
+    //     attributes: [
+    //         'id',
+    //         'ownerId',
+    //         'address',
+    //         'city',
+    //         'state',
+    //         'country',
+    //         'lat',
+    //         'lng',
+    //         'name',
+    //         'description',
+    //         'price',
+    //         'createdAt',
+    //         'updatedAt',
+    //         [sequelize.fn('avg', sequelize.col('Reviews.stars')), 'avgRating']
+    //     ],
+    //     group: ['Reviews.spotId'],
 
-        include: [
-            {
-                model: Review,
-                attributes: [],
-            }
-        ]
-    })
+    //     include: [
+    //         {
+    //             model: Review,
+    //             attributes: [],
+    //         }
+    //     ]
+    // })
+
+    // const Images = await SpotImage.findAll()
+    // const Spots = []
+
+    // spots.forEach(async (spot) => {
+
+    //     spot = spot.toJSON()
+    //     let images = []
+    //     for (let ele of Images) {
+    //         if (ele.spotId === spot.id) {
+    //             images.push(ele.url)
+    //         }
+    //     }
+
+    //     spot.previewImage = images
+    //     Spots.push(spot)
+    // })
+
+    // const payload = {
+    //     Spots,
+    //     // previewImage
+    // }
+
+    // res.json(payload)
+
+    const spots = await Spot.findAll()
 
     const Images = await SpotImage.findAll()
+
+    const allReviews = await Review.findAll()
+
     const Spots = []
 
     spots.forEach(async (spot) => {
-
+        //cater for previewimages
         spot = spot.toJSON()
         let images = []
         for (let ele of Images) {
@@ -118,12 +147,25 @@ router.get('/', async (req, res) => {
         }
 
         spot.previewImage = images
+
+        //cater for rating
+
+        let spotReviews = []
+        for (let ele of allReviews) {
+            if (ele.spotId === spot.id) {
+                spotReviews.push(ele.stars)
+            }
+        }
+        let sum = 0
+        spotReviews.forEach((review) => {
+            sum += review
+        })
+        let avgRating = sum / (spotReviews.length)
+        spot.avgRating = avgRating
         Spots.push(spot)
     })
-
-    const payload = {
-        Spots,
-        // previewImage
+    const payload ={
+        Spots
     }
 
     res.json(payload)
@@ -134,41 +176,76 @@ router.get('/current', requireAuth, async (req, res, next) => {
     // ========= REFACTOR =============
     // NOTE: this has been tested on one user. It works
     // logout and test on other users
+    // const userId = req.user.id
+
+    // const spots = await Spot.findAll({
+    //     attributes: [
+    //         'id',
+    //         'ownerId',
+    //         'address',
+    //         'city',
+    //         'state',
+    //         'country',
+    //         'lat',
+    //         'lng',
+    //         'name',
+    //         'description',
+    //         'price',
+    //         'createdAt',
+    //         'updatedAt',
+    //         [sequelize.fn('avg', sequelize.col('Reviews.stars')), 'avgRating'],
+    //     ],
+    //     group: ['Spot.id'],
+
+    //     include: [
+    //         {
+    //             model: Review,
+    //             attributes: [],
+    //         }
+    //     ],
+    //     where: { ownerId: userId }
+    // })
+
+    // const Images = await SpotImage.findAll()
+    // const Spots = []
+
+    // spots.forEach(async (spot) => {
+
+    //     spot = spot.toJSON()
+    //     let images = []
+    //     for (let ele of Images) {
+    //         if (ele.spotId === spot.id) {
+    //             images.push(ele.url)
+    //         }
+    //     }
+
+    //     spot.previewImage = images
+    //     Spots.push(spot)
+    // })
+
+    // const payload = {
+    //     Spots,
+    //     // previewImage
+    // }
+
+    // res.json(payload)
     const userId = req.user.id
 
     const spots = await Spot.findAll({
-        attributes: [
-            'id',
-            'ownerId',
-            'address',
-            'city',
-            'state',
-            'country',
-            'lat',
-            'lng',
-            'name',
-            'description',
-            'price',
-            'createdAt',
-            'updatedAt',
-            [sequelize.fn('avg', sequelize.col('Reviews.stars')), 'avgRating'],
-        ],
-        group: ['Reviews.spotId'],
+        where: {
+            OwnerId: userId
+        }
 
-        include: [
-            {
-                model: Review,
-                attributes: [],
-            }
-        ],
-        where: { ownerId: userId }
     })
 
     const Images = await SpotImage.findAll()
+
+    const allReviews = await Review.findAll()
+
     const Spots = []
 
     spots.forEach(async (spot) => {
-
+        //cater for previewimages
         spot = spot.toJSON()
         let images = []
         for (let ele of Images) {
@@ -178,17 +255,28 @@ router.get('/current', requireAuth, async (req, res, next) => {
         }
 
         spot.previewImage = images
+
+        //cater for rating
+
+        let spotReviews = []
+        for (let ele of allReviews) {
+            if (ele.spotId === spot.id) {
+                spotReviews.push(ele.stars)
+            }
+        }
+        let sum = 0
+        spotReviews.forEach((review) => {
+            sum += review
+        })
+        let avgRating = sum / (spotReviews.length)
+        spot.avgRating = avgRating
         Spots.push(spot)
     })
-
-    const payload = {
-        Spots,
-        // previewImage
+    const payload ={
+        Spots
     }
 
     res.json(payload)
-
-    res.json({ Spots })
 
 })
 
