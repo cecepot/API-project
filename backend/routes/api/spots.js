@@ -108,7 +108,7 @@ router.get('/', async (req, res) => {
         spot.avgRating = avgRating
         Spots.push(spot)
     })
-    const payload ={
+    const payload = {
         Spots
     }
 
@@ -163,7 +163,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
         spot.avgRating = avgRating
         Spots.push(spot)
     })
-    const payload ={
+    const payload = {
         Spots
     }
 
@@ -471,32 +471,59 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res, ne
 
 //GET ALL BOOKINGS FOR A SPOT BASED ON THE SPOT'S ID
 // ========================================================================
-// router.get('/:spotId/bookings', async(req, res, next)=>{
-// const currentUser = req.user.id
-// const reqSpotId = parseInt(req.params.spotId)
-// let payload ={}
-// let Booking =[]
-// const booking= await Booking.findAll({
-//     where:{
-//         spotId: reqSpotId
-//     }
+router.get('/:spotId/bookings', async (req, res, next) => {
+    /*~ (1)Get the current user's id from the request object~*/
+    const currentUserId = req.user.id
+    /*~ (2)Get the spotId from the request object~*/
+    const spotId = parseInt(req.params.spotId)
+    //*~Find out who owns the spot~*
+    const isOwner = await Spot.findByPk(spotId,{attributes:['ownerId']})
+    //console.log(isOwner)<====an object with property ownerId
+    /*~ (3)Make a request to the database to findAll bookings where userId === current user's id ~*/
+    const allBookings = await Booking.findAll({where:{spotId:spotId}})
+    //console.log(allBookings) //<==it's an array of all bookings
+    /*~ (4)Make a request to the the database to findUserbyPk ~*/
+    const currentUser = await User.findByPk(currentUserId,{attributes:['id', 'firstName', 'lastName']})//<=== returns the current user
+    const JCurrentUser = currentUser.toJSON()
+    //console.log(currentUser)
+    /*~ (5)Define a Bookings array~*/
+    const Bookings = []
+    /*~ (6)push each booking to the Bookings array~*/
+    allBookings.forEach((booking) => {
+        /*~(7)Push the booking into Bookings array ~*/
+            let jBooking = booking.toJSON()
+            /*~[❗❗❗If you are NOT the owner of the spot❗❗❗]~*/
+            if(currentUserId !== isOwner.ownerId){
+                /*~ (8a)Create a pushedBookings object with the desired attributes~*/
+                let pushedBooking ={
+                    spotId:jBooking.spotId,
+                    startDate:jBooking.startDate,
+                    endDate:jBooking.endDate
+                }
+                /*~(9a)Push into the Bookings object~*/
+                Bookings.push(pushedBooking)
+            }
+            /*~[❗❗❗If you are NOT the owner of the spot❗❗❗]~*/
+             /*~[❕❕❕If you ARE the owner of the spot❕❕❕]~*/
+             if(currentUserId === isOwner.ownerId){
+                /*~ (8b)Create a pushedBookings object with the desired attributes~*/
+                let pushedBooking ={
+                  User:{...JCurrentUser},
+                  ...jBooking
+                }
+                /*~(9b)Push into the Bookings object~*/
+                Bookings.push(pushedBooking)
+            }
+             /*~[❕❕❕If you ARE the owner of the spot❕❕❕]~*/
+    })
+    //console.log(Bookings)
+    const payload = {
+        Bookings
+    }
 
-// })
+    res.json(payload)
 
-// const isSpotId = await Spot.findByPk(reqSpotId,{
-//     attributes:['ownerId']
-// })
-// console.log(isSpotId)
-// // if(currentUser !== isSpotId ){
-
-// // }
-// payload={
-//     Bookings
-// }
-
-
-
-// })
+})
 
 
 module.exports = router;
