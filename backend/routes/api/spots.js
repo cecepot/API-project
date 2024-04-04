@@ -577,17 +577,28 @@ router.post('/:spotId/bookings',requireAuth, async (req, res, next) => {
     /*~()Go through all the bookings for the spot and compare the dates~*/
     allSpotBookings.forEach((booking) => {
     /*~()If the booking already has the start or end date that was passed in, throw an error~✅*/
-        if ((booking.startDate).getTime() === new Date(startDate).getTime()) {
+        // if ((booking.startDate).getTime() === new Date(startDate).getTime()) {
+        //     const err = new Error
+        //     err.status = 403,
+        //     err.title = "Start date conflicts with an existing booking"
+        //     err.message = "Sorry, this spot is already booked for the specified dates"
+        //     return next(err)
+        // }
+        // if ((booking.endDate).getTime() === new Date(endDate).getTime()) {
+        //     const err = new Error
+        //     err.status = 403
+        //     err.title = "End date conflicts with an existing booking"
+        //     err.message = "Sorry, this spot is already booked for the specified dates"
+        //     return next(err)
+        // }
+        if ((booking.startDate).getTime() === new Date(startDate).getTime() || (booking.endDate).getTime() === new Date(endDate).getTime()) {
             const err = new Error
-            err.status = 403
-            err.title = "Start date conflicts with an existing booking"
-            err.message = "Sorry, this spot is already booked for the specified dates"
-            return next(err)
-        }
-        if ((booking.endDate).getTime() === new Date(endDate).getTime()) {
-            const err = new Error
-            err.status = 403
-            err.title = "End date conflicts with an existing booking"
+            err.status = 403,
+            err.title ="Booking conflict"
+            err.errors ={
+                startDate:"Start date conflicts with an existing booking",
+                endDate:"End date conflicts with an existing booking"
+            }
             err.message = "Sorry, this spot is already booked for the specified dates"
             return next(err)
         }
@@ -605,26 +616,10 @@ router.post('/:spotId/bookings',requireAuth, async (req, res, next) => {
 
        return  res.json(newBooking)
     }
-    /*~()~*/
-    /*~()~*/
-    /*~()~*/
-    /*~()~*/
-    /*~()~*/
-    /*~()~*/
-    /*~()~*/
-    /*~()~*/
-    /*~()~*/
-    /*~()~*/
-    /*~()~*/
-    /*~()~*/
-    /*~()~*/
-    /*~()~*/
-    /*~()~*/
-    /*~()~*/
-    /*~()~*/
-    /*~()~*/
-    /*~()~*/
 })
+
+
+
 
 
 
