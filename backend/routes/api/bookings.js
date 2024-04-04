@@ -9,14 +9,16 @@ const { Booking, Spot, SpotImage } = require('../../db/models');
 const router = express.Router();
 
 
-const validateSignup = [
+const validatebookings = [
     check('startDate')
         .exists({ checkFalsy: true })
         .notEmpty()
+        .isAfter()
         .withMessage('startDate cannot be in the past'),
     check('endDate')
         .exists({ checkFalsy: true })
         .notEmpty()
+        .isAfter()
         .withMessage('endDate cannot be on or before startDate'),
 ]
 

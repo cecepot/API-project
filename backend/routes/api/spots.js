@@ -62,6 +62,21 @@ const validateReview = [
     handleValidationErrors
 ];
 
+// const validateBookings = [
+//     check('startDate')
+//         .exists({ checkFalsy: true })
+//         .notEmpty()
+//         .withMessage('startDate cannot be in the past'),
+//     check('endDate')
+//         .exists({ checkFalsy: true })
+//         .notEmpty()
+//         .withMessage('endDate cannot be on or before startDate'),
+// ];
+
+
+
+
+
 //GET ALL SPOTS
 router.get('/', async (req, res) => {
 
@@ -488,10 +503,10 @@ router.get('/:spotId/bookings', async (req, res, next) => {
     }
     //console.log(isOwner)<====an object with property ownerId
     /*~ (3)Make a request to the database to findAll bookings where userId === current user's id ~*/
-    const allBookings = await Booking.findAll({where:{spotId:spotId}})
+    const allBookings = await Booking.findAll({ where: { spotId: spotId } })
     //console.log(allBookings) //<==it's an array of all bookings
     /*~ (4)Make a request to the the database to findUserbyPk ~*/
-    const currentUser = await User.findByPk(currentUserId,{attributes:['id', 'firstName', 'lastName']})//<=== returns the current user
+    const currentUser = await User.findByPk(currentUserId, { attributes: ['id', 'firstName', 'lastName'] })//<=== returns the current user
     const JCurrentUser = currentUser.toJSON()
     //console.log(currentUser)
     /*~ (5)Define a Bookings array~*/
@@ -499,30 +514,30 @@ router.get('/:spotId/bookings', async (req, res, next) => {
     /*~ (6)push each booking to the Bookings array~*/
     allBookings.forEach((booking) => {
         /*~(7)Push the booking into Bookings array ~*/
-            let jBooking = booking.toJSON()
-            /*~[❗❗❗If you are NOT the owner of the spot❗❗❗]~*/
-            if(currentUserId !== spotExists.ownerId){
-                /*~ (8a)Create a pushedBookings object with the desired attributes~*/
-                let pushedBooking ={
-                    spotId:jBooking.spotId,
-                    startDate:jBooking.startDate,
-                    endDate:jBooking.endDate
-                }
-                /*~(9a)Push into the Bookings object~*/
-                Bookings.push(pushedBooking)
+        let jBooking = booking.toJSON()
+        /*~[❗❗❗If you are NOT the owner of the spot❗❗❗]~*/
+        if (currentUserId !== spotExists.ownerId) {
+            /*~ (8a)Create a pushedBookings object with the desired attributes~*/
+            let pushedBooking = {
+                spotId: jBooking.spotId,
+                startDate: jBooking.startDate,
+                endDate: jBooking.endDate
             }
-            /*~[❗❗❗If you are NOT the owner of the spot❗❗❗]~*/
-             /*~[❕❕❕If you ARE the owner of the spot❕❕❕]~*/
-             if(currentUserId === spotExists.ownerId){
-                /*~ (8b)Create a pushedBookings object with the desired attributes~*/
-                let pushedBooking ={
-                  User:{...JCurrentUser},
-                  ...jBooking
-                }
-                /*~(9b)Push into the Bookings object~*/
-                Bookings.push(pushedBooking)
+            /*~(9a)Push into the Bookings object~*/
+            Bookings.push(pushedBooking)
+        }
+        /*~[❗❗❗If you are NOT the owner of the spot❗❗❗]~*/
+        /*~[❕❕❕If you ARE the owner of the spot❕❕❕]~*/
+        if (currentUserId === spotExists.ownerId) {
+            /*~ (8b)Create a pushedBookings object with the desired attributes~*/
+            let pushedBooking = {
+                User: { ...JCurrentUser },
+                ...jBooking
             }
-             /*~[❕❕❕If you ARE the owner of the spot❕❕❕]~*/
+            /*~(9b)Push into the Bookings object~*/
+            Bookings.push(pushedBooking)
+        }
+        /*~[❕❕❕If you ARE the owner of the spot❕❕❕]~*/
     })
     //console.log(Bookings)
     const payload = {
@@ -530,8 +545,95 @@ router.get('/:spotId/bookings', async (req, res, next) => {
     }
 
     res.json(payload)
-
 })
+
+
+
+//CREATE A BOOKING FROM A SPOT BASED ON THE SPOT'S ID
+// =====================================================
+router.post('/:spotId/bookings',requireAuth, async (req, res, next) => {
+    /*~()get current user from request body~*/
+    const currentUserId = req.user.id
+    /*~()Get the booking column names out of the request body~*/
+    let { startDate, endDate } = req.body
+    /*~()Get spotId out of request body~*/
+    const spotId = parseInt(req.params.spotId)
+    /*~()Get all bookings for the spot~*/
+    const allSpotBookings = await Booking.findAll({ where: { spotId: spotId } })
+    /*~()Make a request to findspotByPk ~*/
+    const currentSpot = await Spot.findByPk(spotId)
+    /*~()Handle error if spot does not exist~✅*/
+    if (!currentSpot) {
+        const err = new Error
+        err.status = 404
+        err.title = "Couldn't find a Spot with the specified id"
+        err.message = "Spot couldn't be found"
+        return next(err)
+    }
+    /*~()if current user owns spot, do not create booking~✅*/
+    if (currentUserId === currentSpot.ownerId) {
+        return res.json('You are not permitted to make a booking for this spot')
+    }
+    /*~()Go through all the bookings for the spot and compare the dates~*/
+    allSpotBookings.forEach((booking) => {
+    /*~()If the booking already has the start or end date that was passed in, throw an error~✅*/
+        if ((booking.startDate).getTime() === new Date(startDate).getTime()) {
+            const err = new Error
+            err.status = 403
+            err.title = "Start date conflicts with an existing booking"
+            err.message = "Sorry, this spot is already booked for the specified dates"
+            return next(err)
+        }
+        if ((booking.endDate).getTime() === new Date(endDate).getTime()) {
+            const err = new Error
+            err.status = 403
+            err.title = "End date conflicts with an existing booking"
+            err.message = "Sorry, this spot is already booked for the specified dates"
+            return next(err)
+        }
+    })
+    /*~()if current user does not own spot, create booking~*/
+    if (currentUserId !== currentSpot.ownerId){
+
+
+        const newBooking = await Booking.create({
+                startDate,
+                endDate,
+                spotId: currentSpot.id,
+                userId: currentUserId
+        })
+
+       return  res.json(newBooking)
+    }
+    /*~()~*/
+    /*~()~*/
+    /*~()~*/
+    /*~()~*/
+    /*~()~*/
+    /*~()~*/
+    /*~()~*/
+    /*~()~*/
+    /*~()~*/
+    /*~()~*/
+    /*~()~*/
+    /*~()~*/
+    /*~()~*/
+    /*~()~*/
+    /*~()~*/
+    /*~()~*/
+    /*~()~*/
+    /*~()~*/
+    /*~()~*/
+})
+
+
+
+
+
+
+
+
+
 
 
 module.exports = router;

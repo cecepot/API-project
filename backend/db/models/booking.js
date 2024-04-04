@@ -33,7 +33,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate:{
         notEmpty: true,
-        isDate: true
       }
     },
     endDate: {
@@ -41,7 +40,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate:{
         notEmpty: true,
-        isDate: true
       }
     },
   },
