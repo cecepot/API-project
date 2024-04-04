@@ -72,62 +72,6 @@ router.get('/', async (req, res) => {
     // and receive a plain response instead,
     // pass { raw: true } as an option to the finder method🙄.
 
-
-    //*** ISSUE WITH PREVIEW! it duplicates get all spots when the spot has
-    // multiple images
-    // found out the importance of using the group option
-    //revisit preview. if preview === true,  preview = url?
-    // const spots = await Spot.findAll({
-    //     attributes: [
-    //         'id',
-    //         'ownerId',
-    //         'address',
-    //         'city',
-    //         'state',
-    //         'country',
-    //         'lat',
-    //         'lng',
-    //         'name',
-    //         'description',
-    //         'price',
-    //         'createdAt',
-    //         'updatedAt',
-    //         [sequelize.fn('avg', sequelize.col('Reviews.stars')), 'avgRating']
-    //     ],
-    //     group: ['Reviews.spotId'],
-
-    //     include: [
-    //         {
-    //             model: Review,
-    //             attributes: [],
-    //         }
-    //     ]
-    // })
-
-    // const Images = await SpotImage.findAll()
-    // const Spots = []
-
-    // spots.forEach(async (spot) => {
-
-    //     spot = spot.toJSON()
-    //     let images = []
-    //     for (let ele of Images) {
-    //         if (ele.spotId === spot.id) {
-    //             images.push(ele.url)
-    //         }
-    //     }
-
-    //     spot.previewImage = images
-    //     Spots.push(spot)
-    // })
-
-    // const payload = {
-    //     Spots,
-    //     // previewImage
-    // }
-
-    // res.json(payload)
-
     const spots = await Spot.findAll()
 
     const Images = await SpotImage.findAll()
@@ -176,59 +120,6 @@ router.get('/current', requireAuth, async (req, res, next) => {
     // ========= REFACTOR =============
     // NOTE: this has been tested on one user. It works
     // logout and test on other users
-    // const userId = req.user.id
-
-    // const spots = await Spot.findAll({
-    //     attributes: [
-    //         'id',
-    //         'ownerId',
-    //         'address',
-    //         'city',
-    //         'state',
-    //         'country',
-    //         'lat',
-    //         'lng',
-    //         'name',
-    //         'description',
-    //         'price',
-    //         'createdAt',
-    //         'updatedAt',
-    //         [sequelize.fn('avg', sequelize.col('Reviews.stars')), 'avgRating'],
-    //     ],
-    //     group: ['Spot.id'],
-
-    //     include: [
-    //         {
-    //             model: Review,
-    //             attributes: [],
-    //         }
-    //     ],
-    //     where: { ownerId: userId }
-    // })
-
-    // const Images = await SpotImage.findAll()
-    // const Spots = []
-
-    // spots.forEach(async (spot) => {
-
-    //     spot = spot.toJSON()
-    //     let images = []
-    //     for (let ele of Images) {
-    //         if (ele.spotId === spot.id) {
-    //             images.push(ele.url)
-    //         }
-    //     }
-
-    //     spot.previewImage = images
-    //     Spots.push(spot)
-    // })
-
-    // const payload = {
-    //     Spots,
-    //     // previewImage
-    // }
-
-    // res.json(payload)
     const userId = req.user.id
 
     const spots = await Spot.findAll({
@@ -542,7 +433,7 @@ router.get('/:spotId/reviews', async (req, res, next) => {
 
 //CREATE A REVIEW FOR A SPOT BASED ON THE SPOT'S ID
 router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res, next) => {
-    const Id = req.params.spotId
+    const Id = parseInt(req.params.spotId)
     const currentUserId = req.user.id
     const { review, stars } = req.body
     const verifyId = await Spot.findByPk(Id)
@@ -559,7 +450,7 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res, ne
     const newReview = await Review.create({
         review,
         stars,
-        spotId: parseInt(Id),
+        spotId: Id,//doesn't work in development. Returns a string instead
         userId: currentUserId
     })
 
