@@ -349,7 +349,11 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
         return res.json(payload)
     } else {
         /*~()If the user is not authorized to perform the action, throw an error~*/
-        return res.json('You are not authorized to perform this activity')
+        const err = new Error
+     err.status = 403
+     err.title = "unauthorized"
+     err.message = "You are not authorized to perform this action"
+     return next(err)
     }
 
 })
@@ -389,7 +393,11 @@ router.put('/:spotId', [requireAuth, validateSpot], async (req, res, next) => {
         if (price !== undefined) { editedSpot.price = price }
         await editedSpot.save()
     } else {
-        return res.json('You are not authorized to perform this activity')
+        const err = new Error
+     err.status = 403
+     err.title = "unauthorized"
+     err.message = "You are not authorized to perform this action"
+     return next(err)
     }
     return res.json(editedSpot)
 })
@@ -425,9 +433,11 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
             "message": "Successfully deleted"
         })
     } else {
-        return res.json({
-            "message": "You are not authorized to perform this action"
-        })
+        const err = new Error
+     err.status = 403
+     err.title = "unauthorized"
+     err.message = "You are not authorized to perform this action"
+     return next(err)
     }
 })
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -131,9 +131,11 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
          /*~()~*/
          res.json(reviewImage)
         }}else{
-        return res.json({
-            "message": "You are not authorized to perform this action"
-        })
+            const err = new Error
+            err.status = 403
+            err.title = "unauthorized"
+            err.message = "You are not authorized to perform this action"
+            return next(err)
     }
 })
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

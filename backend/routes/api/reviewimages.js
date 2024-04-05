@@ -36,9 +36,11 @@ router.delete('/:imageId', requireAuth, async (req, res, next) => {
             "message": "Successfully deleted"
         })
     } else {
-        return res.json({
-            "message": "You are not authorized to perform this action"
-        })
+        const err = new Error
+     err.status = 403
+     err.title = "unauthorized"
+     err.message = "You are not authorized to perform this action"
+     return next(err)
     }
 })
 

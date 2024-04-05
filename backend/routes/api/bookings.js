@@ -122,7 +122,11 @@ router.put('/:bookingId', requireAuth,async (req, res, next) => {
      }
     /*~()if current user does not own booking, do not create booking~✅*/
     if (currentUserId !== currentBooking.userId) {
-        return res.json('You are not permitted to make a booking for this spot')
+        const err = new Error
+         err.status = 403
+         err.title = "unauthorized"
+         err.message = "You are not permitted to make a booking for this spot"
+         return next(err)
     }
     /*~()If the booking is past the end date, throw an error~✅*/
     if ((currentBooking.endDate).getTime() < todaysDate.getTime()) {
@@ -211,9 +215,11 @@ router.delete('/:bookingId',requireAuth, async (req, res,next)=>{
         })
     } else {
      ///*~()If not, throw an error telling the user that they are not authorized~*/
-        return res.json({
-            "message": "You are not authorized to perform this action"
-        })
+     const err = new Error
+     err.status = 403
+     err.title = "unauthorized"
+     err.message = "You are not authorized to perform this action"
+     return next(err)
     }
 
 })

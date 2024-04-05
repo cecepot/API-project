@@ -30,7 +30,7 @@ router.delete('/:imageId',requireAuth, async (req, res, next) => {
     const spot = isSpotImage.spotId
     /*~()Make a call to the database to find the spot with that image~*/
     const isSpot = await Spot.findByPk(spot)
-    console.log(isSpot)
+    //console.log(isSpot)
     /*~()Check to see if the spot is owned by the current user~*/
     if (isSpot.ownerId === userId) {
         await isSpotImage.destroy()
@@ -38,9 +38,11 @@ router.delete('/:imageId',requireAuth, async (req, res, next) => {
             "message": "Successfully deleted"
         })
     } else {
-        return res.json({
-            "message": "You are not authorized to perform this action"
-        })
+        const err = new Error
+        err.status = 403
+        err.title = "unauthorized"
+        err.message = "You are not authorized to perform this action"
+        return next(err)
     }
 })
 
