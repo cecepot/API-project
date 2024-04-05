@@ -143,54 +143,64 @@ router.get('/', async (req, res) => {
 router.get('/current', requireAuth, async (req, res, next) => {
 /*~()Get the current user's id~*/
     const userId = req.user.id
-
+/*~()Make a call to the database to get all spots which belong to the current user~*/
     const spots = await Spot.findAll({
         where: {
             ownerId: userId
         }
-
     })
-
+    /*~()Make a call to the database to get all spotImages for the current spot~*/
     const Images = await SpotImage.findAll()
-
+    /*~()Make a call to the database to get all spotReviews for the current spot~*/
     const allReviews = await Review.findAll()
-
+    /*~()Create a Spots array which serves as a payload~*/
     const Spots = []
-
+    /*~()Iterate over each spot ~*/
     spots.forEach(async (spot) => {
-        //cater for previewimages
-        spot = spot.toJSON()
-        let images = []
-        for (let ele of Images) {
-            if (ele.spotId === spot.id) {
-                images.push(ele.url)
-            }
-        }
-
-        spot.previewImage = images
-
-        //cater for rating
-
-        let spotReviews = []
-        for (let ele of allReviews) {
-            if (ele.spotId === spot.id) {
-                spotReviews.push(ele.stars)
-            }
-        }
-        let sum = 0
-        spotReviews.forEach((review) => {
-            sum += review
-        })
-        let avgRating = sum / (spotReviews.length)
-        spot.avgRating = avgRating
-        Spots.push(spot)
-    })
-    const payload = {
-        Spots
-    }
-
-    res.json(payload)
-
+         /*~()Make the spot readable by converting it to JSON to get rid of all unwanted data ~*/
+         spot = spot.toJSON()
+         /*~()Create an array to hold all the current spots's images ~*/
+         let images = []
+         /*~()Iterate over each image in spotImages(images of all spot in the entire database)~*/
+         for (let ele of Images) {
+             if (ele.spotId === spot.id) {
+                 images.push(ele.url)/*~()If the current image belongs to the current spot,
+                  push the image into the images array. This selects only the images that belong to the
+                  spot in question~*/
+             }
+         }
+         /*~()Create a previewImage property for the current spot which will be the first image of the spot ~*/
+         spot.previewImage = images[0]
+         /*~()Create an array to hold all the current spots's reviews ~*/
+         let spotReviews = []
+         /*~()Iterate over each review in spotReviews(reviews of all spot in the entire database)~*/
+         for (let ele of allReviews) {
+             ele = ele.toJSON()
+             // console.log(ele)
+             if (ele.spotId === spot.id) {
+                 spotReviews.push(ele)
+             }/*~()If the current review belongs to the current spot,
+                  push the review into the reviews array. This selects only the reviews that belong to the
+                  spot in question~*/
+         }
+         /*~()Find the average rating for the spot~*/
+         console.log(spotReviews)
+         let sum = 0
+         spotReviews.forEach((review) => {
+             sum += review.stars
+         })
+         let avgRating = sum / (spotReviews.length)
+         /*~()Create an averagerating property for the current spot~*/
+         spot.avgRating = avgRating
+         /*~()Push each spot object into the spots's array ~*/
+         Spots.push(spot)
+     })
+     /*~()Create a payload which will hold the Spots array~*/
+     const payload = {
+         Spots
+     }
+     /*~()Return the payload as the response body~*/
+     return res.json(payload)
 })
 
 // //GET DETAILS OF A SPOT BY ID
