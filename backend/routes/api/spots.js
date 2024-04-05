@@ -315,13 +315,13 @@ router.post('/', [requireAuth, validateSpot], async (req, res, next) => {
 // //ADD AN IMAGE TO A SPOT BASED ON THE SPOT'S ID✅
 // =============================================================================
 router.post('/:spotId/images', requireAuth, async (req, res, next) => {
-   /*~()Get spot id out of the request body~*/
+    /*~()Get spot id out of the request body~*/
     const Id = parseInt(req.params.spotId)
-   /*~()Get user id out of the request body~*/
+    /*~()Get user id out of the request body~*/
     const userId = req.user.id
-     /*~()verify whether or not the id actually exists~*/
+    /*~()verify whether or not the id actually exists~*/
     const verifyId = await Spot.findByPk(Id)
-     /*~()if the spot does not exist, throw an error~*/
+    /*~()if the spot does not exist, throw an error~*/
     if (!verifyId) {
         const err = new Error
         err.status = 404
@@ -329,9 +329,9 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
         err.title = " Couldn't find a Spot with the specified id"
         return next(err)
     }
-     /*~()Get the image details out of the request body~*/
+    /*~()Get the image details out of the request body~*/
     const { url, preview } = req.body
-     /*~()If user is the owner of the spot, create the image~*/
+    /*~()If user is the owner of the spot, create the image~*/
     if (verifyId.ownerId === userId) {
         const newImage = await SpotImage.create({
             url,
@@ -357,14 +357,14 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
 
 // //EDIT A SPOT✅
 // =========================================================================================
-router.put('/:spotId',[ requireAuth, validateSpot], async (req, res, next)=>{
+router.put('/:spotId', [requireAuth, validateSpot], async (req, res, next) => {
     /*~()~*/
     let spotId = req.params.spotId
-     /*~()~*/
+    /*~()~*/
     const { address, city, state, country, lat, lng, name, description, price } = req.body
-     /*~()~*/
+    /*~()~*/
     const userId = req.user.id
-     /*~()~*/
+    /*~()~*/
     const editedSpot = await Spot.findByPk(spotId)
     //ERROR HANDLING
     if (!editedSpot) {
@@ -406,7 +406,7 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
     const deletedSpot = await Spot.findByPk(Id)
     /*~()~*/
     const userId = req.user.id
-/*~()~*/
+    /*~()~*/
     //ERROR
     if (!deletedSpot) {
         const err = new Error
@@ -415,7 +415,7 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
         err.title = " Couldn't find a Spot with the specified id"
         return next(err)
     }
-/*~()~*/
+    /*~()~*/
     //AUTHORIZATION
     if (deletedSpot.ownerId === userId) {
         await deletedSpot.destroy()
@@ -428,24 +428,27 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
         })
     }
 })
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 
 //GET ALL REVIEWS BY A SPOT'S ID
+// ===================================================================
+// 📝📝📝📝Yet to be tested in production
 router.get('/:spotId/reviews', async (req, res, next) => {
+    /*~()~*/
     const Id = req.params.spotId
+    /*~()~*/
     const verifyId = await Spot.findByPk(Id)
     //ERROR IF SPOT ID DOES NOT EXIST
-
     if (!verifyId) {
-
         const err = new Error
         err.status = 404
         err.title = "Couldn't find a Spot with the specified id"
         err.message = "Spot couldn't be found"
         return next(err)
     }
-
+    /*~()~*/
     const Reviews = await Review.findAll({
         where: {
             spotId: Id
@@ -461,15 +464,12 @@ router.get('/:spotId/reviews', async (req, res, next) => {
             }
         ]
     })
-
-
-
-
-
+    /*~()~*/
     const payload = {
         Reviews
     }
-    res.json(payload)
+    /*~()~*/
+    return res.json(payload)
 })
 
 

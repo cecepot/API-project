@@ -24,7 +24,7 @@ const validateReview = [
 ];
 
 
-//GET ALL REVIEWS OF THE CURRENT USER
+//GET ALL REVIEWS OF THE CURRENT USER✅
 //==========================================================
 // 📝📝📝📝Yet to be tested in production
 router.get('/current', requireAuth, async (req, res) => {
