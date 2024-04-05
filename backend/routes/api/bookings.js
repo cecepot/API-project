@@ -136,8 +136,58 @@ router.put('/:bookingId', async (req, res, next) => {
 
 
 
+// DELETE A BOOKING
+// =======================================================
+// 📝📝📝📝Looks like when a booking is deleted, the spot is deleted as well
+// 📝📝📝📝Revisit the association and work on the delete cascade
+router.delete('/:bookingId', async (req, res,next)=>{
+    /*~()Get the bookingId out of the request parameter~*/
+    const bookingId = parseInt(req.params.bookingId)
+     /*~()Get the currentUserId out of the request body~*/
+     const currentUserId = req.user.id
+     /*~()make a call to findBookingByPK~*/
+     const currentBooking = await Booking.findByPk(bookingId)
+     /*~()If the booking with that Id does not exist, throw an error~*/
+     if (!currentBooking) {
+        const err = new Error
+        err.status = 404
+        err.title = "Couldn't find a Booking with the specified id"
+        err.message = "Booking couldn't be found"
+        return next(err)
+    }
+     /*~()Store the verified booking id in a variable~*/
+     const isCurrentBookingId = currentBooking.id
+     /*~()make a call to findSpotByPk~*/
+     const currentSpot = await Spot.findByPk(currentBooking.spotId)
+     /*~()Check the booking startDate. If the booking has already started, throw an error~*/
+     const bookingStartDate = currentBooking.startDate
+     const todaysDate = new Date()
+     if(bookingStartDate.getTime() <= todaysDate.getTime()){
+        const err = new Error
+        err.status = 403
+        err.title = "Bookings that have been started can't be deleted"
+        err.message = "Bookings that have been started can't be deleted"
+        return next(err)
+     }
+    /*~()compare the bookingId of the currentUser to the userId of the booking~*/
+    const isBooker = currentBooking.userId
+    /*~()compare the id of the currentUser to the ownerId of the spot that has been booked~*/
+    // console.log(isCurrentBookingId)
+    const isSpotOwner = currentSpot.ownerId
+    /*~()If the booking or spot belongs to the current user, you can go ahead and delete the booking~*/
+    if(currentUserId === isBooker || currentUserId === isSpotOwner){
+        await currentSpot.destroy()
+        return res.json({
+            "message": "Successfully deleted"
+        })
+    } else {
+     ///*~()If not, throw an error telling the user that they are not authorized~*/
+        return res.json({
+            "message": "You are not authorized to perform this action"
+        })
+    }
 
-
+})
 
 
 

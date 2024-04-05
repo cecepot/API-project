@@ -551,6 +551,8 @@ router.get('/:spotId/bookings', async (req, res, next) => {
 
 //CREATE A BOOKING FROM A SPOT BASED ON THE SPOT'S ID
 // =====================================================
+//📝📝You forgot to add constraint where startdate can't be in the past
+//📝📝or enddate is before or the same day as startdate
 router.post('/:spotId/bookings',requireAuth, async (req, res, next) => {
     /*~()get current user from request body~*/
     const currentUserId = req.user.id
