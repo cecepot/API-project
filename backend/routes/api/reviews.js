@@ -82,9 +82,8 @@ router.get('/current', requireAuth, async (req, res) => {
 
 
 
-//ADD AN IMAGE TO A REVIEW BASED ON THE REVIEW'S ID
+//ADD AN IMAGE TO A REVIEW BASED ON THE REVIEW'S ID✅
 // =========================================================================================
-// 📝📝📝📝Yet to be tested in production
 router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
     /*~()~*/
     const currentUser = req.user.id
@@ -137,17 +136,22 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
         })
     }
 })
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 
 
 //EDIT A REVIEW
-router.put('/:reviewId', requireAuth, validateReview, async (req, res, next) => {
+// ===========================================================================================
+// 📝📝📝📝Yet to be tested in production
+router.put('/:reviewId', [requireAuth, validateReview], async (req, res, next) => {
+    /*~()~*/
     let reviewId = req.params.reviewId
+    /*~()~*/
     const { review, stars } = req.body
-
-
+    /*~()~*/
     const userId = req.user.id
     const editedReview = await Review.findByPk(reviewId)
-
     //ERROR HANDLING
     if (!editedReview) {
         const err = new Error
@@ -156,11 +160,10 @@ router.put('/:reviewId', requireAuth, validateReview, async (req, res, next) => 
         err.title = "Couldn't find a Review with the specified id"
         return next(err)
     }
-
     //AUTHORIZATION(works to some extent)
     if (userId === editedReview.userId) {
-        if (review) editedReview.review = review
-        if (stars) editedReview.stars = stars
+        if (review !== undefined) editedReview.review = review
+        if (stars !== undefined) editedReview.stars = stars
         await editedReview.save()
         return res.json(editedReview)
     } else {
@@ -173,14 +176,10 @@ router.put('/:reviewId', requireAuth, validateReview, async (req, res, next) => 
 
 //DELETE A REVIEW
 router.delete('/:reviewId', requireAuth, async (req, res, next) => {
-    // ========= REFACTOR =============
-    // NOTE: works perfectly 10/10 chef's kiss,😘
-    //wish all my other routes would work like this
+    // 📝📝📝📝Yet to be tested in production
     const Id = req.params.reviewId
     const deletedReview = await Review.findByPk(Id)
     const userId = req.user.id
-
-
     //ERROR
     if (!deletedReview) {
         const err = new Error
@@ -189,7 +188,6 @@ router.delete('/:reviewId', requireAuth, async (req, res, next) => {
         err.title = " Couldn't find a Review with the specified id"
         return next(err)
     }
-
     //AUTHORIZATION
     if (deletedReview.userId === userId) {
         await deletedReview.destroy()
@@ -201,7 +199,6 @@ router.delete('/:reviewId', requireAuth, async (req, res, next) => {
             "message": "You are not authorized to perform this action"
         })
     }
-
 })
 
 

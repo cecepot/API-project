@@ -475,7 +475,7 @@ router.get('/:spotId/reviews', async (req, res, next) => {
 
 
 // ***📝📝📝📝work on the reviews model. stars should be an integer from 1 to 5❗
-//CREATE A REVIEW FOR A SPOT BASED ON THE SPOT'S ID
+//CREATE A REVIEW FOR A SPOT BASED ON THE SPOT'S ID✅
 // =============================================================================================
 // 📝📝📝📝Yet to be tested in production
 router.post('/:spotId/reviews', [requireAuth, validateReview], async (req, res, next) => {
