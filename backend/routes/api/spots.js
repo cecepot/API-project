@@ -234,7 +234,8 @@ router.get('/:spotId', async (req, res, next) => {
     const allSpotImages = await SpotImage.findAll({
         where: {
             spotId: verifyId.id
-        }
+        },
+        attributes:['id', 'url', 'preview']
     })
     /*~()Get all the reviews for the spot in question~*/
     const allReviews = await Review.findAll({
