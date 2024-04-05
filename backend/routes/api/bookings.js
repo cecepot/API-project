@@ -171,7 +171,7 @@ router.put('/:bookingId', requireAuth,async (req, res, next) => {
 
 // DELETE A BOOKING
 // =======================================================
-router.delete('/:bookingId', async (req, res,next)=>{
+router.delete('/:bookingId',requireAuth, async (req, res,next)=>{
     /*~()Get the bookingId out of the request parameter~*/
     const bookingId = parseInt(req.params.bookingId)
      /*~()Get the currentUserId out of the request body~*/
