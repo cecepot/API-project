@@ -90,7 +90,7 @@ router.get('/', async (req, res) => {
     /*~()Create a Spots array which serves as a payload~*/
     const Spots = []
     /*~()Iterate over each spot ~*/
-    spots.forEach(async (spot) => {
+    spots.forEach((spot) => {
         /*~()Make the spot readable by converting it to JSON to get rid of all unwanted data ~*/
         spot = spot.toJSON()
         /*~()Create an array to hold all the current spots's images ~*/
@@ -158,7 +158,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
     /*~()Create a Spots array which serves as a payload~*/
     const Spots = []
     /*~()Iterate over each spot ~*/
-    spots.forEach(async (spot) => {
+    spots.forEach((spot) => {
         /*~()Make the spot readable by converting it to JSON to get rid of all unwanted data ~*/
         spot = spot.toJSON()
         /*~()Create an array to hold all the current spots's images ~*/

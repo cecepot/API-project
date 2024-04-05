@@ -31,18 +31,26 @@ router.get('/current', async (req, res) => {
     /*~ (2)Make a request to the database to findAll bookings where userId === current user's id ~*/
     const allBookings = await Booking.findAll()
     // console.log(allBookings) //<==it's an array of all bookings
+    const Images = await SpotImage.findAll()
     /*~ (3)Make a request to the the database to findAllSpots ~*/
-    const allSpots = await Spot.findAll({ include: SpotImage })//<=== returns an array of all spots
+    const allSpots = await Spot.findAll()//<=== returns an array of all spots
     /*~ (4)Define a Bookings array~*/
     const Bookings = []
     /*~ (5)For each booking, go through the spots array to identify the spot that has the same id as booking.spotId~*/
     allBookings.forEach((booking) => {
         /*~(6)Push the booking into Bookings array ~*/
+        let images = []
+        for (let ele of Images) {
+            if (ele.spotId === booking.spotId) {
+                images.push(ele.url)/*~()If the current image belongs to the current spot,
+                 push the image into the images array. This selects only the images that belong to the
+                 spot in question~*/
+            }
+        }
         if (booking.userId === currentUserId) {
             let jBooking = booking.toJSON()
             /*~ (7)Iterate through allSpots to find the spot that has been booked~*/
             for (let ele of allSpots) {
-                let previewImg =ele.SpotImages[0]
                 if (ele.id === jBooking.spotId) {
                     //console.log(ele.toJSON())
                     ele = ele.toJSON()
@@ -57,9 +65,9 @@ router.get('/current', async (req, res) => {
                         lng: ele.lng,
                         name: ele.name,
                         price: ele.price,
-                        previewImage: previewImg.url
+                        previewImage: images[0]
                     }
-                    console.log(ele)
+                    // console.log(ele)
                     jBooking.Spot = Spot
                 }
             }
