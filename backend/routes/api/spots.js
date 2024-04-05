@@ -355,9 +355,8 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
 
 
 
-// //EDIT A SPOT
+// //EDIT A SPOT✅
 // =========================================================================================
-// 📝📝📝 yet to be tested in production
 router.put('/:spotId',[ requireAuth, validateSpot], async (req, res, next)=>{
     /*~()~*/
     let spotId = req.params.spotId
@@ -392,19 +391,23 @@ router.put('/:spotId',[ requireAuth, validateSpot], async (req, res, next)=>{
     }
     return res.json(editedSpot)
 })
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
 
 // //DELETE A SPOT
+// ===================================================================
+// 📝📝📝📝Yet to be tested in production
 router.delete('/:spotId', requireAuth, async (req, res, next) => {
-    // ========= REFACTOR =============
-    // NOTE: this code has (NOT) been tested!!!!
-    // DELETES the spot but you need to check the get spots route.
-    // spots are being created in the database but not all spots are appearing
-    // after the request is made ❕❗❗❗//
+    /*~()~*/
     const Id = req.params.spotId
+    /*~()~*/
     const deletedSpot = await Spot.findByPk(Id)
+    /*~()~*/
     const userId = req.user.id
-
-
+/*~()~*/
     //ERROR
     if (!deletedSpot) {
         const err = new Error
@@ -413,7 +416,7 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
         err.title = " Couldn't find a Spot with the specified id"
         return next(err)
     }
-
+/*~()~*/
     //AUTHORIZATION
     if (deletedSpot.ownerId === userId) {
         await deletedSpot.destroy()
@@ -425,7 +428,6 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
             "message": "You are not authorized to perform this action"
         })
     }
-
 })
 
 
