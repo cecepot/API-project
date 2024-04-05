@@ -9,18 +9,18 @@ const { Booking, Spot, SpotImage } = require('../../db/models');
 const router = express.Router();
 
 
-const validatebookings = [
-    check('startDate')
-        .exists({ checkFalsy: true })
-        .notEmpty()
-        .isAfter()
-        .withMessage('startDate cannot be in the past'),
-    check('endDate')
-        .exists({ checkFalsy: true })
-        .notEmpty()
-        .isAfter()
-        .withMessage('endDate cannot be on or before startDate'),
-]
+// const validatebookings = [
+//     check('startDate')
+//         .exists({ checkFalsy: true })
+//         .notEmpty()
+//         .isAfter()
+//         .withMessage('startDate cannot be in the past'),
+//     check('endDate')
+//         .exists({ checkFalsy: true })
+//         .notEmpty()
+//         .isAfter()
+//         .withMessage('endDate cannot be on or before startDate'),
+// ]
 
 //GET ALL BOOKINGS OF THE CURRENT USER✅
 // ===========================================================
@@ -70,7 +70,7 @@ router.get('/current', async (req, res) => {
         Bookings
     }
 
-    res.json(payload)
+    return res.json(payload)
 
 })
 
