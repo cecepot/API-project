@@ -25,11 +25,13 @@ const validateReview = [
 
 
 //GET ALL REVIEWS OF THE CURRENT USER
+//==========================================================
+// 📝📝📝📝Yet to be tested in production
 router.get('/current', requireAuth, async (req, res) => {
-
-
+    /*~()Get the current user from the request body~*/
     const currentUserId = req.user.id
-    const Reviews = await Review.findAll({
+    /*~()Make a request to the database to get all reviews of the current user~*/
+    const reviews = await Review.findAll({
         where: { userId: currentUserId },
         include: [
             {
@@ -44,31 +46,38 @@ router.get('/current', requireAuth, async (req, res) => {
             },
             {
                 model: ReviewImage,
-
+                attributes: {
+                    exclude: ['reviewId', 'createdAt', 'updatedAt']
+                }
             }
         ]
     })
+    /*~()Make a call to the database to get all the images for every spot~*/
     const Images = await SpotImage.findAll()
-    const reviews = []
- Reviews.forEach((review)=>{
-    let rev = review.toJSON()
-
-    let images = []
-    for (let ele of Images) {
-        if (ele.spotId === rev.Spot.id) {
-            images.push(ele.url)
+    /*~()Create a reveiews array to serve as a payload of some sort~*/
+    const Reviews = []
+    /*~()~*/
+    reviews.forEach((review) => {
+        /*~()~*/
+        let rev = review.toJSON()
+        /*~()~*/
+        let images = []
+        for (let ele of Images) {
+            if (ele.spotId === rev.Spot.id) {
+                images.push(ele.url)
+            }
         }
+        /*~()~*/
+        rev.Spot.previewImage = images[0]
+        /*~()~*/
+        Reviews.push(rev)
+    })
+    /*~()~*/
+    const payload = {
+        Reviews
     }
-
-    rev.Spot.previewImage = images
-    reviews.push(rev)
- })
-
-    const payload ={
-        reviews
-    }
-
-    res.json(payload)
+    /*~()~*/
+    return res.json(payload)
 })
 
 
@@ -128,7 +137,7 @@ router.put('/:reviewId', requireAuth, validateReview, async (req, res, next) => 
         if (stars) editedReview.stars = stars
         await editedReview.save()
         return res.json(editedReview)
-    }else{
+    } else {
         return res.json({
             "message": "You are not authorized to perform this action"
         })
