@@ -547,6 +547,7 @@ router.get('/:spotId/bookings', async (req, res, next) => {
         err.message = "Spot couldn't be found"
         return next(err)
     }
+    const allUsers = await User.findAll({attributes:['id', 'firstName', 'lastName']})
     //console.log(isOwner)<====an object with property ownerId
     /*~ (3)Make a request to the database to findAll bookings where userId === current user's id ~*/
     const allBookings = await Booking.findAll({ where: { spotId: spotId } })
@@ -572,12 +573,21 @@ router.get('/:spotId/bookings', async (req, res, next) => {
             /*~(9a)Push into the Bookings object~*/
             Bookings.push(pushedBooking)
         }
-        /*~[❗❗❗If you are NOT the owner of the spot❗❗❗]~*/
         /*~[❕❕❕If you ARE the owner of the spot❕❕❕]~*/
         if (currentUserId === spotExists.ownerId) {
+            // const booker = booking.userId
+            // const bookerDetails = await User.findByPk(bookerDetails)
+            // console.log(bookerDetails)
             /*~ (8b)Create a pushedBookings object with the desired attributes~*/
+            let booker
+            allUsers.forEach((user)=>{
+                user = user.toJSON()
+                if( user.id === jBooking.userId){
+                    booker = user
+                }
+            })
             let pushedBooking = {
-                User: { ...JCurrentUser },
+                User: { ...booker},
                 ...jBooking
             }
             /*~(9b)Push into the Bookings object~*/
