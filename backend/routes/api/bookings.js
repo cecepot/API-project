@@ -78,7 +78,7 @@ router.get('/current', async (req, res) => {
 
 //EDIT A BOOKING
 // =====================================================================
-router.put('/:bookingId', async (req, res, next) => {
+router.put('/:bookingId', requireAuth,async (req, res, next) => {
     /*~()get current user from request body~*/
     const currentUserId = req.user.id
     /*~()Get startdate and enddate out of the request body~*/
@@ -95,12 +95,27 @@ router.put('/:bookingId', async (req, res, next) => {
         err.message = "Booking couldn't be found"
         return next(err)
     }
+     /*~()If startDate is in the past or endDate is before startDate~*/
+     const todaysDate = new Date()
+     if(new Date(startDate).getTime() < todaysDate.getTime()){
+         const err = new Error
+         err.status = 400
+         err.title = "Body validation errors"
+         err.message = "startDate cannot be in the past"
+         return next(err)
+     }
+     if(new Date(endDate).getTime() <= new Date(startDate).getTime()){
+         const err = new Error
+         err.status = 400
+         err.title = "Body validation errors"
+         err.message = "endDate cannot be on or before startDate"
+         return next(err)
+     }
     /*~()if current user does not own booking, do not create booking~✅*/
     if (currentUserId !== currentBooking.userId) {
         return res.json('You are not permitted to make a booking for this spot')
     }
     /*~()If the booking is past the end date, throw an error~✅*/
-    const todaysDate = new Date()
     if ((currentBooking.endDate).getTime() < todaysDate.getTime()) {
         const err = new Error
         err.status = 403,
@@ -112,12 +127,21 @@ router.put('/:bookingId', async (req, res, next) => {
     const allBookings = await Booking.findAll({ where: { spotId: currentBooking.spotId } })
     /*~()If the booking already has the start or end date that was passed in, throw an error~✅*/
     allBookings.forEach((booking) => {
-        if ((booking.startDate).getTime() === new Date(startDate).getTime() || (booking.endDate).getTime() === new Date(endDate).getTime()) {
+        if ((booking.startDate).getTime() === new Date(startDate).getTime()) {
             const err = new Error
             err.status = 403,
                 err.title = "Booking conflict"
             err.errors = {
                 startDate: "Start date conflicts with an existing booking",
+            }
+            err.message = "Sorry, this spot is already booked for the specified dates"
+            return next(err)
+        }
+        if ((booking.endDate).getTime() === new Date(endDate).getTime()) {
+            const err = new Error
+            err.status = 403,
+                err.title = "Booking conflict"
+            err.errors = {
                 endDate: "End date conflicts with an existing booking"
             }
             err.message = "Sorry, this spot is already booked for the specified dates"
@@ -138,8 +162,6 @@ router.put('/:bookingId', async (req, res, next) => {
 
 // DELETE A BOOKING
 // =======================================================
-// 📝📝📝📝Looks like when a booking is deleted, the spot is deleted as well
-// 📝📝📝📝Revisit the association and work on the delete cascade
 router.delete('/:bookingId', async (req, res,next)=>{
     /*~()Get the bookingId out of the request parameter~*/
     const bookingId = parseInt(req.params.bookingId)
@@ -155,8 +177,6 @@ router.delete('/:bookingId', async (req, res,next)=>{
         err.message = "Booking couldn't be found"
         return next(err)
     }
-     /*~()Store the verified booking id in a variable~*/
-     const isCurrentBookingId = currentBooking.id
      /*~()make a call to findSpotByPk~*/
      const currentSpot = await Spot.findByPk(currentBooking.spotId)
      /*~()Check the booking startDate. If the booking has already started, throw an error~*/
@@ -176,7 +196,7 @@ router.delete('/:bookingId', async (req, res,next)=>{
     const isSpotOwner = currentSpot.ownerId
     /*~()If the booking or spot belongs to the current user, you can go ahead and delete the booking~*/
     if(currentUserId === isBooker || currentUserId === isSpotOwner){
-        await currentSpot.destroy()
+        await currentBooking.destroy()
         return res.json({
             "message": "Successfully deleted"
         })
