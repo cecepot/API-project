@@ -471,16 +471,24 @@ router.get('/:spotId/reviews', async (req, res, next) => {
     /*~()~*/
     return res.json(payload)
 })
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
+
+// ***work on the reviews model. stars should be an integer from 1 to 5❗
 //CREATE A REVIEW FOR A SPOT BASED ON THE SPOT'S ID
-router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res, next) => {
+// =============================================================================================
+// 📝📝📝📝Yet to be tested in production
+router.post('/:spotId/reviews', [requireAuth, validateReview], async (req, res, next) => {
+    /*~()~*/
     const Id = parseInt(req.params.spotId)
+    /*~()~*/
     const currentUserId = req.user.id
+    /*~()~*/
     const { review, stars } = req.body
+    /*~()~*/
     const verifyId = await Spot.findByPk(Id)
     //ERROR IF SPOT ID DOES NOT EXIST
-
     if (!verifyId) {
         const err = new Error
         err.status = 404
@@ -488,23 +496,29 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res, ne
         err.message = "Spot couldn't be found"
         return next(err)
     }
-
+    /*~()Check if the current user already has a review for the spot~*/
+    /*~()Find all reviews where spotid is the current spot's id~*/
+    const allSpotReviews = await Review.findAll({ where: { spotId: verifyId.id } })
+    /*~()Go through the reviews array. Check each review. if review.userid === current user's id, throw an error~*/
+    allSpotReviews.forEach((review) => {
+        if (review.userId === currentUserId) {
+            const err = new Error
+            err.status = 500
+            err.title = "Review from the current user already exists for the Spot"
+            err.message = "User already has a review for this spot"
+            return next(err)
+        }
+    })
+    /*~()Else create a new review~*/
     const newReview = await Review.create({
         review,
         stars,
-        spotId: Id,//doesn't work in development. Returns a string instead
+        spotId: Id,
         userId: currentUserId
     })
-
-    // const displayedReview = {}
-    // displayedReview.review = newReview.review
-    // displayedReview.stars = newReview.stars
+    /*~()~*/
     res.statusCode = 201
-    res.json(newReview)
-
-    //work on this later
-    //Error response: Review from the current user already exists for the Spot
-    // only one review can be made by a useron a spot
+    return res.json(newReview)
 })
 
 
