@@ -24,7 +24,7 @@ const router = express.Router();
 
 //GET ALL BOOKINGS OF THE CURRENT USER✅
 // ===========================================================
-router.get('/current', async (req, res) => {
+router.get('/current',requireAuth, async (req, res) => {
 
     /*~ (1)Get the current user's id from the request object~*/
     const currentUserId = req.user.id

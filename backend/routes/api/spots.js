@@ -532,7 +532,7 @@ router.post('/:spotId/reviews', [requireAuth, validateReview], async (req, res, 
 
 //GET ALL BOOKINGS FOR A SPOT BASED ON THE SPOT'S ID✅
 // ========================================================================
-router.get('/:spotId/bookings', async (req, res, next) => {
+router.get('/:spotId/bookings', requireAuth,async (req, res, next) => {
     /*~ (1)Get the current user's id from the request object~*/
     const currentUserId = req.user.id
     /*~ (2)Get the spotId from the request object~*/
