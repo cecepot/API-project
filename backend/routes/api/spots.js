@@ -79,6 +79,7 @@ const validateReview = [
 
 //GET ALL SPOTS
 // =======================================
+// 📝📝📝📝Everything but average works fine in production
 router.get('/', async (req, res) => {
     /*~()Make a call to the database to get all spots~*/
     const spots = await Spot.findAll()
@@ -117,6 +118,7 @@ router.get('/', async (req, res) => {
                  spot in question~*/
         }
         /*~()Find the average rating for the spot~*/
+        console.log(spotReviews)
         let sum = 0
         spotReviews.forEach((review) => {
             sum += review.stars
@@ -135,11 +137,11 @@ router.get('/', async (req, res) => {
     return res.json(payload)
 })
 
+
 // //GET ALL SPOTS BY CURRENT USER
+//=================================================
 router.get('/current', requireAuth, async (req, res, next) => {
-    // ========= REFACTOR =============
-    // NOTE: this has been tested on one user. It works
-    // logout and test on other users
+/*~()Get the current user's id~*/
     const userId = req.user.id
 
     const spots = await Spot.findAll({
