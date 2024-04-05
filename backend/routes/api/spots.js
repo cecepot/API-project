@@ -658,7 +658,11 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
     }
     /*~()if current user owns spot, do not create booking~✅*/
     if (currentUserId === currentSpot.ownerId) {
-        return res.json('You are not permitted to make a booking for this spot')
+        const err = new Error
+        err.status = 403
+        err.title = "unauthorized"
+        err.message = "You are not authorized to perform this action"
+        return next(err)
     }
     /*~()Go through all the bookings for the spot and compare the dates~*/
     allSpotBookings.forEach((booking) => {
