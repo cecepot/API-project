@@ -312,7 +312,7 @@ router.post('/', [requireAuth, validateSpot], async (req, res, next) => {
 
 
 
-// //ADD AN IMAGE TO A SPOT BASED ON THE SPOT'S ID
+// //ADD AN IMAGE TO A SPOT BASED ON THE SPOT'S ID✅
 // =============================================================================
 router.post('/:spotId/images', requireAuth, async (req, res, next) => {
    /*~()Get spot id out of the request body~*/
@@ -351,19 +351,22 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
     }
 
 })
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 
 // //EDIT A SPOT
-router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
-    // ========= REFACTOR =============
-    // NOTE: this code has (NOT) been tested!!!!
-
+// =========================================================================================
+// 📝📝📝 yet to be tested in production
+router.put('/:spotId',[ requireAuth, validateSpot], async (req, res, next)=>{
+    /*~()~*/
     let spotId = req.params.spotId
+     /*~()~*/
     const { address, city, state, country, lat, lng, name, description, price } = req.body
-
-
+     /*~()~*/
     const userId = req.user.id
+     /*~()~*/
     const editedSpot = await Spot.findByPk(spotId)
-
     //ERROR HANDLING
     if (!editedSpot) {
         const err = new Error
@@ -372,9 +375,8 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
         err.title = " Couldn't find a Spot with the specified id"
         return next(err)
     }
-
-    //AUTHORIZATION(works to some extent)
-    if (parseInt(userId) === editedSpot.ownerId) {
+    //AUTHORIZATION
+    if (userId === editedSpot.ownerId) {
         if (address !== undefined) { editedSpot.address = address }
         if (city !== undefined) { editedSpot.city = city }
         if (state !== undefined) { editedSpot.state = state }
