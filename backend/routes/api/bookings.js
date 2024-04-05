@@ -42,6 +42,7 @@ router.get('/current', async (req, res) => {
             let jBooking = booking.toJSON()
             /*~ (7)Iterate through allSpots to find the spot that has been booked~*/
             for (let ele of allSpots) {
+                let previewImg =ele.SpotImages[0]
                 if (ele.id === jBooking.spotId) {
                     //console.log(ele.toJSON())
                     ele = ele.toJSON()
@@ -56,9 +57,9 @@ router.get('/current', async (req, res) => {
                         lng: ele.lng,
                         name: ele.name,
                         price: ele.price,
-                        previewImage: ele.SpotImages[0].url
+                        previewImage: previewImg.url
                     }
-                    //console.log(Spot)
+                    console.log(ele)
                     jBooking.Spot = Spot
                 }
             }
