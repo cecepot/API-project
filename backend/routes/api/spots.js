@@ -340,6 +340,7 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
         })
         /*~()Create a payload to send back to the user~*/
         const payload = {
+            id:newImage.id,
             url: newImage.url,
             preview: newImage.preview
         }
