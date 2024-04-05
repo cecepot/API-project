@@ -210,7 +210,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
 // //GET DETAILS OF A SPOT BY ID
 //======================================================================================
 router.get('/:spotId', async (req, res, next) => {
-    // ========= REFACTOR =============
+    // 📝📝📝📝Everything but average works fine in production
     /*~()Get spot id from req body~*/
     const spotId = req.params.spotId
     /*~()Ensure that the spot exists~*/
@@ -280,16 +280,14 @@ router.get('/:spotId', async (req, res, next) => {
 
 
 // //CREATE A SPOT
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// =======================================================================================
 router.post('/', [requireAuth, validateSpot], async (req, res, next) => {
-    // ========= REFACTOR =============
-    // NOTE: this code has (NOT) been tested!!!!
-    // You need to redo some validations
-    // Modify validations after you're done setting up spots routes
-    //check validations for lng, lat and price
-    const userId = req.user.id
+    /*~()Get the current user's id~*/
 
+    const userId = req.user.id
+    /*~()Pull all the info needed to create a spot out of the request body~*/
     const { address, city, state, country, lat, lng, name, description, price } = req.body
+    /*~()Validate the details and create the spot~*/
     const newSpot = await Spot.create({
         ownerId: userId,
         address,
@@ -302,14 +300,18 @@ router.post('/', [requireAuth, validateSpot], async (req, res, next) => {
         description,
         price
     })
+    /*~()Change the statusCode to 201 created~*/
     res.statusCode = 201
-
+    /*~()If the spot could not be created, let the user know why~*/
     if (!newSpot) {
         return next(err)
     }
-
+    /*~()If the spot was created, return the newly created spot to the user~*/
     return res.json(newSpot)
 })
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 
 // //ADD AN IMAGE TO A SPOT BASED ON THE SPOT'S ID
 router.post('/:spotId/images', requireAuth, async (req, res, next) => {
