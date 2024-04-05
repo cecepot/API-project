@@ -120,6 +120,7 @@ router.put('/:bookingId', requireAuth,async (req, res, next) => {
          err.message = "endDate cannot be on or before startDate"
          return next(err)
      }
+
     /*~()if current user does not own booking, do not create booking~✅*/
     if (currentUserId !== currentBooking.userId) {
         const err = new Error
@@ -155,6 +156,17 @@ router.put('/:bookingId', requireAuth,async (req, res, next) => {
             err.status = 403,
                 err.title = "Booking conflict"
             err.errors = {
+                endDate: "End date conflicts with an existing booking"
+            }
+            err.message = "Sorry, this spot is already booked for the specified dates"
+            return next(err)
+        }
+        if (((booking.startDate).getTime() < new Date(startDate).getTime())&&((booking.endDate).getTime() > new Date(endDate).getTime())) {
+            const err = new Error
+            err.status = 403,
+                err.title = "Booking conflict"
+            err.errors = {
+                startDate: "Start date conflicts with an existing booking",
                 endDate: "End date conflicts with an existing booking"
             }
             err.message = "Sorry, this spot is already booked for the specified dates"
