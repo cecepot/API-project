@@ -279,11 +279,10 @@ router.get('/:spotId', async (req, res, next) => {
 
 
 
-// //CREATE A SPOT
+// //CREATE A SPOT✅
 // =======================================================================================
 router.post('/', [requireAuth, validateSpot], async (req, res, next) => {
     /*~()Get the current user's id~*/
-
     const userId = req.user.id
     /*~()Pull all the info needed to create a spot out of the request body~*/
     const { address, city, state, country, lat, lng, name, description, price } = req.body
@@ -314,16 +313,15 @@ router.post('/', [requireAuth, validateSpot], async (req, res, next) => {
 
 
 // //ADD AN IMAGE TO A SPOT BASED ON THE SPOT'S ID
+// =============================================================================
 router.post('/:spotId/images', requireAuth, async (req, res, next) => {
-    // ========= REFACTOR =============
-    // NOTE: this code has (NOT) been tested!!!!
-    const Id = req.params.spotId
-
+   /*~()Get spot id out of the request body~*/
+    const Id = parseInt(req.params.spotId)
+   /*~()Get user id out of the request body~*/
     const userId = req.user.id
-    //verify whether or not the id actually exists
+     /*~()verify whether or not the id actually exists~*/
     const verifyId = await Spot.findByPk(Id)
-
-    //ERROR HANDLING (works✅)// find out how to display just the error message
+     /*~()if the spot does not exist, throw an error~*/
     if (!verifyId) {
         const err = new Error
         err.status = 404
@@ -331,22 +329,24 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
         err.title = " Couldn't find a Spot with the specified id"
         return next(err)
     }
-
+     /*~()Get the image details out of the request body~*/
     const { url, preview } = req.body
-
-    //AUTHORIZATION (works✅)
+     /*~()If user is the owner of the spot, create the image~*/
     if (verifyId.ownerId === userId) {
         const newImage = await SpotImage.create({
             url,
             preview,
             spotId: parseInt(Id)
         })
+        /*~()Create a payload to send back to the user~*/
         const payload = {
             url: newImage.url,
             preview: newImage.preview
         }
+        /*~()send the payload to the user~*/
         return res.json(payload)
     } else {
+        /*~()If the user is not authorized to perform the action, throw an error~*/
         return res.json('You are not authorized to perform this activity')
     }
 
