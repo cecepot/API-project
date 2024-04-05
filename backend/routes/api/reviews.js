@@ -26,7 +26,6 @@ const validateReview = [
 
 //GET ALL REVIEWS OF THE CURRENT USER✅
 //==========================================================
-// 📝📝📝📝Yet to be tested in production
 router.get('/current', requireAuth, async (req, res) => {
     /*~()Get the current user from the request body~*/
     const currentUserId = req.user.id
@@ -79,37 +78,64 @@ router.get('/current', requireAuth, async (req, res) => {
     /*~()~*/
     return res.json(payload)
 })
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 
 //ADD AN IMAGE TO A REVIEW BASED ON THE REVIEW'S ID
+// =========================================================================================
+// 📝📝📝📝Yet to be tested in production
 router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
+    /*~()~*/
+    const currentUser = req.user.id
+    /*~()~*/
     const Id = req.params.reviewId
+    /*~()~*/
+    const allReviewImages = await ReviewImage.findAll({where:{reviewId : Id}})
+       /*~()~*/
     const { url } = req.body
+    /*~()~*/
     const review = await Review.findByPk(Id)
     //ERROR IF REVIEW ID DOES NOT EXISt
     if (!review) {
-
         const err = new Error
         err.status = 404
         err.title = "Couldn't find a Review with the specified id"
         err.message = "Review couldn't be found"
         return next(err)
     }
-    //⬇️⬇️⬇️⬇️⬇️
-    //Error response: Cannot add any more images because there is a maximum
-    // of 10 images per resource
-    //add authorization
-    const newImage = await ReviewImage.create({
-        url,
-        reviewId: Id
-    })
-
-    const reviewImage = {}
-    reviewImage.id = newImage.id
-    reviewImage.url = newImage.url
-
-    res.json(reviewImage)
+    /*~()    add authorization~*/
+    if(review.userId === currentUser){
+        //Error response: Cannot add any more images because there is a maximum
+        // of 10 images per resource
+        let JreviewImage = []
+        allReviewImages.forEach((image)=>{
+            image = image.toJSON()
+            JreviewImage.push(image)
+        })
+        if(JreviewImage.length === 10){
+         const err = new Error
+        err.status = 403
+        err.title = "Cannot add any more images because there is a maximum of 10 images per resource"
+        err.message = "Maximum number of images for this resource was reached"
+        return next(err)
+        }else{
+            /*~()~*/
+         const newImage = await ReviewImage.create({
+             url,
+             reviewId: Id
+         })
+         /*~()~*/
+         const reviewImage = {}
+         reviewImage.id = newImage.id
+         reviewImage.url = newImage.url
+         /*~()~*/
+         res.json(reviewImage)
+        }}else{
+        return res.json({
+            "message": "You are not authorized to perform this action"
+        })
+    }
 })
 
 

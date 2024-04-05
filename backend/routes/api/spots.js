@@ -432,9 +432,8 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
 
 
 
-//GET ALL REVIEWS BY A SPOT'S ID
+//GET ALL REVIEWS BY A SPOT'S ID✅
 // ===================================================================
-// 📝📝📝📝Yet to be tested in production
 router.get('/:spotId/reviews', async (req, res, next) => {
     /*~()~*/
     const Id = req.params.spotId
@@ -475,7 +474,7 @@ router.get('/:spotId/reviews', async (req, res, next) => {
 
 
 
-// ***work on the reviews model. stars should be an integer from 1 to 5❗
+// ***📝📝📝📝work on the reviews model. stars should be an integer from 1 to 5❗
 //CREATE A REVIEW FOR A SPOT BASED ON THE SPOT'S ID
 // =============================================================================================
 // 📝📝📝📝Yet to be tested in production
@@ -500,26 +499,32 @@ router.post('/:spotId/reviews', [requireAuth, validateReview], async (req, res, 
     /*~()Find all reviews where spotid is the current spot's id~*/
     const allSpotReviews = await Review.findAll({ where: { spotId: verifyId.id } })
     /*~()Go through the reviews array. Check each review. if review.userid === current user's id, throw an error~*/
+    let hasReview = false
     allSpotReviews.forEach((review) => {
         if (review.userId === currentUserId) {
-            const err = new Error
-            err.status = 500
-            err.title = "Review from the current user already exists for the Spot"
-            err.message = "User already has a review for this spot"
-            return next(err)
+            hasReview = true
         }
     })
-    /*~()Else create a new review~*/
-    const newReview = await Review.create({
-        review,
-        stars,
-        spotId: Id,
-        userId: currentUserId
-    })
-    /*~()~*/
-    res.statusCode = 201
-    return res.json(newReview)
+    if (hasReview === true) {
+        const err = new Error
+        err.status = 500
+        err.title = "Review from the current user already exists for the Spot"
+        err.message = "User already has a review for this spot"
+        return next(err)
+    }else{
+        /*~()Else create a new review~*/
+        const newReview = await Review.create({
+            review,
+            stars,
+            spotId: Id,
+            userId: currentUserId
+        })
+        /*~()~*/
+        res.statusCode = 201
+        return res.json(newReview)
+    }
 })
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 
