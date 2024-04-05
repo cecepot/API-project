@@ -10,18 +10,14 @@ const router = express.Router();
 
 // DELETE A SPOT IMAGE BY ID
 // ========================================
-router.delete('/:imageId', async (req, res, next) => {
+router.delete('/:imageId', requireAuth, async (req, res, next) => {
     /*~()get the reviewImageId out of the request parameter~*/
     const currentImageId = req.params.imageId
     /*~()Make a call to the datatbase to find the reviewimagebyPK~*/
     const isReviewImage = await ReviewImage.findByPk(currentImageId)
     /*~()Get the current user out of the request body~*/
     const userId = req.user.id
-    /*~()Store the review to which the image belongs in a variable~*/
-    const review = isReviewImage.reviewId
-    /*~()Make a call to the database to find the review with that image~*/
-    const isReview = await Review.findByBK(review)
-   /*~()Error if no such image exists~*/
+    /*~()Error if no such image exists~*/
     if (!isReviewImage) {
         const err = new Error
         err.status = 404
@@ -29,6 +25,10 @@ router.delete('/:imageId', async (req, res, next) => {
         err.title = " Couldn't find a Review Image with the specified id"
         return next(err)
     }
+    /*~()Store the review to which the image belongs in a variable~*/
+    const review = isReviewImage.reviewId
+    /*~()Make a call to the database to find the review with that image~*/
+    const isReview = await Review.findByPk(review)
     /*~()Check to see if the review is owned by the current user~*/
     if (isReview.userId === userId) {
         await isReviewImage.destroy()

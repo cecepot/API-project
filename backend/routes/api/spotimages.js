@@ -11,18 +11,14 @@ const router = express.Router();
 
 // DELETE A SPOT IMAGE BY ID
 // ========================================
-router.delete('/:imageId', async (req, res, next) => {
+router.delete('/:imageId',requireAuth, async (req, res, next) => {
     /*~()get the spotImageId out of the request parameter~*/
-    const currentImageId = req.params.imageId
+    const currentImageId = parseInt(req.params.imageId)
     /*~()Make a call to the datatbase to find the spotimagebyPK~*/
     const isSpotImage = await SpotImage.findByPk(currentImageId)
     /*~()Get the current user out of the request body~*/
     const userId = req.user.id
-    /*~()Store the spot to which the image belongs in a variable~*/
-    const spot = isSpotImage.spotId
-    /*~()Make a call to the database to find the spot with that image~*/
-    const isSpot = await Spot.findByBK(spot)
-   /*~()Error if no such image exists~*/
+    /*~()Error if no such image exists~*/
     if (!isSpotImage) {
         const err = new Error
         err.status = 404
@@ -30,6 +26,11 @@ router.delete('/:imageId', async (req, res, next) => {
         err.title = " Couldn't find a Spot Image with the specified id"
         return next(err)
     }
+    /*~()Store the spot to which the image belongs in a variable~*/
+    const spot = isSpotImage.spotId
+    /*~()Make a call to the database to find the spot with that image~*/
+    const isSpot = await Spot.findByPk(spot)
+    console.log(isSpot)
     /*~()Check to see if the spot is owned by the current user~*/
     if (isSpot.ownerId === userId) {
         await isSpotImage.destroy()
