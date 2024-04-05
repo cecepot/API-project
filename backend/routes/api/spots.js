@@ -78,56 +78,61 @@ const validateReview = [
 
 
 //GET ALL SPOTS
+// =======================================
 router.get('/', async (req, res) => {
-
-    // ========= REFACTOR =============
-    // NOTE: this code is close enough to working.
-    //revisit the average rating when you are done with the reviews routes
-    //to stop sequelize from wrapping the responce in the instance of the model
-    // and receive a plain response instead,
-    // pass { raw: true } as an option to the finder method🙄.
-
+    /*~()Make a call to the database to get all spots~*/
     const spots = await Spot.findAll()
-
+    /*~()Make a call to the database to get all spotImages~*/
     const Images = await SpotImage.findAll()
-
+    /*~()Make a call to the database to get all reviews~*/
     const allReviews = await Review.findAll()
-
+    /*~()Create a Spots array which serves as a payload~*/
     const Spots = []
-
+    /*~()Iterate over each spot ~*/
     spots.forEach(async (spot) => {
-        //cater for previewimages
+        /*~()Make the spot readable by converting it to JSON to get rid of all unwanted data ~*/
         spot = spot.toJSON()
+        /*~()Create an array to hold all the current spots's images ~*/
         let images = []
+        /*~()Iterate over each image in spotImages(images of all spot in the entire database)~*/
         for (let ele of Images) {
             if (ele.spotId === spot.id) {
-                images.push(ele.url)
+                images.push(ele.url)/*~()If the current image belongs to the current spot,
+                 push the image into the images array. This selects only the images that belong to the
+                 spot in question~*/
             }
         }
-
-        spot.previewImage = images
-
-        //cater for rating
-
+        /*~()Create a previewImage property for the current spot which will be the first image of the spot ~*/
+        spot.previewImage = images[0]
+        /*~()Create an array to hold all the current spots's reviews ~*/
         let spotReviews = []
+        /*~()Iterate over each review in spotReviews(reviews of all spot in the entire database)~*/
         for (let ele of allReviews) {
+            ele = ele.toJSON()
+            // console.log(ele)
             if (ele.spotId === spot.id) {
-                spotReviews.push(ele.stars)
-            }
+                spotReviews.push(ele)
+            }/*~()If the current review belongs to the current spot,
+                 push the review into the reviews array. This selects only the reviews that belong to the
+                 spot in question~*/
         }
+        /*~()Find the average rating for the spot~*/
         let sum = 0
         spotReviews.forEach((review) => {
-            sum += review
+            sum += review.stars
         })
         let avgRating = sum / (spotReviews.length)
+        /*~()Create an averagerating property for the current spot~*/
         spot.avgRating = avgRating
+        /*~()Push each spot object into the spots's array ~*/
         Spots.push(spot)
     })
+    /*~()Create a payload which will hold the Spots array~*/
     const payload = {
         Spots
     }
-
-    res.json(payload)
+    /*~()Return the payload as the response body~*/
+    return res.json(payload)
 })
 
 // //GET ALL SPOTS BY CURRENT USER
@@ -553,7 +558,7 @@ router.get('/:spotId/bookings', async (req, res, next) => {
 // =====================================================
 //📝📝You forgot to add constraint where startdate can't be in the past
 //📝📝or enddate is before or the same day as startdate
-router.post('/:spotId/bookings',requireAuth, async (req, res, next) => {
+router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
     /*~()get current user from request body~*/
     const currentUserId = req.user.id
     /*~()Get the booking column names out of the request body~*/
@@ -578,7 +583,7 @@ router.post('/:spotId/bookings',requireAuth, async (req, res, next) => {
     }
     /*~()Go through all the bookings for the spot and compare the dates~*/
     allSpotBookings.forEach((booking) => {
-    /*~()If the booking already has the start or end date that was passed in, throw an error~✅*/
+        /*~()If the booking already has the start or end date that was passed in, throw an error~✅*/
         // if ((booking.startDate).getTime() === new Date(startDate).getTime()) {
         //     const err = new Error
         //     err.status = 403,
@@ -596,27 +601,27 @@ router.post('/:spotId/bookings',requireAuth, async (req, res, next) => {
         if ((booking.startDate).getTime() === new Date(startDate).getTime() || (booking.endDate).getTime() === new Date(endDate).getTime()) {
             const err = new Error
             err.status = 403,
-            err.title ="Booking conflict"
-            err.errors ={
-                startDate:"Start date conflicts with an existing booking",
-                endDate:"End date conflicts with an existing booking"
+                err.title = "Booking conflict"
+            err.errors = {
+                startDate: "Start date conflicts with an existing booking",
+                endDate: "End date conflicts with an existing booking"
             }
             err.message = "Sorry, this spot is already booked for the specified dates"
             return next(err)
         }
     })
     /*~()if current user does not own spot, create booking~*/
-    if (currentUserId !== currentSpot.ownerId){
+    if (currentUserId !== currentSpot.ownerId) {
 
 
         const newBooking = await Booking.create({
-                startDate,
-                endDate,
-                spotId: currentSpot.id,
-                userId: currentUserId
+            startDate,
+            endDate,
+            spotId: currentSpot.id,
+            userId: currentUserId
         })
 
-       return  res.json(newBooking)
+        return res.json(newBooking)
     }
 })
 
