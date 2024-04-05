@@ -22,7 +22,7 @@ const validatebookings = [
         .withMessage('endDate cannot be on or before startDate'),
 ]
 
-//GET ALL BOOKINGS OF THE CURRENT USER
+//GET ALL BOOKINGS OF THE CURRENT USER✅
 // ===========================================================
 router.get('/current', async (req, res) => {
 

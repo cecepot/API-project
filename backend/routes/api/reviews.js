@@ -141,9 +141,8 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
 
 
 
-//EDIT A REVIEW
+//EDIT A REVIEW✅
 // ===========================================================================================
-// 📝📝📝📝Yet to be tested in production
 router.put('/:reviewId', [requireAuth, validateReview], async (req, res, next) => {
     /*~()~*/
     let reviewId = req.params.reviewId
@@ -172,11 +171,14 @@ router.put('/:reviewId', [requireAuth, validateReview], async (req, res, next) =
         })
     }
 })
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-//DELETE A REVIEW
+
+
+//DELETE A REVIEW✅
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 router.delete('/:reviewId', requireAuth, async (req, res, next) => {
-    // 📝📝📝📝Yet to be tested in production
     const Id = req.params.reviewId
     const deletedReview = await Review.findByPk(Id)
     const userId = req.user.id
