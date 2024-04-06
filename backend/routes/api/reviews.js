@@ -168,9 +168,11 @@ router.put('/:reviewId', [requireAuth, validateReview], async (req, res, next) =
         await editedReview.save()
         return res.json(editedReview)
     } else {
-        return res.json({
-            "message": "You are not authorized to perform this action"
-        })
+        const err = new Error
+     err.status = 403
+     err.title = "unauthorized"
+     err.message = "You are not authorized to perform this action"
+     return next(err)
     }
 })
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -199,9 +201,11 @@ router.delete('/:reviewId', requireAuth, async (req, res, next) => {
             "message": "Successfully deleted"
         })
     } else {
-        return res.json({
-            "message": "You are not authorized to perform this action"
-        })
+        const err = new Error
+     err.status = 403
+     err.title = "unauthorized"
+     err.message = "You are not authorized to perform this action"
+     return next(err)
     }
 })
 

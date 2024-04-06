@@ -141,7 +141,7 @@ router.put('/:bookingId', requireAuth,async (req, res, next) => {
     const allBookings = await Booking.findAll({ where: { spotId: currentBooking.spotId } })
     /*~()If the booking already has the start or end date that was passed in, throw an error~✅*/
     allBookings.forEach((booking) => {
-        if ((booking.startDate).getTime() === new Date(startDate).getTime()) {
+        if ((booking.startDate).getTime() === new Date(startDate).getTime() || new Date(startDate).getTime() === (booking.endDate).getTime()) {
             const err = new Error
             err.status = 403,
                 err.title = "Booking conflict"
@@ -151,7 +151,7 @@ router.put('/:bookingId', requireAuth,async (req, res, next) => {
             err.message = "Sorry, this spot is already booked for the specified dates"
             return next(err)
         }
-        if ((booking.endDate).getTime() === new Date(endDate).getTime()) {
+        if ((booking.endDate).getTime() === new Date(endDate).getTime() ||new Date(endDate).getTime()===(booking.startDate).getTime()) {
             const err = new Error
             err.status = 403,
                 err.title = "Booking conflict"
@@ -173,6 +173,17 @@ router.put('/:bookingId', requireAuth,async (req, res, next) => {
             return next(err)
         }
         if (((booking.startDate).getTime() < new Date(startDate).getTime())&&((booking.endDate).getTime() < new Date(endDate).getTime())) {
+            const err = new Error
+            err.status = 403,
+                err.title = "Booking conflict"
+            err.errors = {
+                startDate: "Start date conflicts with an existing booking",
+                endDate: "End date conflicts with an existing booking"
+            }
+            err.message = "Sorry, this spot is already booked for the specified dates"
+            return next(err)
+        }
+        if (((booking.startDate).getTime() > new Date(startDate).getTime())&&((booking.endDate).getTime() < new Date(endDate).getTime())) {
             const err = new Error
             err.status = 403,
                 err.title = "Booking conflict"
