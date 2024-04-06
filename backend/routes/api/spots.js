@@ -81,8 +81,38 @@ const validateReview = [
 // =======================================
 // 📝📝📝📝Everything but average works fine in production
 router.get('/', async (req, res) => {
+    /*~()Get the page and size from the request's query parameters~*/
+    let { page, size } = req.query;
+    /*~()Set default values for the page and size variables~*/
+    if (!page) page = 1;
+    if (!size) size = 20;
+
+    page = parseInt(page);
+    size = parseInt(size);
+
+    const pagination = {};
+
+    if(page > 10){page = 10}
+    if(size > 20){size = 20}
+
+    if (page > 0 && size > 0) {
+        pagination.limit = size;
+        pagination.offset = size * (page - 1);
+    }else if(page <= 0){
+        const err = new Error
+        err.status = 400
+        err.message = "Bad Request"
+        err.errors ={ page: "Page must be greater than or equal to 1"}
+        return next(err)
+    }else if(size <= 0){
+        const err = new Error
+        err.status = 400
+        err.message = "Bad Request"
+        err.errors ={ page: "Page must be greater than or equal to 1"}
+        return next(err)
+    }
     /*~()Make a call to the database to get all spots~*/
-    const spots = await Spot.findAll()
+    const spots = await Spot.findAll({...pagination})
     /*~()Make a call to the database to get all spotImages~*/
     const Images = await SpotImage.findAll()
     /*~()Make a call to the database to get all reviews~*/
@@ -134,7 +164,7 @@ router.get('/', async (req, res) => {
         Spots
     }
     /*~()Return the payload as the response body~*/
-    return res.json(payload)
+    return res.json(payload,page,size)
 })
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -235,7 +265,7 @@ router.get('/:spotId', async (req, res, next) => {
         where: {
             spotId: verifyId.id
         },
-        attributes:['id', 'url', 'preview']
+        attributes: ['id', 'url', 'preview']
     })
     /*~()Get all the reviews for the spot in question~*/
     const allReviews = await Review.findAll({
@@ -341,7 +371,7 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
         })
         /*~()Create a payload to send back to the user~*/
         const payload = {
-            id:newImage.id,
+            id: newImage.id,
             url: newImage.url,
             preview: newImage.preview
         }
@@ -350,10 +380,10 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
     } else {
         /*~()If the user is not authorized to perform the action, throw an error~*/
         const err = new Error
-     err.status = 403
-     err.title = "unauthorized"
-     err.message = "You are not authorized to perform this action"
-     return next(err)
+        err.status = 403
+        err.title = "unauthorized"
+        err.message = "You are not authorized to perform this action"
+        return next(err)
     }
 
 })
@@ -394,10 +424,10 @@ router.put('/:spotId', [requireAuth, validateSpot], async (req, res, next) => {
         await editedSpot.save()
     } else {
         const err = new Error
-     err.status = 403
-     err.title = "unauthorized"
-     err.message = "You are not authorized to perform this action"
-     return next(err)
+        err.status = 403
+        err.title = "unauthorized"
+        err.message = "You are not authorized to perform this action"
+        return next(err)
     }
     return res.json(editedSpot)
 })
@@ -434,10 +464,10 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
         })
     } else {
         const err = new Error
-     err.status = 403
-     err.title = "unauthorized"
-     err.message = "You are not authorized to perform this action"
-     return next(err)
+        err.status = 403
+        err.title = "unauthorized"
+        err.message = "You are not authorized to perform this action"
+        return next(err)
     }
 })
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -523,7 +553,7 @@ router.post('/:spotId/reviews', [requireAuth, validateReview], async (req, res, 
         err.title = "Review from the current user already exists for the Spot"
         err.message = "User already has a review for this spot"
         return next(err)
-    }else{
+    } else {
         /*~()Else create a new review~*/
         const newReview = await Review.create({
             review,
@@ -544,7 +574,7 @@ router.post('/:spotId/reviews', [requireAuth, validateReview], async (req, res, 
 
 //GET ALL BOOKINGS FOR A SPOT BASED ON THE SPOT'S ID✅
 // ========================================================================
-router.get('/:spotId/bookings', requireAuth,async (req, res, next) => {
+router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
     /*~ (1)Get the current user's id from the request object~*/
     const currentUserId = req.user.id
     /*~ (2)Get the spotId from the request object~*/
@@ -559,7 +589,7 @@ router.get('/:spotId/bookings', requireAuth,async (req, res, next) => {
         err.message = "Spot couldn't be found"
         return next(err)
     }
-    const allUsers = await User.findAll({attributes:['id', 'firstName', 'lastName']})
+    const allUsers = await User.findAll({ attributes: ['id', 'firstName', 'lastName'] })
     //console.log(isOwner)<====an object with property ownerId
     /*~ (3)Make a request to the database to findAll bookings where userId === current user's id ~*/
     const allBookings = await Booking.findAll({ where: { spotId: spotId } })
@@ -592,14 +622,14 @@ router.get('/:spotId/bookings', requireAuth,async (req, res, next) => {
             // console.log(bookerDetails)
             /*~ (8b)Create a pushedBookings object with the desired attributes~*/
             let booker
-            allUsers.forEach((user)=>{
+            allUsers.forEach((user) => {
                 user = user.toJSON()
-                if( user.id === jBooking.userId){
+                if (user.id === jBooking.userId) {
                     booker = user
                 }
             })
             let pushedBooking = {
-                User: { ...booker},
+                User: { ...booker },
                 ...jBooking
             }
             /*~(9b)Push into the Bookings object~*/
@@ -642,14 +672,14 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
     }
     /*~()If startDate is in the past or endDate is before startDate~*/
     const todaysDate = new Date()
-    if(new Date(startDate).getTime() < todaysDate.getTime()){
+    if (new Date(startDate).getTime() < todaysDate.getTime()) {
         const err = new Error
         err.status = 400
         err.title = "Body validation errors"
         err.message = "startDate cannot be in the past"
         return next(err)
     }
-    if(new Date(endDate).getTime() <= new Date(startDate).getTime()){
+    if (new Date(endDate).getTime() <= new Date(startDate).getTime()) {
         const err = new Error
         err.status = 400
         err.title = "Body validation errors"
@@ -686,7 +716,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
             err.message = "Sorry, this spot is already booked for the specified dates"
             return next(err)
         }
-        if (((booking.startDate).getTime() < new Date(startDate).getTime())&&((booking.endDate).getTime() > new Date(endDate).getTime())) {
+        if (((booking.startDate).getTime() < new Date(startDate).getTime()) && ((booking.endDate).getTime() > new Date(endDate).getTime())) {
             const err = new Error
             err.status = 403,
                 err.title = "Booking conflict"
@@ -697,7 +727,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
             err.message = "Sorry, this spot is already booked for the specified dates"
             return next(err)
         }
-        if (((booking.startDate).getTime() < new Date(startDate).getTime())&&((booking.endDate).getTime() < new Date(endDate).getTime())) {
+        if (((booking.startDate).getTime() < new Date(startDate).getTime()) && ((booking.endDate).getTime() < new Date(endDate).getTime())) {
             const err = new Error
             err.status = 403,
                 err.title = "Booking conflict"
