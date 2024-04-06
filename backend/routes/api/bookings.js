@@ -161,7 +161,7 @@ router.put('/:bookingId', requireAuth,async (req, res, next) => {
             err.message = "Sorry, this spot is already booked for the specified dates"
             return next(err)
         }
-        if (((booking.startDate).getTime() < new Date(startDate).getTime())&&((booking.endDate).getTime() > new Date(endDate).getTime())) {
+        if ((((booking.startDate).getTime() < new Date(startDate).getTime())&&((booking.endDate).getTime() > new Date(endDate).getTime())) && booking.id !== currentBooking.id) {
             const err = new Error
             err.status = 403,
                 err.title = "Booking conflict"
@@ -183,7 +183,7 @@ router.put('/:bookingId', requireAuth,async (req, res, next) => {
             err.message = "Sorry, this spot is already booked for the specified dates"
             return next(err)
         }
-        if (((booking.startDate).getTime() > new Date(startDate).getTime())&&((booking.endDate).getTime() < new Date(endDate).getTime())) {
+        if ((((booking.startDate).getTime() > new Date(startDate).getTime())&&((booking.endDate).getTime() < new Date(endDate).getTime()))&& booking.id !== currentBooking.id) {
             const err = new Error
             err.status = 403,
                 err.title = "Booking conflict"
