@@ -578,14 +578,18 @@ router.get('/:spotId/reviews', async (req, res, next) => {
             }
         ]
     })
-    const Reviews = reviews.toJSON()
-    /*~()Formatting date to return without extra elements~*/
-    let createdAt = Reviews.createdAt.toISOString().split('T')[0]
-    let updatedAt = Reviews.updatedAt.toISOString().split('T')[0]
-    let createdAtTime = Reviews.createdAt.toISOString().split('T')[1].split('.')[0]
-    let updatedAtTime = Reviews.updatedAt.toISOString().split('T')[1].split('.')[0]
-    Reviews.createdAt = createdAt.concat(' ', createdAtTime)
-    Reviews.updatedAt = updatedAt.concat(' ', updatedAtTime)
+    let Reviews = []
+    reviews.foreEach((review)=>{
+        const Rev = review.toJSON()
+        /*~()Formatting date to return without extra elements~*/
+        let createdAt = Rev.createdAt.toISOString().split('T')[0]
+        let updatedAt = Rev.updatedAt.toISOString().split('T')[0]
+        let createdAtTime = Rev.createdAt.toISOString().split('T')[1].split('.')[0]
+        let updatedAtTime = Rev.updatedAt.toISOString().split('T')[1].split('.')[0]
+        Rev.createdAt = createdAt.concat(' ', createdAtTime)
+        Rev.updatedAt = updatedAt.concat(' ', updatedAtTime)
+        Reviews.push(Rev)
+    })
     /*~()~*/
     const payload = {
         Reviews

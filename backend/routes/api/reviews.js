@@ -57,10 +57,10 @@ router.get('/current', requireAuth, async (req, res) => {
     const Reviews = []
     /*~()~*/
     reviews.forEach((review) => {
-        /*~()Formatting price to return as a number~*/
-        rev.Spot.price = parseInt(newSpot.price)
         /*~()~*/
         let rev = review.toJSON()
+        /*~()Formatting price to return as a number~*/
+        rev.Spot.price = parseInt(newSpot.price)
         /*~()Formatting date to return without extra elements~*/
         let createdAt = rev.createdAt.toISOString().split('T')[0]
         let updatedAt = rev.updatedAt.toISOString().split('T')[0]
