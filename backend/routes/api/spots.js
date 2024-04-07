@@ -152,7 +152,9 @@ router.get('/', async (req, res, next) => {
     spots.forEach((spot) => {
         /*~()Make the spot readable by converting it to JSON to get rid of all unwanted data ~*/
         spot = spot.toJSON()
+        /*~()Formatting price to return as a number~*/
         spot.price = parseInt(spot.price)
+        /*~()Formatting date to return without extra elements~*/
         let createdAt = spot.createdAt.toISOString().split('T')[0]
         let updatedAt = spot.updatedAt.toISOString().split('T')[0]
         let createdAtTime = spot.createdAt.toISOString().split('T')[1].split('.')[0]
@@ -227,6 +229,15 @@ router.get('/current', requireAuth, async (req, res, next) => {
     spots.forEach((spot) => {
         /*~()Make the spot readable by converting it to JSON to get rid of all unwanted data ~*/
         spot = spot.toJSON()
+        /*~()Formatting price to return as a number~*/
+        spot.price = parseInt(spot.price)
+        /*~()Formatting date to return without extra elements~*/
+        let createdAt = spot.createdAt.toISOString().split('T')[0]
+        let updatedAt = spot.updatedAt.toISOString().split('T')[0]
+        let createdAtTime = spot.createdAt.toISOString().split('T')[1].split('.')[0]
+        let updatedAtTime = spot.updatedAt.toISOString().split('T')[1].split('.')[0]
+        spot.createdAt = createdAt.concat(' ', createdAtTime)
+        spot.updatedAt = updatedAt.concat(' ', updatedAtTime)
         /*~()Create an array to hold all the current spots's images ~*/
         let images = []
         /*~()Iterate over each image in spotImages(images of all spot in the entire database)~*/
@@ -316,6 +327,15 @@ router.get('/:spotId', async (req, res, next) => {
     })
     /*~()Store the average rating in a variable~*/
     const avgStarRating = sum / numReviews
+    /*~()Formatting price to return as a number~*/
+    verifyId.price = parseInt(verifyId.price)
+    /*~()Formatting date to return without extra elements~*/
+    let createdAt = verifyId.createdAt.toISOString().split('T')[0]
+    let updatedAt = verifyId.updatedAt.toISOString().split('T')[0]
+    let createdAtTime = verifyId.createdAt.toISOString().split('T')[1].split('.')[0]
+    let updatedAtTime = verifyId.updatedAt.toISOString().split('T')[1].split('.')[0]
+    verifyId.createdAt = createdAt.concat(' ', createdAtTime)
+    verifyId.updatedAt = updatedAt.concat(' ', updatedAtTime)
     /*~()Create a payload to be sent to the user~*/
     let payload = {
         id: verifyId.id,
@@ -370,6 +390,15 @@ router.post('/', [requireAuth, validateSpot], async (req, res, next) => {
     if (!newSpot) {
         return next(err)
     }
+    /*~()Formatting price to return as a number~*/
+    newSpot.price = parseInt(newSpot.price)
+    /*~()Formatting date to return without extra elements~*/
+    let createdAt = newSpot.createdAt.toISOString().split('T')[0]
+    let updatedAt = newSpot.updatedAt.toISOString().split('T')[0]
+    let createdAtTime = newSpot.createdAt.toISOString().split('T')[1].split('.')[0]
+    let updatedAtTime = newSpot.updatedAt.toISOString().split('T')[1].split('.')[0]
+    newSpot.createdAt = createdAt.concat(' ', createdAtTime)
+    newSpot.updatedAt = updatedAt.concat(' ', updatedAtTime)
     /*~()If the spot was created, return the newly created spot to the user~*/
     return res.json(newSpot)
 })
@@ -463,6 +492,13 @@ router.put('/:spotId', [requireAuth, validateSpot], async (req, res, next) => {
         err.message = "You are not authorized to perform this action"
         return next(err)
     }
+    /*~()Formatting date to return without extra elements~*/
+    let createdAt = editedSpot.createdAt.toISOString().split('T')[0]
+    let updatedAt = editedSpot.updatedAt.toISOString().split('T')[0]
+    let createdAtTime = editedSpot.createdAt.toISOString().split('T')[1].split('.')[0]
+    let updatedAtTime = editedSpot.updatedAt.toISOString().split('T')[1].split('.')[0]
+    editedSpot.createdAt = createdAt.concat(' ', createdAtTime)
+    editedSpot.updatedAt = updatedAt.concat(' ', updatedAtTime)
     return res.json(editedSpot)
 })
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
