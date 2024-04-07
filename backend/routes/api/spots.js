@@ -155,8 +155,8 @@ router.get('/', async (req, res, next) => {
         spot.price = parseInt(spot.price)
         let createdAt = spot.createdAt.toISOString().split('T')[0]
         let updatedAt = spot.updatedAt.toISOString().split('T')[0]
-        let createdAtTime = createdAt[1].split('.')[0]
-        let updatedAtTime = updatedAt[1].split('.')[0]
+        let createdAtTime = spot.createdAt.toISOString().split('T')[1].split('.')[0]
+        let updatedAtTime = spot.updatedAt.toISOString().split('T')[1].split('.')[0]
         spot.createdAt = createdAt.concat('', createdAtTime)
         spot.updatedAt = updatedAt.concat('', updatedAtTime)
         /*~()Create an array to hold all the current spots's images ~*/
