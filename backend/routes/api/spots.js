@@ -675,28 +675,6 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
     }
     /*~()If startDate is in the past or endDate is before startDate~*/
     const todaysDate = new Date()
-    if (new Date(startDate).getTime() < todaysDate.getTime()) {
-        const err = new Error
-        err.status = 400
-        err.title = "Body validation errors"
-        err.message = "startDate cannot be in the past"
-        return next(err)
-    }
-    if (new Date(endDate).getTime() <= new Date(startDate).getTime()) {
-        const err = new Error
-        err.status = 400
-        err.title = "Body validation errors"
-        err.message = "endDate cannot be on or before startDate"
-        return next(err)
-    }
-    /*~()if current user owns spot, do not create booking~✅*/
-    if (currentUserId === currentSpot.ownerId) {
-        const err = new Error
-        err.status = 403
-        err.title = "unauthorized"
-        err.message = "You are not authorized to perform this action"
-        return next(err)
-    }
     /*~()Go through all the bookings for the spot and compare the dates~*/
     allSpotBookings.forEach((booking) => {
         if ((booking.startDate).getTime() === new Date(startDate).getTime()) {
@@ -742,8 +720,29 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
             return next(err)
         }
     })
+    if (new Date(startDate).getTime() < todaysDate.getTime()) {
+        const err = new Error
+        err.status = 400
+        err.title = "Body validation errors"
+        err.message = "startDate cannot be in the past"
+        return next(err)
+    }else if (new Date(endDate).getTime() <= new Date(startDate).getTime()) {
+        const err = new Error
+        err.status = 400
+        err.title = "Body validation errors"
+        err.message = "endDate cannot be on or before startDate"
+        return next(err)
+    }
+    /*~()if current user owns spot, do not create booking~✅*/
+    else if (currentUserId === currentSpot.ownerId) {
+        const err = new Error
+        err.status = 403
+        err.title = "unauthorized"
+        err.message = "You are not authorized to perform this action"
+        return next(err)
+    }
     /*~()if current user does not own spot, create booking~*/
-    if (currentUserId !== currentSpot.ownerId) {
+    else (currentUserId !== currentSpot.ownerId) {
         const newBooking = await Booking.create({
             startDate,
             endDate,
