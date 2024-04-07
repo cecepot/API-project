@@ -152,6 +152,13 @@ router.get('/', async (req, res, next) => {
     spots.forEach((spot) => {
         /*~()Make the spot readable by converting it to JSON to get rid of all unwanted data ~*/
         spot = spot.toJSON()
+        spot.price = parseInt(spot.price)
+        let createdAt = spot.createdAt.toISOString().split('T')[0]
+        let updatedAt = spot.updatedAt.toISOString().split('T')[0]
+        let createdAtTime = createdAt[1].split('.')[0]
+        let updatedAtTime = updatedAt[1].split('.')[0]
+        spot.createdAt = createdAt[0].concat('', createdAtTime)
+        spot.updatedAt = updatedAt[0].concat('', updatedAtTime)
         /*~()Create an array to hold all the current spots's images ~*/
         let images = []
         /*~()Iterate over each image in spotImages(images of all spot in the entire database)~*/
