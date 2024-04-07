@@ -80,7 +80,7 @@ const validateReview = [
 //GET ALL SPOTS
 // =======================================
 // 📝📝📝📝Everything but average works fine in production
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
     /*~()Get the page and size from the request's query parameters~*/
     let { page, size } = req.query;
     /*~()Set default values for the page and size variables~*/
