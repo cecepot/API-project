@@ -30,7 +30,6 @@ router.get('/current',requireAuth, async (req, res) => {
     const currentUserId = req.user.id
     /*~ (2)Make a request to the database to findAll bookings where userId === current user's id ~*/
     const allBookings = await Booking.findAll()
-    // console.log(allBookings) //<==it's an array of all bookings
     const Images = await SpotImage.findAll()
     /*~ (3)Make a request to the the database to findAllSpots ~*/
     const allSpots = await Spot.findAll()//<=== returns an array of all spots
@@ -55,7 +54,6 @@ router.get('/current',requireAuth, async (req, res) => {
             /*~ (7)Iterate through allSpots to find the spot that has been booked~*/
             for (let ele of allSpots) {
                 if (ele.id === jBooking.spotId) {
-                    //console.log(ele.toJSON())
                     ele = ele.toJSON()
                     const Spot = {
                         id: ele.id,
@@ -70,14 +68,12 @@ router.get('/current',requireAuth, async (req, res) => {
                         price: ele.price,
                         previewImage: images[0]
                     }
-                    // console.log(ele)
                     jBooking.Spot = Spot
                 }
             }
             Bookings.push(jBooking)
         }
     })
-    //console.log(Bookings)
     const payload = {
         Bookings
     }
@@ -252,7 +248,6 @@ router.delete('/:bookingId',requireAuth, async (req, res,next)=>{
     /*~()compare the bookingId of the currentUser to the userId of the booking~*/
     const isBooker = currentBooking.userId
     /*~()compare the id of the currentUser to the ownerId of the spot that has been booked~*/
-    // console.log(isCurrentBookingId)
     const isSpotOwner = currentSpot.ownerId
     /*~()If the booking or spot belongs to the current user, you can go ahead and delete the booking~*/
     if(currentUserId === isBooker || currentUserId === isSpotOwner){
