@@ -98,19 +98,32 @@ router.get('/', async (req, res, next) => {
     if (page > 0 && size > 0) {
         pagination.limit = size;
         pagination.offset = size * (page - 1);
-    } else if (page <= 0) {
+    }
+    else if (page <= 0 || size <= 0) {
         const err = new Error
+        if(page <= 0 ){
+            err.errors.page =  "Page must be greater than or equal to 1"
+        }
+        if(size <= 0 ){
+            err.errors.size =  "Size must be greater than or equal to 1"
+        }
         err.status = 400
         err.message = "Bad Request"
-        err.errors = { page: "Page must be greater than or equal to 1" }
-        return next(err)
-    } else if (size <= 0) {
-        const err = new Error
-        err.status = 400
-        err.message = "Bad Request"
-        err.errors = { page: "Page must be greater than or equal to 1" }
         return next(err)
     }
+    // } else if (page <= 0) {
+    //     const err = new Error
+    //     err.status = 400
+    //     err.message = "Bad Request"
+    //     err.errors = { page: "Page must be greater than or equal to 1" }
+    //     return next(err)
+    // } else if (size <= 0) {
+    //     const err = new Error
+    //     err.status = 400
+    //     err.message = "Bad Request"
+    //     err.errors = { page: "Size must be greater than or equal to 1" }
+    //     return next(err)
+    // }
     /*~()Make a call to the database to get all spots~*/
     const spots = await Spot.findAll({ ...pagination })
     /*~()Make a call to the database to get all spotImages~*/
