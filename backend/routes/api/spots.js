@@ -327,31 +327,31 @@ router.get('/:spotId', async (req, res, next) => {
     })
     /*~()Store the average rating in a variable~*/
     const avgStarRating = sum / numReviews
-    verifyId = verifyId.toJSON()
+    const jverifyId = verifyId.toJSON()
     /*~()Formatting price to return as a number~*/
-    verifyId.price = parseInt(verifyId.price)
+    jverifyId.price = parseInt(verifyId.price)
     /*~()Formatting date to return without extra elements~*/
-    let createdAt = verifyId.createdAt.toISOString().split('T')[0]
-    let updatedAt = verifyId.updatedAt.toISOString().split('T')[0]
-    let createdAtTime = verifyId.createdAt.toISOString().split('T')[1].split('.')[0]
-    let updatedAtTime = verifyId.updatedAt.toISOString().split('T')[1].split('.')[0]
-    verifyId.createdAt = createdAt.concat(' ', createdAtTime)
-    verifyId.updatedAt = updatedAt.concat(' ', updatedAtTime)
+    let createdAt = jverifyId.createdAt.toISOString().split('T')[0]
+    let updatedAt = jverifyId.updatedAt.toISOString().split('T')[0]
+    let createdAtTime = jverifyId.createdAt.toISOString().split('T')[1].split('.')[0]
+    let updatedAtTime = jverifyId.updatedAt.toISOString().split('T')[1].split('.')[0]
+    jverifyId.createdAt = createdAt.concat(' ', createdAtTime)
+    jverifyId.updatedAt = updatedAt.concat(' ', updatedAtTime)
     /*~()Create a payload to be sent to the user~*/
     let payload = {
-        id: verifyId.id,
-        ownerId: verifyId.ownerId,
-        address: verifyId.address,
-        city: verifyId.city,
-        state: verifyId.state,
-        country: verifyId.country,
-        lat: verifyId.lat,
-        lng: verifyId.lng,
-        name: verifyId.name,
-        description: verifyId.description,
-        price: verifyId.price,
-        createdAt: verifyId.createdAt,
-        updatedAt: verifyId.updatedAt,
+        id: jverifyId.id,
+        ownerId: jverifyId.ownerId,
+        address: jverifyId.address,
+        city: jverifyId.city,
+        state: jverifyId.state,
+        country: jverifyId.country,
+        lat: jverifyId.lat,
+        lng: jverifyId.lng,
+        name: jverifyId.name,
+        description: jverifyId.description,
+        price: jverifyId.price,
+        createdAt: jverifyId.createdAt,
+        updatedAt: jverifyId.updatedAt,
         numReviews,
         avgStarRating,
         SpotImages: allSpotImages,
@@ -494,14 +494,15 @@ router.put('/:spotId', [requireAuth, validateSpot], async (req, res, next) => {
         err.message = "You are not authorized to perform this action"
         return next(err)
     }
+    const jEditedSpot = editedSpot.toJSON()
     /*~()Formatting date to return without extra elements~*/
-    let createdAt = editedSpot.createdAt.toISOString().split('T')[0]
-    let updatedAt = editedSpot.updatedAt.toISOString().split('T')[0]
-    let createdAtTime = editedSpot.createdAt.toISOString().split('T')[1].split('.')[0]
-    let updatedAtTime = editedSpot.updatedAt.toISOString().split('T')[1].split('.')[0]
-    editedSpot.createdAt = createdAt.concat(' ', createdAtTime)
-    editedSpot.updatedAt = updatedAt.concat(' ', updatedAtTime)
-    return res.json(editedSpot)
+    let createdAt = jEditedSpot.createdAt.toISOString().split('T')[0]
+    let updatedAt = jEditedSpot.updatedAt.toISOString().split('T')[0]
+    let createdAtTime = jEditedSpot.createdAt.toISOString().split('T')[1].split('.')[0]
+    let updatedAtTime = jEditedSpot.updatedAt.toISOString().split('T')[1].split('.')[0]
+    jEditedSpot.createdAt = createdAt.concat(' ', createdAtTime)
+    jEditedSpot.updatedAt = updatedAt.concat(' ', updatedAtTime)
+    return res.json(jEditedSpot)
 })
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
