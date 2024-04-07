@@ -734,7 +734,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
         return next(err)
     }
     /*~()if current user owns spot, do not create booking~✅*/
-    else if (currentUserId === currentSpot.ownerId) {
+    if (currentUserId === currentSpot.ownerId) {
         const err = new Error
         err.status = 403
         err.title = "unauthorized"
@@ -742,7 +742,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
         return next(err)
     }
     /*~()if current user does not own spot, create booking~*/
-    else (currentUserId !== currentSpot.ownerId) {
+    else {
         const newBooking = await Booking.create({
             startDate,
             endDate,
