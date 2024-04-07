@@ -143,8 +143,10 @@ router.put('/:bookingId', requireAuth,async (req, res, next) => {
     /*~ (3)Make a request to the database to findAll bookings where userId === current user's id ~*/
     const allBookings = await Booking.findAll({ where: { spotId: currentBooking.spotId } })
     /*~()If the booking already has the start or end date that was passed in, throw an error~✅*/
+    let noIssue = true
     allBookings.forEach((booking) => {
         if ((booking.startDate).getTime() === new Date(startDate).getTime() || new Date(startDate).getTime() === (booking.endDate).getTime()) {
+            noIssue = false
             const err = new Error
             err.status = 403,
                 err.title = "Booking conflict"
@@ -155,6 +157,7 @@ router.put('/:bookingId', requireAuth,async (req, res, next) => {
             return next(err)
         }
         if ((booking.endDate).getTime() === new Date(endDate).getTime() ||new Date(endDate).getTime()===(booking.startDate).getTime()) {
+            noIssue = false
             const err = new Error
             err.status = 403,
                 err.title = "Booking conflict"
@@ -165,6 +168,7 @@ router.put('/:bookingId', requireAuth,async (req, res, next) => {
             return next(err)
         }
         if ((((booking.startDate).getTime() < new Date(startDate).getTime())&&((booking.endDate).getTime() > new Date(endDate).getTime())) && booking.id !== currentBooking.id) {
+            noIssue = false
             const err = new Error
             err.status = 403,
                 err.title = "Booking conflict"
@@ -176,6 +180,7 @@ router.put('/:bookingId', requireAuth,async (req, res, next) => {
             return next(err)
         }
         if (((booking.startDate).getTime() < new Date(startDate).getTime())&&((booking.endDate).getTime() < new Date(endDate).getTime())) {
+            noIssue = false
             const err = new Error
             err.status = 403,
                 err.title = "Booking conflict"
@@ -187,6 +192,7 @@ router.put('/:bookingId', requireAuth,async (req, res, next) => {
             return next(err)
         }
         if ((((booking.startDate).getTime() > new Date(startDate).getTime())&&((booking.endDate).getTime() < new Date(endDate).getTime()))&& booking.id !== currentBooking.id) {
+            noIssue = false
             const err = new Error
             err.status = 403,
                 err.title = "Booking conflict"
@@ -199,7 +205,7 @@ router.put('/:bookingId', requireAuth,async (req, res, next) => {
         }
     })
     /*~()if current user owns booking, update booking~*/
-    if (currentUserId === currentBooking.userId) {
+    if (currentUserId === currentBooking.userId && noIssue === true) {
 
         if (startDate !== undefined) { currentBooking.startDate = startDate }
         if (endDate !== undefined) { currentBooking.endDate = endDate }
