@@ -712,6 +712,13 @@ router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
         if (currentUserId === spotExists.ownerId) {
             // const booker = booking.userId
             // const bookerDetails = await User.findByPk(bookerDetails)
+            /*~()Formatting date to return without extra elements~*/
+            let createdAt = jBooking.createdAt.toISOString().split('T')[0]
+            let updatedAt = jBooking.updatedAt.toISOString().split('T')[0]
+            let createdAtTime = jBooking.createdAt.toISOString().split('T')[1].split('.')[0]
+            let updatedAtTime = jBooking.updatedAt.toISOString().split('T')[1].split('.')[0]
+            jBooking.createdAt = createdAt.concat(' ', createdAtTime)
+            jBooking.updatedAt = updatedAt.concat(' ', updatedAtTime)
             /*~ (8b)Create a pushedBookings object with the desired attributes~*/
             let booker
             allUsers.forEach((user) => {
