@@ -92,27 +92,27 @@ router.get('/', async (req, res) => {
 
     const pagination = {};
 
-    if(page > 10){page = 10}
-    if(size > 20){size = 20}
+    if (page > 10) { page = 10 }
+    if (size > 20) { size = 20 }
 
     if (page > 0 && size > 0) {
         pagination.limit = size;
         pagination.offset = size * (page - 1);
-    }else if(page <= 0){
+    } else if (page <= 0) {
         const err = new Error
         err.status = 400
         err.message = "Bad Request"
-        err.errors ={ page: "Page must be greater than or equal to 1"}
+        err.errors = { page: "Page must be greater than or equal to 1" }
         return next(err)
-    }else if(size <= 0){
+    } else if (size <= 0) {
         const err = new Error
         err.status = 400
         err.message = "Bad Request"
-        err.errors ={ page: "Page must be greater than or equal to 1"}
+        err.errors = { page: "Page must be greater than or equal to 1" }
         return next(err)
     }
     /*~()Make a call to the database to get all spots~*/
-    const spots = await Spot.findAll({...pagination})
+    const spots = await Spot.findAll({ ...pagination })
     /*~()Make a call to the database to get all spotImages~*/
     const Images = await SpotImage.findAll()
     /*~()Make a call to the database to get all reviews~*/
@@ -164,7 +164,7 @@ router.get('/', async (req, res) => {
         Spots
     }
     /*~()Return the payload as the response body~*/
-    return res.json(payload,page,size)
+    return res.json(payload, page, size)
 })
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -698,60 +698,67 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
         return next(err)
     }
     /*~()if current user does not own spot, create booking~*/
-    if (currentUserId !== currentSpot.ownerId){
-/*~()Go through all the bookings for the spot and compare the dates~*/
-allSpotBookings.forEach((booking) => {
-    if ((booking.startDate).getTime() === new Date(startDate).getTime()) {
-        const err = new Error
-        err.status = 403,
-            err.title = "Booking conflict"
-        err.errors = {
-            startDate: "Start date conflicts with an existing booking",
+    let noIssue = true
+    allSpotBookings.forEach((booking) => {
+        if ((booking.startDate).getTime() === new Date(startDate).getTime()) {
+            noIssue = false
+            const err = new Error
+            err.status = 403,
+                err.title = "Booking conflict"
+            err.errors = {
+                startDate: "Start date conflicts with an existing booking",
+            }
+            err.message = "Sorry, this spot is already booked for the specified dates"
+            return next(err)
         }
-        err.message = "Sorry, this spot is already booked for the specified dates"
-        return next(err)
-    }
-    if ((booking.endDate).getTime() === new Date(endDate).getTime()) {
-        const err = new Error
-        err.status = 403,
-            err.title = "Booking conflict"
-        err.errors = {
-            endDate: "End date conflicts with an existing booking"
+        if ((booking.endDate).getTime() === new Date(endDate).getTime()) {
+            noIssue = false
+            const err = new Error
+            err.status = 403,
+                err.title = "Booking conflict"
+            err.errors = {
+                endDate: "End date conflicts with an existing booking"
+            }
+            err.message = "Sorry, this spot is already booked for the specified dates"
+            return next(err)
         }
-        err.message = "Sorry, this spot is already booked for the specified dates"
-        return next(err)
-    }
-    if (((booking.startDate).getTime() < new Date(startDate).getTime()) && ((booking.endDate).getTime() > new Date(endDate).getTime())) {
-        const err = new Error
-        err.status = 403,
-            err.title = "Booking conflict"
-        err.errors = {
-            startDate: "Start date conflicts with an existing booking",
-            endDate: "End date conflicts with an existing booking"
+        if (((booking.startDate).getTime() < new Date(startDate).getTime()) && ((booking.endDate).getTime() > new Date(endDate).getTime())) {
+            noIssue = false
+            const err = new Error
+            err.status = 403,
+                err.title = "Booking conflict"
+            err.errors = {
+                startDate: "Start date conflicts with an existing booking",
+                endDate: "End date conflicts with an existing booking"
+            }
+            err.message = "Sorry, this spot is already booked for the specified dates"
+            return next(err)
         }
-        err.message = "Sorry, this spot is already booked for the specified dates"
-        return next(err)
-    }
-    if (((booking.startDate).getTime() < new Date(startDate).getTime()) && ((booking.endDate).getTime() < new Date(endDate).getTime())) {
-        const err = new Error
-        err.status = 403,
-            err.title = "Booking conflict"
-        err.errors = {
-            startDate: "Start date conflicts with an existing booking",
-            endDate: "End date conflicts with an existing booking"
+        if (((booking.startDate).getTime() < new Date(startDate).getTime()) && ((booking.endDate).getTime() < new Date(endDate).getTime())) {
+            noIssue = false
+            const err = new Error
+            err.status = 403,
+                err.title = "Booking conflict"
+            err.errors = {
+                startDate: "Start date conflicts with an existing booking",
+                endDate: "End date conflicts with an existing booking"
+            }
+            err.message = "Sorry, this spot is already booked for the specified dates"
+            return next(err)
         }
-        err.message = "Sorry, this spot is already booked for the specified dates"
-        return next(err)
-    }
-})
-    }else{
+    })
+    if (currentUserId !== currentSpot.ownerId && noIssue === true) {
+        /*~()Go through all the bookings for the spot and compare the dates~*/
         const newBooking = await Booking.create({
             startDate,
             endDate,
             spotId: currentSpot.id,
             userId: currentUserId
         })
-        return res.json(newBooking)
+        const jBooking = newBooking.toJSON()
+        jBooking.startDate = jBooking.startDate.toISOString().split('T')[0]
+        jBooking.endDate = jBooking.endDate.toISOString().split('T')[0]
+        return res.json(jBooking)
     }
 })
 
