@@ -57,6 +57,8 @@ router.get('/current', requireAuth, async (req, res) => {
     const Reviews = []
     /*~()~*/
     reviews.forEach((review) => {
+        /*~()Formatting price to return as a number~*/
+        rev.Spot.price = parseInt(newSpot.price)
         /*~()~*/
         let rev = review.toJSON()
         /*~()Formatting date to return without extra elements~*/
@@ -97,8 +99,8 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
     /*~()~*/
     const Id = req.params.reviewId
     /*~()~*/
-    const allReviewImages = await ReviewImage.findAll({where:{reviewId : Id}})
-       /*~()~*/
+    const allReviewImages = await ReviewImage.findAll({ where: { reviewId: Id } })
+    /*~()~*/
     const { url } = req.body
     /*~()~*/
     const review = await Review.findByPk(Id)
@@ -111,38 +113,39 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
         return next(err)
     }
     /*~()    add authorization~*/
-    if(review.userId === currentUser){
+    if (review.userId === currentUser) {
         //Error response: Cannot add any more images because there is a maximum
         // of 10 images per resource
         let JreviewImage = []
-        allReviewImages.forEach((image)=>{
+        allReviewImages.forEach((image) => {
             image = image.toJSON()
             JreviewImage.push(image)
         })
-        if(JreviewImage.length === 10){
-         const err = new Error
-        err.status = 403
-        err.title = "Cannot add any more images because there is a maximum of 10 images per resource"
-        err.message = "Maximum number of images for this resource was reached"
-        return next(err)
-        }else{
-            /*~()~*/
-         const newImage = await ReviewImage.create({
-             url,
-             reviewId: Id
-         })
-         /*~()~*/
-         const reviewImage = {}
-         reviewImage.id = newImage.id
-         reviewImage.url = newImage.url
-         /*~()~*/
-         res.json(reviewImage)
-        }}else{
+        if (JreviewImage.length === 10) {
             const err = new Error
             err.status = 403
-            err.title = "unauthorized"
-            err.message = "You are not authorized to perform this action"
+            err.title = "Cannot add any more images because there is a maximum of 10 images per resource"
+            err.message = "Maximum number of images for this resource was reached"
             return next(err)
+        } else {
+            /*~()~*/
+            const newImage = await ReviewImage.create({
+                url,
+                reviewId: Id
+            })
+            /*~()~*/
+            const reviewImage = {}
+            reviewImage.id = newImage.id
+            reviewImage.url = newImage.url
+            /*~()~*/
+            res.json(reviewImage)
+        }
+    } else {
+        const err = new Error
+        err.status = 403
+        err.title = "unauthorized"
+        err.message = "You are not authorized to perform this action"
+        return next(err)
     }
 })
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -174,21 +177,21 @@ router.put('/:reviewId', [requireAuth, validateReview], async (req, res, next) =
         if (stars !== undefined) editedReview.stars = stars
         await editedReview.save()
 
-          /*~()Formatting date to return without extra elements~*/
-          const rev = editedReview.toJSON()
-          let createdAt = rev.createdAt.toISOString().split('T')[0]
-          let updatedAt = rev.updatedAt.toISOString().split('T')[0]
-          let createdAtTime = rev.createdAt.toISOString().split('T')[1].split('.')[0]
-          let updatedAtTime = rev.updatedAt.toISOString().split('T')[1].split('.')[0]
-          rev.createdAt = createdAt.concat(' ', createdAtTime)
-          rev.updatedAt = updatedAt.concat(' ', updatedAtTime)
+        /*~()Formatting date to return without extra elements~*/
+        const rev = editedReview.toJSON()
+        let createdAt = rev.createdAt.toISOString().split('T')[0]
+        let updatedAt = rev.updatedAt.toISOString().split('T')[0]
+        let createdAtTime = rev.createdAt.toISOString().split('T')[1].split('.')[0]
+        let updatedAtTime = rev.updatedAt.toISOString().split('T')[1].split('.')[0]
+        rev.createdAt = createdAt.concat(' ', createdAtTime)
+        rev.updatedAt = updatedAt.concat(' ', updatedAtTime)
         return res.json(rev)
     } else {
         const err = new Error
-     err.status = 403
-     err.title = "unauthorized"
-     err.message = "You are not authorized to perform this action"
-     return next(err)
+        err.status = 403
+        err.title = "unauthorized"
+        err.message = "You are not authorized to perform this action"
+        return next(err)
     }
 })
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -218,10 +221,10 @@ router.delete('/:reviewId', requireAuth, async (req, res, next) => {
         })
     } else {
         const err = new Error
-     err.status = 403
-     err.title = "unauthorized"
-     err.message = "You are not authorized to perform this action"
-     return next(err)
+        err.status = 403
+        err.title = "unauthorized"
+        err.message = "You are not authorized to perform this action"
+        return next(err)
     }
 })
 

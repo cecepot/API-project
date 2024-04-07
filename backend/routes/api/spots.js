@@ -563,7 +563,7 @@ router.get('/:spotId/reviews', async (req, res, next) => {
         return next(err)
     }
     /*~()~*/
-    const Reviews = await Review.findAll({
+    const reviews = await Review.findAll({
         where: {
             spotId: Id
         },
@@ -578,6 +578,14 @@ router.get('/:spotId/reviews', async (req, res, next) => {
             }
         ]
     })
+    const Reviews = reviews.toJSON()
+    /*~()Formatting date to return without extra elements~*/
+    let createdAt = Reviews.createdAt.toISOString().split('T')[0]
+    let updatedAt = Reviews.updatedAt.toISOString().split('T')[0]
+    let createdAtTime = Reviews.createdAt.toISOString().split('T')[1].split('.')[0]
+    let updatedAtTime = Reviews.updatedAt.toISOString().split('T')[1].split('.')[0]
+    Reviews.createdAt = createdAt.concat(' ', createdAtTime)
+    Reviews.updatedAt = updatedAt.concat(' ', updatedAtTime)
     /*~()~*/
     const payload = {
         Reviews
