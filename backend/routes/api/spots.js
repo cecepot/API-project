@@ -157,8 +157,8 @@ router.get('/', async (req, res, next) => {
         let updatedAt = spot.updatedAt.toISOString().split('T')[0]
         let createdAtTime = spot.createdAt.toISOString().split('T')[1].split('.')[0]
         let updatedAtTime = spot.updatedAt.toISOString().split('T')[1].split('.')[0]
-        spot.createdAt = createdAt.concat('', createdAtTime)
-        spot.updatedAt = updatedAt.concat('', updatedAtTime)
+        spot.createdAt = createdAt.concat(' ', createdAtTime)
+        spot.updatedAt = updatedAt.concat(' ', updatedAtTime)
         /*~()Create an array to hold all the current spots's images ~*/
         let images = []
         /*~()Iterate over each image in spotImages(images of all spot in the entire database)~*/
