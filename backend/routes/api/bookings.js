@@ -200,13 +200,14 @@ router.put('/:bookingId', requireAuth,async (req, res, next) => {
     })
     /*~()if current user owns booking, update booking~*/
     if (currentUserId === currentBooking.userId) {
-        //FORMAT THE DATE
-       const newStartDate = currentBooking.startDate.toISOString().split('T')[0]
-       const newEndDate = currentBooking.startDate.toISOString().split('T')[0]
-        if (startDate !== undefined) { currentBooking.startDate = newStartDate }
-        if (endDate !== undefined) { currentBooking.endDate = newEndDate }
+
+        if (startDate !== undefined) { currentBooking.startDate = startDate }
+        if (endDate !== undefined) { currentBooking.endDate = endDate }
         await currentBooking.save()
         const editedBooking = currentBooking.toJSON()
+        //FORMAT THE DATE
+        editedBooking.startDate = currentBooking.startDate.toISOString().split('T')[0]
+        editedBooking.endDate= currentBooking.startDate.toISOString().split('T')[0]
         return res.json(editedBooking)
     }
 })
