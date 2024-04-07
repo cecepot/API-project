@@ -604,6 +604,9 @@ router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
     allBookings.forEach((booking) => {
         /*~(7)Push the booking into Bookings array ~*/
         let jBooking = booking.toJSON()
+        //FORMAT THE DATE
+        jBooking.startDate = jBooking.startDate.toISOString().split('T')[0]
+        jBooking.endDate = jBooking.endDate.toISOString().split('T')[0]
         /*~[❗❗❗If you are NOT the owner of the spot❗❗❗]~*/
         if (currentUserId !== spotExists.ownerId) {
             /*~ (8a)Create a pushedBookings object with the desired attributes~*/
