@@ -579,7 +579,7 @@ router.get('/:spotId/reviews', async (req, res, next) => {
         ]
     })
     let Reviews = []
-    reviews.foreEach((review)=>{
+    reviews.forEach((review)=>{
         const Rev = review.toJSON()
         /*~()Formatting date to return without extra elements~*/
         let createdAt = Rev.createdAt.toISOString().split('T')[0]
