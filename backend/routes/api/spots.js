@@ -681,7 +681,8 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
         err.title = "Body validation errors"
         err.message = "startDate cannot be in the past"
         return next(err)
-    }else if (new Date(endDate).getTime() <= new Date(startDate).getTime()) {
+    }
+    if (new Date(endDate).getTime() <= new Date(startDate).getTime()) {
         const err = new Error
         err.status = 400
         err.title = "Body validation errors"
