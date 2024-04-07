@@ -49,6 +49,9 @@ router.get('/current',requireAuth, async (req, res) => {
         }
         if (booking.userId === currentUserId) {
             let jBooking = booking.toJSON()
+            //FORMAT THE DATE
+        jBooking.startDate = jBooking.startDate.toISOString().split('T')[0]
+        jBooking.endDate = jBooking.endDate.toISOString().split('T')[0]
             /*~ (7)Iterate through allSpots to find the spot that has been booked~*/
             for (let ele of allSpots) {
                 if (ele.id === jBooking.spotId) {
@@ -197,8 +200,11 @@ router.put('/:bookingId', requireAuth,async (req, res, next) => {
     })
     /*~()if current user owns booking, update booking~*/
     if (currentUserId === currentBooking.userId) {
-        if (startDate !== undefined) { currentBooking.startDate = startDate }
-        if (endDate !== undefined) { currentBooking.endDate = endDate }
+        //FORMAT THE DATE
+       const newStartDate = currentBooking.startDate.toISOString().split('T')[0]
+       const newEndDate = currentBooking.startDate.toISOString().split('T')[0]
+        if (startDate !== undefined) { currentBooking.startDate = newStartDate }
+        if (endDate !== undefined) { currentBooking.endDate = newEndDate }
         await currentBooking.save()
         const editedBooking = currentBooking.toJSON()
         return res.json(editedBooking)
