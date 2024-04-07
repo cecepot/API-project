@@ -110,7 +110,6 @@ router.get('/', async (req, res, next) => {
     else if (size <= 0) {
         const err = new Error
         err.errors = { size: "Size must be greater than or equal to 1" }
-        err.errors = { page: "Page must be greater than or equal to 1" }
         err.title = 'Query parameter validation errors'
         err.status = 400
         err.message = "Bad Request"
