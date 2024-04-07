@@ -159,10 +159,12 @@ router.get('/', async (req, res, next) => {
     })
     /*~()Create a payload which will hold the Spots array~*/
     const payload = {
-        Spots
+        Spots,
+        page,
+        size
     }
     /*~()Return the payload as the response body~*/
-    return res.json(payload, page, size)
+    return res.json(payload)
 })
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
