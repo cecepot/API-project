@@ -327,6 +327,7 @@ router.get('/:spotId', async (req, res, next) => {
     })
     /*~()Store the average rating in a variable~*/
     const avgStarRating = sum / numReviews
+    verifyId = verifyId.toJSON()
     /*~()Formatting price to return as a number~*/
     verifyId.price = parseInt(verifyId.price)
     /*~()Formatting date to return without extra elements~*/
@@ -390,17 +391,18 @@ router.post('/', [requireAuth, validateSpot], async (req, res, next) => {
     if (!newSpot) {
         return next(err)
     }
+    let jNewSpot = newSpot.toJSON()
     /*~()Formatting price to return as a number~*/
-    newSpot.price = parseInt(newSpot.price)
+    jNewSpot.price = parseInt(newSpot.price)
     /*~()Formatting date to return without extra elements~*/
-    let createdAt = newSpot.createdAt.toISOString().split('T')[0]
-    let updatedAt = newSpot.updatedAt.toISOString().split('T')[0]
-    let createdAtTime = newSpot.createdAt.toISOString().split('T')[1].split('.')[0]
-    let updatedAtTime = newSpot.updatedAt.toISOString().split('T')[1].split('.')[0]
-    newSpot.createdAt = createdAt.concat(' ', createdAtTime)
-    newSpot.updatedAt = updatedAt.concat(' ', updatedAtTime)
+    let createdAt = jNewSpot.createdAt.toISOString().split('T')[0]
+    let updatedAt = jNewSpot.updatedAt.toISOString().split('T')[0]
+    let createdAtTime = jNewSpot.createdAt.toISOString().split('T')[1].split('.')[0]
+    let updatedAtTime = jNewSpot.updatedAt.toISOString().split('T')[1].split('.')[0]
+    jNewSpot.createdAt = createdAt.concat(' ', createdAtTime)
+    jNewSpot.updatedAt = updatedAt.concat(' ', updatedAtTime)
     /*~()If the spot was created, return the newly created spot to the user~*/
-    return res.json(newSpot)
+    return res.json(jNewSpot)
 })
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
