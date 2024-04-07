@@ -636,7 +636,15 @@ router.post('/:spotId/reviews', [requireAuth, validateReview], async (req, res, 
         })
         /*~()~*/
         res.statusCode = 201
-        return res.json(newReview)
+        /*~()Formatting date to return without extra elements~*/
+        const jReview = newReview.toJSON()
+        let createdAt = jReview.createdAt.toISOString().split('T')[0]
+        let updatedAt = jReview.updatedAt.toISOString().split('T')[0]
+        let createdAtTime = jReview.createdAt.toISOString().split('T')[1].split('.')[0]
+        let updatedAtTime = jReview.updatedAt.toISOString().split('T')[1].split('.')[0]
+        jReview.createdAt = createdAt.concat(' ', createdAtTime)
+        jReview.updatedAt = updatedAt.concat(' ', updatedAtTime)
+        return res.json(jReview)
     }
 })
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

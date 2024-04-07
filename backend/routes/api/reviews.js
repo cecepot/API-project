@@ -59,6 +59,13 @@ router.get('/current', requireAuth, async (req, res) => {
     reviews.forEach((review) => {
         /*~()~*/
         let rev = review.toJSON()
+        /*~()Formatting date to return without extra elements~*/
+        let createdAt = rev.createdAt.toISOString().split('T')[0]
+        let updatedAt = rev.updatedAt.toISOString().split('T')[0]
+        let createdAtTime = rev.createdAt.toISOString().split('T')[1].split('.')[0]
+        let updatedAtTime = rev.updatedAt.toISOString().split('T')[1].split('.')[0]
+        rev.createdAt = createdAt.concat(' ', createdAtTime)
+        rev.updatedAt = updatedAt.concat(' ', updatedAtTime)
         /*~()~*/
         let images = []
         for (let ele of Images) {
@@ -166,7 +173,16 @@ router.put('/:reviewId', [requireAuth, validateReview], async (req, res, next) =
         if (review !== undefined) editedReview.review = review
         if (stars !== undefined) editedReview.stars = stars
         await editedReview.save()
-        return res.json(editedReview)
+
+          /*~()Formatting date to return without extra elements~*/
+          const rev = editedReview.toJSON()
+          let createdAt = rev.createdAt.toISOString().split('T')[0]
+          let updatedAt = rev.updatedAt.toISOString().split('T')[0]
+          let createdAtTime = rev.createdAt.toISOString().split('T')[1].split('.')[0]
+          let updatedAtTime = rev.updatedAt.toISOString().split('T')[1].split('.')[0]
+          rev.createdAt = createdAt.concat(' ', createdAtTime)
+          rev.updatedAt = updatedAt.concat(' ', updatedAtTime)
+        return res.json(rev)
     } else {
         const err = new Error
      err.status = 403
