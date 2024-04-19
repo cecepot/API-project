@@ -187,6 +187,8 @@ router.get('/', async (req, res, next) => {
         /*~()Find the average rating for the spot~*/
         let sum = 0
         spotReviews.forEach((review) => {
+            /*~()Formatting stars to return as a number~*/
+            review.stars = parseInt(review.stars)
             sum += review.stars
         })
         let avgRating = sum / (spotReviews.length)
@@ -579,7 +581,7 @@ router.get('/:spotId/reviews', async (req, res, next) => {
         ]
     })
     let Reviews = []
-    reviews.forEach((review)=>{
+    reviews.forEach((review) => {
         const Rev = review.toJSON()
         /*~()Formatting date to return without extra elements~*/
         let createdAt = Rev.createdAt.toISOString().split('T')[0]
