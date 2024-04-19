@@ -62,6 +62,8 @@ router.get('/current', requireAuth, async (req, res) => {
             for (let ele of allSpots) {
                 if (ele.id === jBooking.spotId) {
                     ele = ele.toJSON()
+                    /*~()Formatting price to return as a number~*/
+                    ele.price = parseInt(ele.price)
                     const Spot = {
                         id: ele.id,
                         ownerId: ele.ownerId,
