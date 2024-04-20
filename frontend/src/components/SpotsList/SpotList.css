@@ -1,0 +1,55 @@
+*{
+    padding: 0;
+    margin: 1%;
+    box-sizing: border-box;
+}
+
+.spot-container{
+    list-style-type: none;
+}
+
+img{
+    width: 100%;
+    border-radius: 10px;
+}
+
+.upper-details{
+    display: flex;
+    justify-content: space-between;
+}
+
+.spot-name{
+position: relative;
+z-index: 1;
+bottom: 12em;
+visibility: hidden;
+color: whitesmoke;
+border: solid 1px black;
+background-color: black;
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
+
+.tiles{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto;
+    gap: 2%;
+}
+
+.Link{
+    text-decoration: none;
+    color: black;
+}
+
+/* HOVER AND EFFECTS */
+img:hover{
+    cursor: pointer;
+}
+
+.tooltip-container:hover .spot-name{
+visibility: visible;
+cursor: pointer;
+}

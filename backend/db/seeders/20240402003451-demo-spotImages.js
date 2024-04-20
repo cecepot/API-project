@@ -26,27 +26,27 @@ module.exports = {
     await SpotImage.bulkCreate([
       {
         spotId: 1,
-        url: 'http://foo1.com',
+        url: 'https://res.cloudinary.com/dv9oyy79u/image/upload/v1713634942/Gemini_Generated_Image_7x3g27x3g27x3g27_r78mfv.jpg',
         preview:true,
       },
       {
         spotId: 1,
-        url: 'http://foo2.com',
+        url: 'https://res.cloudinary.com/dv9oyy79u/image/upload/v1713634942/Gemini_Generated_Image_7x3g27x3g27x3g27_r78mfv.jpg',
         preview:true,
       },
       {
         spotId: 2,
-        url: 'http://foo3.com',
+        url: 'https://res.cloudinary.com/dv9oyy79u/image/upload/v1713634942/Gemini_Generated_Image_7x3g27x3g27x3g27_r78mfv.jpg',
         preview:true,
       },
       {
         spotId: 2,
-        url: 'http://foo4.com',
+        url: 'https://res.cloudinary.com/dv9oyy79u/image/upload/v1713634942/Gemini_Generated_Image_7x3g27x3g27x3g27_r78mfv.jpg',
         preview:true,
       },
       {
         spotId: 3,
-        url: 'http://foo5.com',
+        url: 'https://res.cloudinary.com/dv9oyy79u/image/upload/v1713634942/Gemini_Generated_Image_7x3g27x3g27x3g27_r78mfv.jpg',
         preview:true,
       }
     ], { validate: true })
@@ -63,7 +63,7 @@ module.exports = {
     const Op = Sequelize.Op;
 
     return queryInterface.bulkDelete(options, {
-      url:{[Op.in]:['https://foo1.com', 'https://foo2.com', 'https://foo3.com', 'https://foo4.com', 'https://foo5.com']}
+      url:{[Op.in]:['https://res.cloudinary.com/dv9oyy79u/image/upload/v1713634942/Gemini_Generated_Image_7x3g27x3g27x3g27_r78mfv.jpg']}
     }, {})
   }
 };

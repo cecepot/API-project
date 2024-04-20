@@ -1,0 +1,39 @@
+
+.image-grid{
+    display: grid;
+    width: 1000px;
+    grid-template-columns: 2fr 1fr 1fr;
+    /* grid-template-rows: repeat(2, 1fr); */
+    grid-auto-flow: row;
+    gap: 1%;
+}
+
+img{
+    width: 100%;
+}
+
+.spot-info{
+    display: flex;
+}
+
+.reserve-card{
+    border: 1px solid black;
+    width: 20%;
+}
+
+.card-upper{
+    display: flex;
+    justify-content: space-between;
+}
+
+.reserve-button{
+    width: 80%;
+    display: flex;
+    justify-content: center;
+}
+
+.button-div{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
