@@ -1,0 +1,7 @@
+.form-container{
+    width: 50%;
+}
+
+.side-by-side{
+    display: flex;
+}

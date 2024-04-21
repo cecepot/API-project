@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import * as sessionActions from '../../store/session';
 import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal';
@@ -10,6 +10,15 @@ function LoginFormModal() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
+  // ADD STATE FOR DISABLING LOGIN BUTTON
+  const [disabled, setDisabled] = useState(true)
+
+  //UPDATE STATE OF DISABLED TO BE TRUE IF CREDENTIALS OR PASSWORD ARE LONGER THAN 3
+useEffect(()=>{
+  if(credential.length >= 4 && password.length >= 6){
+    setDisabled(false)
+  }
+},[password, credential])
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,30 +33,52 @@ function LoginFormModal() {
       });
   };
 
+  //CREATING THE DEMO USER
+  const handleClick = (e)=>{
+    e.preventDefault()
+    // alert('howdy!')
+    setErrors({});
+    const credential ='FakeUser1'
+   const password = 'password2'
+    return dispatch(sessionActions.login({credential, password}))
+    .then(closeModal)
+      .catch(async (res) => {
+        const data = await res.json();
+        if (data && data.errors) {
+          setErrors(data.errors);
+        }
+      });
+  }
+
   return (
     <>
       <h1>Log In</h1>
       <form onSubmit={handleSubmit}>
-        <label>
-          Username or Email
+        <div>
           <input
+            placeholder='Username or Email'
             type="text"
             value={credential}
             onChange={(e) => setCredential(e.target.value)}
             required
           />
-        </label>
-        <label>
-          Password
+        </div>
+        <div>
           <input
+            placeholder='Password'
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-        </label>
-        {errors.credential && <p>{errors.credential}</p>}
-        <button type="submit">Log In</button>
+          {errors.credential && <p>{errors.credential}</p>}
+        </div>
+        <div>
+          <button type="submit" disabled={disabled}>Log In</button>
+        </div>
+        <div>
+          <button onClick={handleClick}>Demo User</button>
+        </div>
       </form>
     </>
   );
