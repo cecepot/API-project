@@ -5,11 +5,11 @@ import { useEffect } from 'react'
 import { fetchCurrentSpot } from '../../store/spotsReducer'
 
 
-function SpotDetails() {
+const SpotDetails = () => {
     const { spotId } = useParams()
     const dispatch = useDispatch()
     // console.log(spotId)
-    const currentSpot = useSelector((state) => state.spotState)
+    const currentSpot = useSelector((state) => state.spotState.spot)
 
     useEffect(() => {
         dispatch(fetchCurrentSpot(spotId))
@@ -21,9 +21,9 @@ function SpotDetails() {
             <h1>You are now on the spot details page</h1>
             <h2>{currentSpot && currentSpot.name}</h2>
             <p>{currentSpot && currentSpot.city}, {currentSpot && currentSpot.state}, {currentSpot && currentSpot.country}</p>
-            <div className='image-grid'>
+            <div className='image-grid' >
                 {currentSpot && currentSpot.SpotImages.map((image) => {
-                    return <img src={`${image.url}`} alt="" key={spotId.id}/>
+                    return <img key={image.id} src={`${image.url}`} alt="" />
                 })}
             </div>
             <div className='spot-info'>

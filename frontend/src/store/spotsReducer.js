@@ -11,7 +11,7 @@ export const loadSpots = (spots) => {
     }
 }
 // ~()Get current spot~
-export const currentSpot = (spot)=>{
+export const currentSpot = (spot) => {
     return {
         type: LOAD_CURRENTSPOT,
         spot
@@ -26,10 +26,13 @@ export const fetchSpots = () => async (dispatch) => {
     dispatch(loadSpots(spots))//<== the data fetched from the backend server is what is passed into the loadspots as an argument
 }
 // ~()Get current spot~
-export const fetchCurrentSpot = (spotId) => async (dispatch) =>{
+export const fetchCurrentSpot = (spotId) => async (dispatch) => {
     const res = await fetch(`/api/spots/${spotId}`)
-    const spot = await res.json()
-    dispatch(currentSpot(spot))
+
+    if (res.ok) {
+        const spot = await res.json()
+        dispatch(currentSpot(spot))
+    }
 }
 
 
@@ -39,9 +42,9 @@ const spotsReducer = (state = initialState, action) => {
     switch (action.type) {
         // ~()Get all spots~
         case LOAD_SPOTS:
-            return { ...state, ...action.spots}
+            return { ...state, ...action.spots }
         case LOAD_CURRENTSPOT:
-            return { ...action.spot}
+            return { ...state, spot: { ...action.spot } }
         default:
             return state
     }
