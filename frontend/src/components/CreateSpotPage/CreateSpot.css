@@ -5,3 +5,7 @@
 .side-by-side{
     display: flex;
 }
+
+.error{
+    color: red;
+}
