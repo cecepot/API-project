@@ -28,7 +28,13 @@ export const createSpot = (newSpot) => {
         newSpot
     }
 }
-
+// ~()Create a new spot~
+// export const createImage = (SpotImage) => {
+//     return {
+//         type: CREATE_SPOTIMAGE,
+//         image
+//     }
+// }
 
 // ~()Get all spots~
 export const fetchSpots = () => async (dispatch) => {
@@ -46,23 +52,48 @@ export const fetchCurrentSpot = (spotId) => async (dispatch) => {
     }
 }
 // ~()Create a new spot~
-export const CreatNewSpot = (Spotpayload) => async (dispatch) => {
+export const CreatNewSpot = (Spotpayload) => async dispatch => {
 
     const res = await csrfFetch('/api/spots', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(Spotpayload)
     })
-    if(!res.ok){
-            const errors = await res.json()
-            // console.log(errors)
-            return errors
-            // throw new Error(errors)
+    if (!res.ok) {
+        const errors = await res.json()
+        // console.log(errors)
+        return errors
+        // throw new Error(errors)
     }
-        const newSpot = await res.json()
-        dispatch(createSpot(newSpot))
-        return newSpot
+    const newSpot = await res.json()
+    // dispatch(createSpot(newSpot))
+    return newSpot
 }
+// ~()Create spot image~
+// const images = []
+export const CreateSpotImage = (imagePayload, spotId, newSpot) => async (dispatch) => {
+    const res = await csrfFetch(`/api/spots/${spotId}/images`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(imagePayload)
+    })
+    if (!res.ok) {
+        const errors = await res.json()
+        // console.log(errors)
+        return errors
+        // throw new Error(errors)
+    }
+    const spotImage = await res.json()
+    // dispatch(createImage(spotImage))
+    // images.push(spotImage.url)
+    dispatch(createSpot(newSpot))
+    return spotImage
+}
+
+
+
+
+
 
 
 const initialState = {}

@@ -2,11 +2,12 @@ import './CreateSpot.css'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { CreatNewSpot } from '../../store/spotsReducer'
-// import {useNavigate} from 'react-router-dom'
+import { CreateSpotImage } from '../../store/spotsReducer'
+import { useNavigate } from 'react-router-dom'
 
 const CreateSpot = () => {
     const dispatch = useDispatch()
-    // const navigate = useNavigate()
+    const navigate = useNavigate()
     const [address, setAddress] = useState('')
     const [city, setCity] = useState('')
     const [state, setState] = useState('')
@@ -16,7 +17,13 @@ const CreateSpot = () => {
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
     const [price, setPrice] = useState('')
+    const [previewImage, setPreviewImage] = useState('')
+    const [image1, setImage1] = useState('')
+    const [image2, setImage2] = useState('')
+    const [image3, setImage3] = useState('')
+    const [image4, setImage4] = useState('')
     const [errors, setErrors] = useState({});
+    const [imageError, setImageError] = useState('')
 
     const handlesubmit = async (e) => {
         e.preventDefault()
@@ -33,16 +40,51 @@ const CreateSpot = () => {
             price
         }
 
+        const imageArray = []
+        if(!previewImage){
+            const err = new Error('This field is required')
+             setImageError(err.message)
+            //  console.log(imageError.message)
+        }
 
-          return  dispatch(CreatNewSpot(Spotpayload)).catch(
+        imageArray.push(previewImage)
+        image1 && imageArray.push(image1)
+        image2 && imageArray.push(image2)
+        image3 && imageArray.push(image3)
+        image4 && imageArray.push(image4)
+        // console.log(imageArray)
+        // console.log(JSON.stringify(imageArray[0]))
+        const newSpot = await dispatch(CreatNewSpot(Spotpayload)).catch(
             async (res) => {
                 const data = await res.json();
                 if (data && data.errors) {
-                  setErrors(data.errors);
-                  console.log(errors)
+                    setErrors(data.errors);
+                    // console.log(errors)
                 }
-              }
-          )
+            }
+        )
+        // console.log({newSpot})
+        const spotId = newSpot.id
+        imageArray.forEach((image)=>{
+            // console.log(image)
+            const imagePayload = {}
+            imagePayload.url = image
+            dispatch(CreateSpotImage(imagePayload, spotId, newSpot)).catch(
+                async (res) => {
+                    console.log(res)
+                    const data = await res.json();
+                    console.log({data})
+                    if (data && data.errors) {
+                        console.log(data.errors)
+                      setErrors(data.errors);
+                    }
+                  }
+            )
+        })
+
+        if (!errors.length && !imageError.length) {
+             navigate(`/spots/${spotId}`)
+        }
 
 
     }
@@ -68,7 +110,7 @@ const CreateSpot = () => {
                     </div>
                     <div>
                         <label>
-                        <p className='error'>{errors.address && `${errors.address}`}</p>
+                            <p className='error'>{errors.address && `${errors.address}`}</p>
                             Street Address
                             <input type="text"
                                 // Set the country variable to the value in the input box
@@ -77,14 +119,14 @@ const CreateSpot = () => {
                     </div>
                     <div className='side-by-side'>
                         <label>
-                        <p className='error'>{errors.city && `${errors.city}`}</p>
+                            <p className='error'>{errors.city && `${errors.city}`}</p>
                             city
                             <input type="text"
                                 // Set the city variable to the value in the input box
                                 onChange={(e) => setCity(e.target.value)} />
                         </label>
                         <label>
-                        <p className='error'>{errors.state && `${errors.state}`}</p>
+                            <p className='error'>{errors.state && `${errors.state}`}</p>
                             State
                             <input type="text"
                                 // Set the state variable to the value in the input box
@@ -93,14 +135,14 @@ const CreateSpot = () => {
                     </div>
                     <div className='side-by-side'>
                         <label>
-                        <p className='error'>{errors.lng && `${errors.lng}`}</p>
+                            <p className='error'>{errors.lng && `${errors.lng}`}</p>
                             Longitude
                             <input type="text"
                                 // Set the longitude variable to the value in the input box
                                 onChange={(e) => setLng(e.target.value)} />
                         </label>
                         <label>
-                        <p className='error'>{errors.lat && `${errors.lat}`}</p>
+                            <p className='error'>{errors.lat && `${errors.lat}`}</p>
                             Latitude
                             <input type="text"
                                 // Set the latitude variable to the value in the input box
@@ -114,7 +156,7 @@ const CreateSpot = () => {
                     </div>
                     <div>
                         <label>
-                        <p className='error'>{errors.description && `${errors.description}`}</p>
+                            <p className='error'>{errors.description && `${errors.description}`}</p>
                             <textarea placeholder='Please write at least 30 characters'
                                 // Set the description variable to the value in the input box
                                 onChange={(e) => setDescription(e.target.value)}></textarea>
@@ -127,7 +169,7 @@ const CreateSpot = () => {
                     </div>
                     <div>
                         <label>
-                        <p className='error'>{errors.name && `${errors.name}`}</p>
+                            <p className='error'>{errors.name && `${errors.name}`}</p>
                             <textarea placeholder='Name of your spot'
                                 // Set the name variable to the value in the input box
                                 onChange={(e) => setName(e.target.value)}></textarea>
@@ -140,7 +182,7 @@ const CreateSpot = () => {
                     </div>
                     <div>
                         <label>
-                        <p className='error'>{errors.price && `${errors.price}`}</p>
+                            <p className='error'>{errors.price && `${errors.price}`}</p>
                             $<textarea placeholder='Price per night (USD)'
                                 // Set the description variable to the value in the input box
                                 onChange={(e) => setPrice(e.target.value)}></textarea>
@@ -152,27 +194,33 @@ const CreateSpot = () => {
                     </div>
                     <div>
                         <label>
-                            <input type="text" placeholder='Preview Image URL' />
+                        <p className='error'>{imageError && `${imageError.message}`}</p>
+                            <input type="text" placeholder='Preview Image URL'
+                                onChange={(e) => setPreviewImage(e.target.value)} />
                         </label>
                     </div>
                     <div>
                         <label>
-                            <input type="text" placeholder='Image URL' />
+                            <input type="text" placeholder='Image URL'
+                                onChange={(e) => setImage1(e.target.value)} />
                         </label>
                     </div>
                     <div>
                         <label>
-                            <input type="text" placeholder='Image URL' />
+                            <input type="text" placeholder='Image URL'
+                                onChange={(e) => setImage2(e.target.value)} />
                         </label>
                     </div>
                     <div>
                         <label>
-                            <input type="text" placeholder='Image URL' />
+                            <input type="text" placeholder='Image URL'
+                                onChange={(e) => setImage3(e.target.value)} />
                         </label>
                     </div>
                     <div>
                         <label>
-                            <input type="text" placeholder='Image URL' />
+                            <input type="text" placeholder='Image URL'
+                                onChange={(e) => setImage4(e.target.value)} />
                         </label>
                     </div>
                     <div>

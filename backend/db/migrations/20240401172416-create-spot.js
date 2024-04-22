@@ -48,7 +48,8 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING,
-        allownull: false
+        allownull: false,
+        unique: true
       },
       description: {
         type: Sequelize.STRING,
