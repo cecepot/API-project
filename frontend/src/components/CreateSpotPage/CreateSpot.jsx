@@ -65,11 +65,11 @@ const CreateSpot = () => {
             setName('')
             setDescription('')
             setPrice('')
-            // setPreviewImage('')
-            // setImage1('')
-            // setImage2('')
-            // setImage3('')
-            // setImage4('')
+            setPreviewImage('')
+            setImage1('')
+            setImage2('')
+            setImage3('')
+            setImage4('')
         }
 
         const newSpot = await dispatch(CreatNewSpot(Spotpayload)).catch(
@@ -103,10 +103,10 @@ const CreateSpot = () => {
                 // )
 
             })
-            reset()
 
             if (!errors.length && !imageError.length) {
-                 navigate(`/spots/${spotId}`)
+                reset()
+                navigate(`/spots/${spotId}`)
             }
         }
 
