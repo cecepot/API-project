@@ -1,7 +1,6 @@
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch} from "react-redux"
 import { deleteCurrentSpot } from "../../store/spotsReducer"
 import { fetchUserSpots } from '../../store/spotsReducer'
-import { useNavigate } from "react-router-dom"
 import { useModal } from "../../context/Modal"
 const DeleteSpotModal = ({currentSpot}) => {
     const { closeModal } = useModal();
@@ -10,7 +9,6 @@ const DeleteSpotModal = ({currentSpot}) => {
     // console.log(currentSpot)
     const spotId = (currentSpot && currentSpot.id)
     console.log(spotId)
-    const navigate = useNavigate()
     const dispatch = useDispatch()
     const handleClick = async(e) =>{
         e.preventDefault()

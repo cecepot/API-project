@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import { fetchUserSpots } from '../../store/spotsReducer'
@@ -23,8 +23,8 @@ const ManageSpots = () => {
                 {/* The logical && operator ensures that the state is not null before calling map on the spots */}
                 {spots && spots.map((spot) => {
                     return (
-                        <div>
-                            <Link to={`../spots/${spot.id}`} key={spot.id} className="Link">
+                        <div key={spot.id}>
+                            <Link to={`../spots/${spot.id}`}  className="Link">
                                 <li className="spot-container">
                                     <div className="tooltip-container">
                                         <img src={`${spot.previewImage}`} alt="" />
