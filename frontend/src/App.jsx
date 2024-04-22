@@ -7,6 +7,7 @@ import LandingPage from './components/Landing page';
 import SpotDetails from './components/SpotDetails';
 import CreateSpot from './components/CreateSpotPage';
 import Navigation from './components/Navigation/Navigation-bonus';
+import ManageSpots from './components/ManageSpotsPage';
 import * as sessionActions from './store/session';
 import { Modal } from './context/Modal';
 
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
       {
         path: 'spots',
         element: <CreateSpot/>//<== CreateSpot page added
+      },
+      {
+        path: 'spots/current',
+        element: <ManageSpots/>//<== CreateSpot page added
       },
       // {
       //   path: 'login',

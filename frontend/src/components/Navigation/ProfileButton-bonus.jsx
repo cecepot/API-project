@@ -54,6 +54,7 @@ function ProfileButton({ user }) {
             <li>{user.username}</li>
             <li>Hello {user.firstName} {user.lastName}</li>  {/* ADD A GREETING WHEN THE USER IS LOGGED IN */}
             <li>{user.email}</li>
+            <NavLink to='/spots/current'>manage spots</NavLink>
             <li>
               <button onClick={logout}>Log Out</button>
             </li>

@@ -6,6 +6,8 @@ const LOAD_SPOTS = 'spots/loadSpots'
 const LOAD_CURRENTSPOT = 'spot/loadCurrentSpot'
 // ~()Create a spot~
 const CREATE_SPOT = 'spot/createSpot'
+// ~()Get all spots of the current user~
+const MANAGE_SPOT = 'spot/manageSpot'
 
 // ~()Get all spots~
 export const loadSpots = (spots) => {
@@ -26,6 +28,13 @@ export const createSpot = (newSpot) => {
     return {
         type: CREATE_SPOT,
         newSpot
+    }
+}
+// ~()Manage a spot~
+export const manageSpot = (spot) => {
+    return {
+        type: MANAGE_SPOT,
+        spot
     }
 }
 // ~()Create a new spot~
@@ -89,7 +98,12 @@ export const CreateSpotImage = (imagePayload, spotId, newSpot) => async (dispatc
     dispatch(createSpot(newSpot))
     return spotImage
 }
-
+// ~()Get current user's spots spots~
+export const fetchUserSpots = () => async (dispatch) => {
+    const res = await csrfFetch('/api/spots/current')
+    const spots = await res.json()
+    dispatch(loadSpots(spots))//<== the data fetched from the backend server is what is passed into the loadspots as an argument
+}
 
 
 
@@ -111,6 +125,9 @@ const spotsReducer = (state = initialState, action) => {
             return {
                 ...state, ...action.newSpot
             }
+        // ~()Manage your spot~
+        case MANAGE_SPOT:
+            return { ...state, spot: { ...action.spot } }
         default:
             return state
     }
