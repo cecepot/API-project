@@ -8,6 +8,9 @@ const LOAD_CURRENTSPOT = 'spot/loadCurrentSpot'
 const CREATE_SPOT = 'spot/createSpot'
 // ~()Get all spots of the current user~
 const MANAGE_SPOT = 'spot/manageSpot'
+// ~()Get all spots of the current user~
+const DELETE_SPOT = 'spot/deleteSpot'
+
 
 // ~()Get all spots~
 export const loadSpots = (spots) => {
@@ -34,6 +37,12 @@ export const createSpot = (newSpot) => {
 export const manageSpot = (spot) => {
     return {
         type: MANAGE_SPOT,
+        spot
+    }
+}
+export const deleteSpot = (spot) => {
+    return {
+        type: DELETE_SPOT,
         spot
     }
 }
@@ -104,7 +113,15 @@ export const fetchUserSpots = () => async (dispatch) => {
     const spots = await res.json()
     dispatch(loadSpots(spots))//<== the data fetched from the backend server is what is passed into the loadspots as an argument
 }
-
+// ~()Delete a spot~
+export const deleteCurrentSpot = (spotId) => async (dispatch) => {
+    const res = await csrfFetch(`/api/spots/${spotId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+    })
+    const spot = await res.json()
+    dispatch(deleteSpot(spot))//<== the data fetched from the backend server is what is passed into the loadspots as an argument
+}
 
 
 
@@ -128,6 +145,9 @@ const spotsReducer = (state = initialState, action) => {
         // ~()Manage your spot~
         case MANAGE_SPOT:
             return { ...state, spot: { ...action.spot } }
+        // ~()Delete your spot~
+        case DELETE_SPOT:
+            return { ...state }
         default:
             return state
     }
