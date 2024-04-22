@@ -66,7 +66,7 @@ export const CreatNewSpot = (Spotpayload) => async dispatch => {
         // throw new Error(errors)
     }
     const newSpot = await res.json()
-    // dispatch(createSpot(newSpot))
+    dispatch(createSpot(newSpot))
     return newSpot
 }
 // ~()Create spot image~
