@@ -117,7 +117,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     description: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(5000),
       allownull: false,
       validate: {
         notEmpty: true
