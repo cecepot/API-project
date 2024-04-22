@@ -81,7 +81,7 @@ const CreateSpot = () => {
                 }
             }
         )
-        reset()
+
         // console.log({newSpot})
         if(newSpot){
             const spotId = newSpot.id
@@ -103,7 +103,8 @@ const CreateSpot = () => {
                 // )
 
             })
-
+            reset()
+            
             if (!errors.length && !imageError.length) {
                  navigate(`/spots/${spotId}`)
             }
