@@ -70,7 +70,7 @@ export const fetchCurrentSpot = (spotId) => async (dispatch) => {
     }
 }
 // ~()Create a new spot~
-export const CreatNewSpot = (Spotpayload) => async dispatch => {
+export const CreatNewSpot = (Spotpayload, allImages) => async dispatch => {
 
     const res = await csrfFetch('/api/spots', {
         method: 'POST',
@@ -84,6 +84,13 @@ export const CreatNewSpot = (Spotpayload) => async dispatch => {
         // throw new Error(errors)
     }
     const newSpot = await res.json()
+    allImages.forEach(async(image)=>{
+        await csrfFetch(`/api/spots/${newSpot.id}/images`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(image)
+        })
+    })
     dispatch(createSpot(newSpot))
     return newSpot
 }
