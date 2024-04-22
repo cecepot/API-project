@@ -2,7 +2,6 @@ import './CreateSpot.css'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { CreatNewSpot } from '../../store/spotsReducer'
-import { CreateSpotImage } from '../../store/spotsReducer'
 import { useNavigate } from 'react-router-dom'
 
 const CreateSpot = () => {
@@ -39,15 +38,15 @@ const CreateSpot = () => {
             description,
             price
         }
-
+        // console.log(previewImage)
         const imageArray = []
-        if(!previewImage){
+        if (!previewImage) {
             const err = new Error('This field is required')
-             setImageError(err.message)
+            setImageError(err.message)
             //  console.log(imageError)
         }
 
-        imageArray.push(previewImage)
+        previewImage && imageArray.push(previewImage)
         image1 && imageArray.push(image1)
         image2 && imageArray.push(image2)
         image3 && imageArray.push(image3)
@@ -55,7 +54,7 @@ const CreateSpot = () => {
         // console.log(imageArray)
         // console.log(JSON.stringify(imageArray[0]))
 
-        const reset = ()=>{
+        const reset = () => {
             setAddress('')
             setCity('')
             setState('')
@@ -72,7 +71,16 @@ const CreateSpot = () => {
             setImage4('')
         }
 
-        const newSpot = await dispatch(CreatNewSpot(Spotpayload)).catch(
+        let allImages = []
+        // console.log(imageArray)
+        if (imageArray.length) {
+            imageArray.forEach((image) => {
+                allImages.push({ url: image })
+            })
+        }
+        // console.log({allImages})
+
+        const newSpot = await dispatch(CreatNewSpot(Spotpayload, allImages)).catch(
             async (res) => {
                 const data = await res.json();
                 if (data && data.errors) {
@@ -82,33 +90,13 @@ const CreateSpot = () => {
             }
         )
 
-        // console.log({newSpot})
-        if(newSpot){
-            const spotId = newSpot.id
-            imageArray.forEach((image)=>{
-                // console.log(image)
-                const imagePayload = {}
-                imagePayload.url = image
-                dispatch(CreateSpotImage(imagePayload, spotId, newSpot))
-                // .catch(
-                //     async (res) => {
-                //         console.log(res)
-                //         const data = await res.json();
-                //         console.log({data})
-                //         if (data && data.errors) {
-                //             console.log(data.errors)
-                //           setErrors(data.errors);
-                //         }
-                //       }
-                // )
-
-            })
-
-            if (!errors.length && !imageError.length) {
-                reset()
-                navigate(`/spots/${spotId}`)
-            }
+        if (!errors.length && !imageError.length) {
+            reset()
+            navigate(`/spots/${newSpot.id}`)
         }
+
+        // console.log({newSpot})
+
 
 
     }
@@ -218,7 +206,7 @@ const CreateSpot = () => {
                     </div>
                     <div>
                         <label>
-                        <p className='error'>{imageError && `${imageError}`}</p>
+                            <p className='error'>{imageError && `${imageError}`}</p>
                             <input type="text" placeholder='Preview Image URL'
                                 onChange={(e) => setPreviewImage(e.target.value)} />
                         </label>
