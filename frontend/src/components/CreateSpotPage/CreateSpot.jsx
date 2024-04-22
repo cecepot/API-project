@@ -44,7 +44,7 @@ const CreateSpot = () => {
         if(!previewImage){
             const err = new Error('This field is required')
              setImageError(err.message)
-             console.log(imageError)
+            //  console.log(imageError)
         }
 
         imageArray.push(previewImage)
@@ -54,6 +54,24 @@ const CreateSpot = () => {
         image4 && imageArray.push(image4)
         // console.log(imageArray)
         // console.log(JSON.stringify(imageArray[0]))
+
+        const reset = ()=>{
+            setAddress('')
+            setCity('')
+            setState('')
+            setCountry('')
+            setLat('')
+            setLng('')
+            setName('')
+            setDescription('')
+            setPrice('')
+            // setPreviewImage('')
+            // setImage1('')
+            // setImage2('')
+            // setImage3('')
+            // setImage4('')
+        }
+
         const newSpot = await dispatch(CreatNewSpot(Spotpayload)).catch(
             async (res) => {
                 const data = await res.json();
@@ -63,6 +81,7 @@ const CreateSpot = () => {
                 }
             }
         )
+        reset()
         // console.log({newSpot})
         if(newSpot){
             const spotId = newSpot.id
@@ -70,17 +89,19 @@ const CreateSpot = () => {
                 // console.log(image)
                 const imagePayload = {}
                 imagePayload.url = image
-                dispatch(CreateSpotImage(imagePayload, spotId, newSpot)).catch(
-                    async (res) => {
-                        console.log(res)
-                        const data = await res.json();
-                        console.log({data})
-                        if (data && data.errors) {
-                            console.log(data.errors)
-                          setErrors(data.errors);
-                        }
-                      }
-                )
+                dispatch(CreateSpotImage(imagePayload, spotId, newSpot))
+                // .catch(
+                //     async (res) => {
+                //         console.log(res)
+                //         const data = await res.json();
+                //         console.log({data})
+                //         if (data && data.errors) {
+                //             console.log(data.errors)
+                //           setErrors(data.errors);
+                //         }
+                //       }
+                // )
+
             })
 
             if (!errors.length && !imageError.length) {
