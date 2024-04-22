@@ -1,7 +1,11 @@
+import { csrfFetch } from "./csrf"
+
 // ~()Get all spots~
 const LOAD_SPOTS = 'spots/loadSpots'
 // ~()Get current spot~
 const LOAD_CURRENTSPOT = 'spot/loadCurrentSpot'
+// ~()Create a spot~
+const CREATE_SPOT = 'spot/createSpot'
 
 // ~()Get all spots~
 export const loadSpots = (spots) => {
@@ -15,6 +19,13 @@ export const currentSpot = (spot) => {
     return {
         type: LOAD_CURRENTSPOT,
         spot
+    }
+}
+// ~()Create a new spot~
+export const createSpot = (newSpot) => {
+    return {
+        type: CREATE_SPOT,
+        newSpot
     }
 }
 
@@ -34,6 +45,24 @@ export const fetchCurrentSpot = (spotId) => async (dispatch) => {
         dispatch(currentSpot(spot))
     }
 }
+// ~()Create a new spot~
+export const CreatNewSpot = (Spotpayload) => async (dispatch) => {
+
+    const res = await csrfFetch('/api/spots', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Spotpayload)
+    })
+    if(!res.ok){
+            const errors = await res.json()
+            // console.log(errors)
+            return errors
+            // throw new Error(errors)
+    }
+        const newSpot = await res.json()
+        dispatch(createSpot(newSpot))
+        return newSpot
+}
 
 
 const initialState = {}
@@ -43,8 +72,14 @@ const spotsReducer = (state = initialState, action) => {
         // ~()Get all spots~
         case LOAD_SPOTS:
             return { ...state, ...action.spots }
+        // ~()Get current spot~
         case LOAD_CURRENTSPOT:
             return { ...state, spot: { ...action.spot } }
+        // ~()Create a new spot~
+        case CREATE_SPOT:
+            return {
+                ...state, ...action.newSpot
+            }
         default:
             return state
     }
