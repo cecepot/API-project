@@ -104,7 +104,7 @@ const CreateSpot = () => {
 
             })
             reset()
-            
+
             if (!errors.length && !imageError.length) {
                  navigate(`/spots/${spotId}`)
             }
