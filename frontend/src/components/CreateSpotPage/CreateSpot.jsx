@@ -103,10 +103,10 @@ const CreateSpot = () => {
                 // )
 
             })
-            reset()
 
             if (!errors.length && !imageError.length) {
-                 navigate(`/spots/${spotId}`)
+                reset()
+                navigate(`/spots/${spotId}`)
             }
         }
 
