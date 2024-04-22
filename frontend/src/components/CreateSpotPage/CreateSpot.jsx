@@ -44,7 +44,7 @@ const CreateSpot = () => {
         if(!previewImage){
             const err = new Error('This field is required')
              setImageError(err.message)
-            //  console.log(imageError.message)
+             console.log(imageError)
         }
 
         imageArray.push(previewImage)
@@ -64,26 +64,28 @@ const CreateSpot = () => {
             }
         )
         // console.log({newSpot})
-        const spotId = newSpot.id
-        imageArray.forEach((image)=>{
-            // console.log(image)
-            const imagePayload = {}
-            imagePayload.url = image
-            dispatch(CreateSpotImage(imagePayload, spotId, newSpot)).catch(
-                async (res) => {
-                    console.log(res)
-                    const data = await res.json();
-                    console.log({data})
-                    if (data && data.errors) {
-                        console.log(data.errors)
-                      setErrors(data.errors);
-                    }
-                  }
-            )
-        })
+        if(newSpot){
+            const spotId = newSpot.id
+            imageArray.forEach((image)=>{
+                // console.log(image)
+                const imagePayload = {}
+                imagePayload.url = image
+                dispatch(CreateSpotImage(imagePayload, spotId, newSpot)).catch(
+                    async (res) => {
+                        console.log(res)
+                        const data = await res.json();
+                        console.log({data})
+                        if (data && data.errors) {
+                            console.log(data.errors)
+                          setErrors(data.errors);
+                        }
+                      }
+                )
+            })
 
-        if (!errors.length && !imageError.length) {
-             navigate(`/spots/${spotId}`)
+            if (!errors.length && !imageError.length) {
+                 navigate(`/spots/${spotId}`)
+            }
         }
 
 
@@ -194,7 +196,7 @@ const CreateSpot = () => {
                     </div>
                     <div>
                         <label>
-                        <p className='error'>{imageError && `${imageError.message}`}</p>
+                        <p className='error'>{imageError && `${imageError}`}</p>
                             <input type="text" placeholder='Preview Image URL'
                                 onChange={(e) => setPreviewImage(e.target.value)} />
                         </label>
