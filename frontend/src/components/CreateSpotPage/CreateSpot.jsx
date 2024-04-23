@@ -40,11 +40,11 @@ const CreateSpot = () => {
         }
         // console.log(previewImage)
         const imageArray = []
-        // if (!previewImage) {
-        //     const err = new Error('This field is required')
-        //     setImageError(err.message)
-        //     //  console.log(imageError)
-        // }
+        if (!previewImage) {
+            const err = new Error('This field is required')
+            setImageError(err.message)
+            //  console.log(imageError)
+        }
 
         previewImage && imageArray.push(previewImage)
         image1 && imageArray.push(image1)
