@@ -40,11 +40,11 @@ const CreateSpot = () => {
         }
         // console.log(previewImage)
         const imageArray = []
-        if (!previewImage) {
-            const err = new Error('This field is required')
-            setImageError(err.message)
-            //  console.log(imageError)
-        }
+        // if (!previewImage) {
+        //     const err = new Error('This field is required')
+        //     setImageError(err.message)
+        //     //  console.log(imageError)
+        // }
 
         previewImage && imageArray.push(previewImage)
         image1 && imageArray.push(image1)
@@ -116,6 +116,8 @@ const CreateSpot = () => {
                         <label>
                             Country
                             <input type="text"
+                            required
+                            value={country}
                                 // Set the country variable to the value in the input box
                                 onChange={(e) => setCountry(e.target.value)} />
                         </label>
@@ -125,6 +127,8 @@ const CreateSpot = () => {
                             <p className='error'>{errors.address && `${errors.address}`}</p>
                             Street Address
                             <input type="text"
+                            required
+                            value={address}
                                 // Set the country variable to the value in the input box
                                 onChange={(e) => setAddress(e.target.value)} />
                         </label>
@@ -134,6 +138,8 @@ const CreateSpot = () => {
                             <p className='error'>{errors.city && `${errors.city}`}</p>
                             city
                             <input type="text"
+                             required
+                             value={city}
                                 // Set the city variable to the value in the input box
                                 onChange={(e) => setCity(e.target.value)} />
                         </label>
@@ -141,6 +147,8 @@ const CreateSpot = () => {
                             <p className='error'>{errors.state && `${errors.state}`}</p>
                             State
                             <input type="text"
+                            required
+                            value={state}
                                 // Set the state variable to the value in the input box
                                 onChange={(e) => setState(e.target.value)} />
                         </label>
@@ -150,6 +158,8 @@ const CreateSpot = () => {
                             <p className='error'>{errors.lng && `${errors.lng}`}</p>
                             Longitude
                             <input type="text"
+                             required
+                             value={lng}
                                 // Set the longitude variable to the value in the input box
                                 onChange={(e) => setLng(e.target.value)} />
                         </label>
@@ -157,6 +167,8 @@ const CreateSpot = () => {
                             <p className='error'>{errors.lat && `${errors.lat}`}</p>
                             Latitude
                             <input type="text"
+                            required
+                            value={lat}
                                 // Set the latitude variable to the value in the input box
                                 onChange={(e) => setLat(e.target.value)} />
                         </label>
@@ -170,6 +182,8 @@ const CreateSpot = () => {
                         <label>
                             <p className='error'>{errors.description && `${errors.description}`}</p>
                             <textarea placeholder='Please write at least 30 characters'
+                            required
+                            value={description}
                                 // Set the description variable to the value in the input box
                                 onChange={(e) => setDescription(e.target.value)}></textarea>
                         </label>
@@ -183,6 +197,8 @@ const CreateSpot = () => {
                         <label>
                             <p className='error'>{errors.name && `${errors.name}`}</p>
                             <textarea placeholder='Name of your spot'
+                            required
+                            value={name}
                                 // Set the name variable to the value in the input box
                                 onChange={(e) => setName(e.target.value)}></textarea>
                         </label>
@@ -196,6 +212,8 @@ const CreateSpot = () => {
                         <label>
                             <p className='error'>{errors.price && `${errors.price}`}</p>
                             $<textarea placeholder='Price per night (USD)'
+                            required
+                            value={price}
                                 // Set the description variable to the value in the input box
                                 onChange={(e) => setPrice(e.target.value)}></textarea>
                         </label>
@@ -208,6 +226,8 @@ const CreateSpot = () => {
                         <label>
                             <p className='error'>{imageError && `${imageError}`}</p>
                             <input type="text" placeholder='Preview Image URL'
+                            required
+                            value={previewImage}
                                 onChange={(e) => setPreviewImage(e.target.value)} />
                         </label>
                     </div>
