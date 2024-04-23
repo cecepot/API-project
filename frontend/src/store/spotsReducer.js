@@ -10,7 +10,8 @@ const CREATE_SPOT = 'spot/createSpot'
 const MANAGE_SPOT = 'spot/manageSpot'
 // ~()Get all spots of the current user~
 const DELETE_SPOT = 'spot/deleteSpot'
-
+// ~()Get all spots of the current user~
+const UPDATED_SPOT = 'spot/updateSpot'
 
 // ~()Get all spots~
 export const loadSpots = (spots) => {
@@ -40,19 +41,22 @@ export const manageSpot = (spot) => {
         spot
     }
 }
+// ~()Delete a spot~
 export const deleteSpot = (spot) => {
     return {
         type: DELETE_SPOT,
         spot
     }
 }
-// ~()Create a new spot~
-// export const createImage = (SpotImage) => {
-//     return {
-//         type: CREATE_SPOTIMAGE,
-//         image
-//     }
-// }
+// ~()Update a spot~
+export const updatedSpot = (spot) => {
+    return {
+        type: UPDATED_SPOT,
+        spot
+    }
+}
+
+
 
 // ~()Get all spots~
 export const fetchSpots = () => async (dispatch) => {
@@ -129,7 +133,22 @@ export const deleteCurrentSpot = (spotId) => async (dispatch) => {
     const spot = await res.json()
     dispatch(deleteSpot(spot))//<== the data fetched from the backend server is what is passed into the loadspots as an argument
 }
+// ~()Update a spot~
+export const updateCurrentSpot = (Spotpayload, id) => async dispatch => {
 
+    const res = await csrfFetch(`/api/spots/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Spotpayload)
+    })
+    if (!res.ok) {
+        const errors = await res.json()
+        return errors
+    }
+    const spot = await res.json()
+    dispatch(updatedSpot(spot))
+    return spot
+}
 
 
 
@@ -155,6 +174,9 @@ const spotsReducer = (state = initialState, action) => {
         // ~()Delete your spot~
         case DELETE_SPOT:
             return { ...state }
+            // ~()Update your spot~
+        case UPDATED_SPOT:
+            return { ...state, updatedSpot: {...action.spot} }
         default:
             return state
     }

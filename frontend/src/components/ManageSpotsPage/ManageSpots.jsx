@@ -1,20 +1,25 @@
-import { useEffect } from "react"
+import { useEffect} from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { fetchUserSpots } from '../../store/spotsReducer'
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem"
 import DeleteSpotModal from "./DeleteSpotModal"
 
-
 const ManageSpots = () => {
     const dispatch = useDispatch()
     const spots = useSelector((state) => state.spotState.Spots)
-
+    const navigate = useNavigate()
 
     // console.log(spots)
     useEffect(() => {
         dispatch(fetchUserSpots())
     }, [dispatch])
+
+    const handleClick = (clickedSpot)=>{
+        navigate(`../spots/${clickedSpot.id}/edit`)
+    }
+
 
     return (
         <>
@@ -40,7 +45,12 @@ const ManageSpots = () => {
                                 </li>
                             </Link>
                             <div>
-                                <button>Update</button>
+                                <button onClick={(e)=>{
+                                    e.preventDefault()
+                                    // console.log(spot)
+                                    const clickedSpot = spot
+                                    handleClick(clickedSpot)
+                                }}>Update</button>
                                 <button>
                                     <OpenModalMenuItem
                                         itemText='Delete'
