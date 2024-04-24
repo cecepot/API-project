@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import './SpotDetails.css'
 import { useEffect } from 'react'
 import { fetchCurrentSpot } from '../../store/spotsReducer'
+import ReviewsList from "../CreateSpotPage/ReviewsList/ReviewsList"
 
 
 const SpotDetails = () => {
@@ -40,6 +41,9 @@ const SpotDetails = () => {
                         <button className='reserve-button'>Reserve</button>
                     </div>
                 </div>
+            </div>
+            <div>
+            <ReviewsList avgStarRating={currentSpot.avgStarRating} ownerId={currentSpot.ownerId}/>
             </div>
         </>
     )
