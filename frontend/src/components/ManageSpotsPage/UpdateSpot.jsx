@@ -52,6 +52,7 @@ export const UpdateSpot = () => {
         const updatedSpot = await dispatch(updateCurrentSpot(Spotpayload, spotId)).catch(
             async (res) => {
                 const data = await res.json();
+                // console.log(data)
                 if (data && data.errors) {
                     setErrors(data.errors);
                     // console.log(errors)
