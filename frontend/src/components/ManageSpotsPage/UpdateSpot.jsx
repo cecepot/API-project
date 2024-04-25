@@ -1,36 +1,28 @@
-import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
-import { fetchCurrentSpot, updateCurrentSpot } from '../../store/spotsReducer'
+import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useNavigate, useLocation} from 'react-router-dom'
+import { updateCurrentSpot } from '../../store/spotsReducer'
 
 
 export const UpdateSpot = () => {
-    const {spotId} = useParams()
     // console.log({spotId})
     const dispatch = useDispatch()
     const navigate = useNavigate()
-
-    useEffect(()=>{
-        const getCurrentSpot = () =>{
-            const currentSpot =  dispatch(fetchCurrentSpot(spotId))
-            // console.log(currentSpot)
-            return currentSpot
-        }
-        getCurrentSpot()
-    }, [dispatch, spotId])
-    const currentSpot = useSelector(state => state.spotState.spot)
+    const location = useLocation()
+    const data = location.state
+    const spotId = data.id
+    console.log(data)
     // console.log(currentSpot)
 
-
-    const [address, setAddress] = useState('')
-    const [city, setCity] = useState('')
-    const [state, setState] = useState('')
-    const [country, setCountry] = useState('')
-    const [lat, setLat] = useState('')
-    const [lng, setLng] = useState('')
-    const [name, setName] = useState('')
-    const [description, setDescription] = useState('')
-    const [price, setPrice] = useState('')
+    const [address, setAddress] = useState(data.address)
+    const [city, setCity] = useState(data.city)
+    const [state, setState] = useState(data.state)
+    const [country, setCountry] = useState(data.country)
+    const [lat, setLat] = useState(data.lat)
+    const [lng, setLng] = useState(data.lng)
+    const [name, setName] = useState(data.name)
+    const [description, setDescription] = useState(data.description)
+    const [price, setPrice] = useState(data.price)
     const [errors, setErrors] = useState({});
 
 
@@ -50,7 +42,7 @@ export const UpdateSpot = () => {
         }
         // reset()
 
-
+        console.log(price)
         const Spotpayload = {}
         if (address) Spotpayload.address = address
         if (city) Spotpayload.city = city
@@ -60,7 +52,7 @@ export const UpdateSpot = () => {
         if (lng) Spotpayload.lng = lng
         if (name) Spotpayload.name = name
         if (description) Spotpayload.description = description
-        if (price){Spotpayload.price = price}
+        if (price){Spotpayload.price =price}
         // console.log(previewImage)
 
 
@@ -74,7 +66,7 @@ export const UpdateSpot = () => {
                 }
             }
         )
-        console.log(updatedSpot)
+        // console.log(updatedSpot)
 
         if (!errors.length) {
             reset()
@@ -101,8 +93,8 @@ export const UpdateSpot = () => {
                             Country
                             <input type="text"
                             required
-                            placeholder={currentSpot && currentSpot.country}
-
+                            value={country}
+                            placeholder='country'
                                 // Set the country variable to the value in the input box
                                 onChange={(e) => setCountry(e.target.value)} />
                         </label>
@@ -113,7 +105,8 @@ export const UpdateSpot = () => {
                             Street Address
                             <input type="text"
                             required
-                            placeholder={currentSpot && currentSpot.address}
+                            value={address}
+                            placeholder='address'
                                 // Set the country variable to the value in the input box
                                 onChange={(e) => setAddress(e.target.value)} />
                         </label>
@@ -124,7 +117,8 @@ export const UpdateSpot = () => {
                             city
                             <input type="text"
                             required
-                            placeholder={currentSpot && currentSpot.city}
+                            value={city}
+                            placeholder='city'
                                 // Set the city variable to the value in the input box
                                 onChange={(e) => setCity(e.target.value)} />
                         </label>
@@ -133,7 +127,8 @@ export const UpdateSpot = () => {
                             State
                             <input type="text"
                             required
-                            placeholder={currentSpot && currentSpot.state}
+                            value={state}
+                            placeholder='state'
                                 // Set the state variable to the value in the input box
                                 onChange={(e) => setState(e.target.value)} />
                         </label>
@@ -144,7 +139,8 @@ export const UpdateSpot = () => {
                             Longitude
                             <input type="text"
                             required
-                            placeholder={currentSpot && currentSpot.lng}
+                            value={lng}
+                            placeholder='longitude'
                                 // Set the longitude variable to the value in the input box
                                 onChange={(e) => setLng(e.target.value)} />
                         </label>
@@ -153,7 +149,8 @@ export const UpdateSpot = () => {
                             Latitude
                             <input type="text"
                             required
-                            placeholder={currentSpot && currentSpot.lat}
+                            value={lat}
+                            placeholder='latitude'
                                 // Set the latitude variable to the value in the input box
                                 onChange={(e) => setLat(e.target.value)} />
                         </label>
@@ -168,7 +165,8 @@ export const UpdateSpot = () => {
                             <p className='error'>{errors.description && `${errors.description}`}</p>
                             <textarea
                             required
-                            placeholder={currentSpot && currentSpot.description}
+                            value={description}
+                            placeholder='description'
                                 // Set the description variable to the value in the input box
                                 onChange={(e) => setDescription(e.target.value)}></textarea>
                         </label>
@@ -183,7 +181,8 @@ export const UpdateSpot = () => {
                             <p className='error'>{errors.name && `${errors.name}`}</p>
                             <textarea
                             required
-                            placeholder={currentSpot && currentSpot.name}
+                            value={name}
+                            placeholder='name of your spot'
                                 // Set the name variable to the value in the input box
                                 onChange={(e) => setName(e.target.value)}></textarea>
                         </label>
@@ -196,13 +195,17 @@ export const UpdateSpot = () => {
                     <div>
                         <label>
                             <p className='error'>{errors.price && `${errors.price}`}</p>
-                            $<textarea
+                            $<input
+                            type = 'number'
+                            step="0.01"
+                            min = '1.00'
                             required
-                            placeholder={currentSpot && currentSpot.price}
+                            value={price}
+                            placeholder='price per night (USD)'
                                 // Set the description variable to the value in the input box
                                 onChange={(e) => {
                                     setPrice(e.target.value)
-                                    } }></textarea>
+                                    } }></input>
                         </label>
                     </div>
                     <div>
