@@ -4,7 +4,7 @@ import './SpotDetails.css'
 import { useEffect } from 'react'
 import { fetchCurrentSpot } from '../../store/spotsReducer'
 import ReviewsList from "../ReviewsList/ReviewsList"
-
+import StarRating from '../StarRating'
 
 const SpotDetails = () => {
     const { spotId } = useParams()
@@ -35,10 +35,10 @@ const SpotDetails = () => {
                 <div className='reserve-card'>
                     <div className='card-upper'>
                         <p>${currentSpot && currentSpot.price} night</p>
-                        <p>{currentSpot && currentSpot.avgStarRating} {currentSpot && currentSpot.numReviews} reviews</p>
+                        <p className='adjacent'>{currentSpot ? <StarRating rating={currentSpot.avgStarRating}/> : <StarRating rating={false}/> } {currentSpot && (currentSpot.numReviews > 1 ? <span className='fit'>{currentSpot.numReviews} reviews</span> : <span className='fit'>{currentSpot.numReviews} review</span>)}</p>
                     </div>
                     <div className='button-div'>
-                        <button className='reserve-button'>Reserve</button>
+                        <button onClick={e=>{e.preventDefault; alert('Feature coming soon')}} className='reserve-button'>Reserve</button>
                     </div>
                 </div>
             </div>

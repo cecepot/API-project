@@ -2,9 +2,13 @@ import { useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { useEffect } from 'react'
 import { fetchReviews } from '../../store/reviewsReducer'
+import StarRating from '../StarRating'
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem"
 import CreateReviewModal from './CreateReviewModal'
 import DeleteReviewModal from './DeleteReviewModal'
+
+
+
 
 const ReviewsList = ({spot}) => {
     const { spotId } = useParams()
@@ -31,7 +35,7 @@ const ReviewsList = ({spot}) => {
 
     return (
         <>
-            <h1>reviews</h1>
+            <h1 className='adjacent'>reviews <span><StarRating rating={spot.avgStarRating}/></span>.{spot.numReviews > 1 ? <span className='fit'>{spot.numReviews} reviews</span> : <span className='fit'>{spot.numReviews} review</span>}</h1>
             {showButton &&
                 <button>
                     <OpenModalMenuItem

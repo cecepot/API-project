@@ -18,12 +18,13 @@ img{
 
 .reserve-card{
     border: 1px solid black;
-    width: 20%;
+    width: 30%;
 }
 
 .card-upper{
     display: flex;
-    justify-content: space-between;
+    width: 100%;
+    /* justify-content: space-between; */
 }
 
 .reserve-button{
@@ -36,4 +37,8 @@ img{
     width: 100%;
     display: flex;
     justify-content: center;
+}
+
+.fit{
+    width: 50%;
 }
