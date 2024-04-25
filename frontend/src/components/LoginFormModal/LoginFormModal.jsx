@@ -29,6 +29,9 @@ useEffect(()=>{
         const data = await res.json();
         if (data && data.errors) {
           setErrors(data.errors);
+          setCredential('')
+          setPassword('')
+          setDisabled(true)
         }
       });
   };
@@ -71,13 +74,13 @@ useEffect(()=>{
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          {errors.credential && <p>{errors.credential}</p>}
+          {errors.credential && <p className='error'>{errors.credential}</p>}
         </div>
         <div>
           <button type="submit" disabled={disabled}>Log In</button>
         </div>
         <div>
-          <button onClick={handleClick}>Demo User</button>
+          <button onClick={handleClick}>Log in as Demo User</button>
         </div>
       </form>
     </>

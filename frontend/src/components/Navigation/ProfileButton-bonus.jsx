@@ -4,8 +4,10 @@ import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
-import {useNavigate} from 'react-router-dom' //<== so that logging out sends the user to the home page
+import { useNavigate } from 'react-router-dom' //<== so that logging out sends the user to the home page
 import { NavLink } from 'react-router-dom';
+import { IoIosMenu } from "react-icons/io";
+
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
@@ -44,15 +46,18 @@ function ProfileButton({ user }) {
 
   return (
     <>
-      {user && <NavLink to='/spots' >Create a new spot</NavLink>} {/*link to creating a spot*/}
-      <button onClick={toggleMenu}>
+    <div className='adjacent'>
+      {user &&  <NavLink className='Link' to='/spots' >Create a new spot</NavLink>} {/*link to creating a spot*/}
+      <button className='adjacent profile-button' onClick={toggleMenu}>
+        <IoIosMenu />
         <i className="fas fa-user-circle" />
       </button>
+    </div>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
           <>
             <li>{user.username}</li>
-            <li>Hello {user.firstName} {user.lastName}</li>  {/* ADD A GREETING WHEN THE USER IS LOGGED IN */}
+            <li>Hello, {user.firstName}</li>  {/* ADD A GREETING WHEN THE USER IS LOGGED IN */}
             <li>{user.email}</li>
             <NavLink to='/spots/current'>manage spots</NavLink>
             <li>
