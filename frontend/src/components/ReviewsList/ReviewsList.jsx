@@ -24,12 +24,12 @@ const ReviewsList = ({spot}) => {
     if(user && user.id == spot.ownerId){
         showButton = false
     }
-
+    const userId = user && user.id
 
     const reviews = useSelector((state) => state.reviewState.reviews.Reviews)
     // console.log(reviews)
     const sortedReviews = reviews && reviews.sort((a, b)=>b.id - a.id)
-    console.log(sortedReviews)
+    // console.log(sortedReviews)
 
     useEffect(() => {
         dispatch(fetchReviews(spotId))
@@ -52,10 +52,10 @@ const ReviewsList = ({spot}) => {
                 reviews && sortedReviews.map((review) => {
                     return (<div key={review.id}>
                         <p>{review && review.User.firstName}</p>
-                        <p>{review && (review.createdAt).split(' ')[0]}</p>
+                        <p>{review && new Date((review.createdAt).split(' ')[0]).toLocaleDateString('en-us',{month:'long', year:'numeric'})}</p>
                         <p>{review && review.review}</p>
                         {
-                            user.id == review.userId &&
+                            userId == review.userId &&
                             <button >
                                 <OpenModalMenuItem
                                 itemText='Delete'

@@ -14,6 +14,7 @@
   list-style-type: none;
   align-items: center;
   height: 4em;
+  width: 100%;
 }
 
 .no-dot{
@@ -31,5 +32,3 @@
   height: 3em;
   border-radius: 3em;
 }
-
-
