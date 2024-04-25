@@ -28,6 +28,9 @@ const ReviewsList = ({spot}) => {
 
     const reviews = useSelector((state) => state.reviewState.reviews.Reviews)
     // console.log(reviews)
+    const sortedReviews = reviews && reviews.sort((a, b)=>b.id - a.id)
+    console.log(sortedReviews)
+
     useEffect(() => {
         dispatch(fetchReviews(spotId))
     }, [dispatch, spotId])
@@ -35,7 +38,7 @@ const ReviewsList = ({spot}) => {
 
     return (
         <>
-            <h1 className='adjacent'>reviews <span><StarRating rating={spot.avgStarRating}/></span>.{spot.numReviews > 1 ? <span className='fit'>{spot.numReviews} reviews</span> : <span className='fit'>{spot.numReviews} review</span>}</h1>
+            <h1 className='adjacent'>reviews <span><StarRating rating={spot.avgStarRating}/></span>.{spot.numReviews > 1 || spot.numReviews === 0 ? <span className='fit'>{spot.numReviews} reviews</span> : <span className='fit'>{spot.numReviews} review</span>}</h1>
             {showButton &&
                 <button>
                     <OpenModalMenuItem
@@ -46,7 +49,7 @@ const ReviewsList = ({spot}) => {
             }
             {(reviews && reviews.length === 0) && <p>Be the first to post a review!</p>}
             {
-                reviews && reviews.map((review) => {
+                reviews && sortedReviews.map((review) => {
                     return (<div key={review.id}>
                         <p>{review && review.User.firstName}</p>
                         <p>{review && (review.createdAt).split(' ')[0]}</p>
