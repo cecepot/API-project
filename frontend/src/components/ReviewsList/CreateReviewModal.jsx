@@ -2,6 +2,7 @@ import { useDispatch} from "react-redux"
 import { useModal } from "../../context/Modal"
 import { useState } from "react";
 import { createNewReview, fetchReviews } from "../../store/reviewsReducer";
+import { fetchCurrentSpot } from "../../store/spotsReducer";
 
 const CreateReviewModal = ({id}) => {
     const [reviewText, setReviewText] = useState('')
@@ -37,6 +38,7 @@ const CreateReviewModal = ({id}) => {
         // console.log(errors)
         if(newReview){
             dispatch(fetchReviews(id))
+            dispatch(fetchCurrentSpot(id))
            return closeModal()
         }
     }

@@ -17,8 +17,8 @@ const ManageSpots = () => {
         dispatch(fetchUserSpots())
     }, [dispatch])
 
-    const handleClick = (clickedSpot)=>{
-        navigate(`../spots/${clickedSpot.id}/edit`)
+    const handleClick = (spot)=>{
+        navigate(`../spots/${spot.id}/edit`, {state: spot})
     }
 
 
@@ -49,8 +49,8 @@ const ManageSpots = () => {
                                 <button onClick={(e)=>{
                                     e.preventDefault()
                                     // console.log(spot)
-                                    const clickedSpot = spot
-                                    handleClick(clickedSpot)
+                                    // const clickedSpot = spot
+                                    handleClick(spot)
                                 }}>Update</button>
                                 <button>
                                     <OpenModalMenuItem

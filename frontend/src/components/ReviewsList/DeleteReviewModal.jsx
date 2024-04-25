@@ -14,8 +14,8 @@ const DeleteReviewModal = ({id, spotId}) => {
         e.preventDefault()
 
         await dispatch(deleteCurrentReview(reviewId))
-        dispatch(fetchCurrentSpot(spotId))
         dispatch(fetchReviews(spotId))
+        dispatch(fetchCurrentSpot(spotId))
         closeModal()
     }
 
