@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom"
 import { fetchUserSpots } from '../../store/spotsReducer'
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem"
 import DeleteSpotModal from "./DeleteSpotModal"
+import { FaStar } from "react-icons/fa";
 
 const ManageSpots = () => {
     const dispatch = useDispatch()
@@ -38,9 +39,9 @@ const ManageSpots = () => {
                                     <div className="details">
                                         <div className="upper-details">
                                             <p>{spot.city}, {spot.state}</p>
-                                            <p>{spot.avgRating ? spot.avgRating : 'New'}</p>
+                                            <p>{spot.avgRating ? <span><FaStar />{spot.avgRating}</span>  : 'New'}</p>
                                         </div>
-                                        <p>{spot.price} night</p>
+                                        <p><span className="bold">{spot.price}</span> night</p>
                                     </div>
                                 </li>
                             </Link>

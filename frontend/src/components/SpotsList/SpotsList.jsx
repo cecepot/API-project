@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import { fetchSpots } from '../../store/spotsReducer'
+import StarRating from "../StarRating"
 // import SpotDetails from "../SpotDetails"
 import './SpotList.css'
 
@@ -30,7 +31,7 @@ const SpotsList = () => {
                             <div className="details">
                                 <div className="upper-details">
                                     <p>{spot.city}, {spot.state}</p>
-                                    <p>{spot.avgRating ? spot.avgRating : 'New'}</p>
+                                    <p>{spot.avgRating ? <StarRating rating={spot.avgRating}/> : <StarRating rating={false}/> }</p>
                                 </div>
                                 <p>{spot.price} night</p>
                             </div>
