@@ -21,6 +21,8 @@ function SignupFormModal() {
  useEffect(()=>{
   if(email.length > 0 && username.length >= 4 && firstName.length > 0 && lastName.length > 0 && password.length >= 6 && confirmPassword.length > 0){
     setDisabled(false)
+  }else{
+    setDisabled(true)
   }
 },[email, username, firstName, lastName, password, confirmPassword, disabled])
 
