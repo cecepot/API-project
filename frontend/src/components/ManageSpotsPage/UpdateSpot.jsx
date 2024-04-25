@@ -10,14 +10,14 @@ export const UpdateSpot = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const getCurrentSpot = () =>{
-        const currentSpot =  dispatch(fetchCurrentSpot(spotId))
-        // console.log(currentSpot)
-        return currentSpot
-    }
     useEffect(()=>{
+        const getCurrentSpot = () =>{
+            const currentSpot =  dispatch(fetchCurrentSpot(spotId))
+            // console.log(currentSpot)
+            return currentSpot
+        }
         getCurrentSpot()
-    }, [spotId])
+    }, [dispatch, spotId])
     const currentSpot = useSelector(state => state.spotState.spot)
     // console.log(currentSpot)
 
@@ -196,7 +196,7 @@ export const UpdateSpot = () => {
                     <div>
                         <label>
                             <p className='error'>{errors.price && `${errors.price}`}</p>
-                            $<textarea 
+                            $<textarea
                             required
                             placeholder={currentSpot && currentSpot.price}
                                 // Set the description variable to the value in the input box
