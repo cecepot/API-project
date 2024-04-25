@@ -13,3 +13,7 @@
   justify-content: space-between;
   list-style-type: none
 }
+
+.no-dot{
+  list-style: none;
+}

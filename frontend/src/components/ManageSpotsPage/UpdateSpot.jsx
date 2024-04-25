@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
-import { updateCurrentSpot } from '../../store/spotsReducer'
+import { fetchCurrentSpot, updateCurrentSpot } from '../../store/spotsReducer'
 
 
 export const UpdateSpot = () => {
@@ -9,6 +9,19 @@ export const UpdateSpot = () => {
     // console.log({spotId})
     const dispatch = useDispatch()
     const navigate = useNavigate()
+
+    const getCurrentSpot = () =>{
+        const currentSpot =  dispatch(fetchCurrentSpot(spotId))
+        // console.log(currentSpot)
+        return currentSpot
+    }
+    useEffect(()=>{
+        getCurrentSpot()
+    }, [spotId])
+    const currentSpot = useSelector(state => state.spotState.spot)
+    // console.log(currentSpot)
+
+
     const [address, setAddress] = useState('')
     const [city, setCity] = useState('')
     const [state, setState] = useState('')
@@ -19,6 +32,8 @@ export const UpdateSpot = () => {
     const [description, setDescription] = useState('')
     const [price, setPrice] = useState('')
     const [errors, setErrors] = useState({});
+
+
     const handlesubmit = async (e) => {
         e.preventDefault()
 
@@ -71,6 +86,8 @@ export const UpdateSpot = () => {
 
 
 
+
+
     return (
         <>
             <div className="form-container">
@@ -84,7 +101,8 @@ export const UpdateSpot = () => {
                             Country
                             <input type="text"
                             required
-                            value={country}
+                            placeholder={currentSpot && currentSpot.country}
+
                                 // Set the country variable to the value in the input box
                                 onChange={(e) => setCountry(e.target.value)} />
                         </label>
@@ -95,7 +113,7 @@ export const UpdateSpot = () => {
                             Street Address
                             <input type="text"
                             required
-                            value={address}
+                            placeholder={currentSpot && currentSpot.address}
                                 // Set the country variable to the value in the input box
                                 onChange={(e) => setAddress(e.target.value)} />
                         </label>
@@ -106,7 +124,7 @@ export const UpdateSpot = () => {
                             city
                             <input type="text"
                             required
-                            value={city}
+                            placeholder={currentSpot && currentSpot.city}
                                 // Set the city variable to the value in the input box
                                 onChange={(e) => setCity(e.target.value)} />
                         </label>
@@ -115,7 +133,7 @@ export const UpdateSpot = () => {
                             State
                             <input type="text"
                             required
-                            value={state}
+                            placeholder={currentSpot && currentSpot.state}
                                 // Set the state variable to the value in the input box
                                 onChange={(e) => setState(e.target.value)} />
                         </label>
@@ -126,7 +144,7 @@ export const UpdateSpot = () => {
                             Longitude
                             <input type="text"
                             required
-                            value={lng}
+                            placeholder={currentSpot && currentSpot.lng}
                                 // Set the longitude variable to the value in the input box
                                 onChange={(e) => setLng(e.target.value)} />
                         </label>
@@ -135,7 +153,7 @@ export const UpdateSpot = () => {
                             Latitude
                             <input type="text"
                             required
-                            value={lat}
+                            placeholder={currentSpot && currentSpot.lat}
                                 // Set the latitude variable to the value in the input box
                                 onChange={(e) => setLat(e.target.value)} />
                         </label>
@@ -148,9 +166,9 @@ export const UpdateSpot = () => {
                     <div>
                         <label>
                             <p className='error'>{errors.description && `${errors.description}`}</p>
-                            <textarea placeholder='Please write at least 30 characters'
+                            <textarea
                             required
-                            value={description}
+                            placeholder={currentSpot && currentSpot.description}
                                 // Set the description variable to the value in the input box
                                 onChange={(e) => setDescription(e.target.value)}></textarea>
                         </label>
@@ -163,9 +181,9 @@ export const UpdateSpot = () => {
                     <div>
                         <label>
                             <p className='error'>{errors.name && `${errors.name}`}</p>
-                            <textarea placeholder='Name of your spot'
+                            <textarea
                             required
-                            value={name}
+                            placeholder={currentSpot && currentSpot.name}
                                 // Set the name variable to the value in the input box
                                 onChange={(e) => setName(e.target.value)}></textarea>
                         </label>
@@ -178,9 +196,9 @@ export const UpdateSpot = () => {
                     <div>
                         <label>
                             <p className='error'>{errors.price && `${errors.price}`}</p>
-                            $<textarea placeholder='Price per night (USD)'
+                            $<textarea 
                             required
-                            value={price}
+                            placeholder={currentSpot && currentSpot.price}
                                 // Set the description variable to the value in the input box
                                 onChange={(e) => {
                                     setPrice(e.target.value)
