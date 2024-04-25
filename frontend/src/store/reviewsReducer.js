@@ -6,6 +6,10 @@ import { csrfFetch } from "./csrf"
 const LOAD_REVIEWS = 'spots/loadReviews'
 // ~()Create a review  for a spot~
 const CREATE_REVIEW = 'spots/createReview'
+// ~()Get all spots of the current user~
+const DELETE_REVIEW = 'spot/deleteReview'
+
+
 
 // ~()Get all spots~
 export const loadReviews = (reviews) => {
@@ -21,6 +25,15 @@ export const createReview = (newReview) => {
         newReview
     }
 }
+// ~()Delete a review~
+export const deleteReview= (review) => {
+    return {
+        type: DELETE_REVIEW,
+        review
+    }
+}
+
+
 
 // ~()Get all reviews for a spot~
 export const fetchReviews = (spotId) => async (dispatch) => {
@@ -32,7 +45,7 @@ export const fetchReviews = (spotId) => async (dispatch) => {
     }
     return res
 }
-// ~()Get all reviews for a spot~
+// ~()Create a review for a spot~
 export const createNewReview = (reviewsPayload, id) => async (dispatch) => {
     const res = await csrfFetch(`/api/spots/${id}/reviews`, {
         method: 'POST',
@@ -50,6 +63,17 @@ export const createNewReview = (reviewsPayload, id) => async (dispatch) => {
         dispatch(createNewReview(newReview))
     return res
 }
+// ~()Delete a review~
+export const deleteCurrentReview = (reviewId) => async (dispatch) => {
+    const res = await csrfFetch(`/api/reviews/${reviewId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+    })
+    const review = await res.json()
+    dispatch(deleteReview(review))//<== the data fetched from the backend server is what is passed into the loadspots as an argument
+}
+
+
 
 
 
@@ -62,6 +86,9 @@ const reviewsReducer = (state = initialState, action) =>{
         // ~()Get all reviews for a spot~
         case CREATE_REVIEW:
             return { ...state, ...action.newReview }
+        // ~()Delete review for a spot~
+        case DELETE_REVIEW:
+            return { ...state }
     default:
             return state
     }
