@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { fetchReviews } from '../../store/reviewsReducer'
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem"
 import CreateReviewModal from './CreateReviewModal'
+import DeleteReviewModal from './DeleteReviewModal'
 
 const ReviewsList = ({spot}) => {
     const { spotId } = useParams()
@@ -19,6 +20,7 @@ const ReviewsList = ({spot}) => {
     if(user && user.id == spot.ownerId){
         showButton = false
     }
+
 
     const reviews = useSelector((state) => state.reviewState.reviews.Reviews)
     // console.log(reviews)
@@ -45,6 +47,15 @@ const ReviewsList = ({spot}) => {
                         <p>{review && review.User.firstName}</p>
                         <p>{review && (review.createdAt).split(' ')[0]}</p>
                         <p>{review && review.review}</p>
+                        {
+                            user.id == review.userId &&
+                            <button>
+                                <OpenModalMenuItem
+                                itemText='Delete'
+                                modalComponent={<DeleteReviewModal id ={review.id} spotId ={review.spotId}/>}
+                                />
+                            </button>
+                        }
                     </div>
                     )
                 })
