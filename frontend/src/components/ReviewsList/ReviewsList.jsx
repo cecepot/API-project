@@ -49,7 +49,7 @@ const ReviewsList = ({spot}) => {
                         <p>{review && review.review}</p>
                         {
                             user.id == review.userId &&
-                            <button>
+                            <button >
                                 <OpenModalMenuItem
                                 itemText='Delete'
                                 modalComponent={<DeleteReviewModal id ={review.id} spotId ={review.spotId}/>}

@@ -29,10 +29,10 @@ const DeleteReviewModal = ({id, spotId}) => {
             <h1>Confirm Delete</h1>
             <p>Are you sure you want to delete this review?</p>
             <div>
-            <button onClick={handleClick}>Yes</button>
+            <button className='delete' onClick={handleClick}>Yes(Delete Review)</button>
             </div>
             <div>
-            <button onClick={close}>No</button>
+            <button className="keep" onClick={close}>No(Keep Review)</button>
             </div>
         </div>
     )

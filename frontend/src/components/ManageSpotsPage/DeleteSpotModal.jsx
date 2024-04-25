@@ -2,6 +2,8 @@ import { useDispatch} from "react-redux"
 import { deleteCurrentSpot } from "../../store/spotsReducer"
 import { fetchUserSpots } from '../../store/spotsReducer'
 import { useModal } from "../../context/Modal"
+import './ManageSpots.css'
+
 const DeleteSpotModal = ({currentSpot}) => {
     const { closeModal } = useModal();
     // console.log(closeModal)
@@ -30,10 +32,10 @@ const DeleteSpotModal = ({currentSpot}) => {
                 from the listings?
             </p>
             <div>
-            <button onClick={handleClick}>Yes</button>
+            <button className="delete" onClick={handleClick}>Yes (Delete Spot)</button>
             </div>
             <div>
-            <button onClick={close}>No</button>
+            <button className='keep' onClick={close}>No (Keep Spot)</button>
             </div>
         </div>
     )
