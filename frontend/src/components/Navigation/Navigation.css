@@ -17,3 +17,9 @@
 .no-dot{
   list-style: none;
 }
+
+.logo {
+  height: 8em;
+  width: 8em;
+
+}

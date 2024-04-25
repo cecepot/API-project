@@ -4,6 +4,9 @@ import { useNavigate, useLocation} from 'react-router-dom'
 import { updateCurrentSpot } from '../../store/spotsReducer'
 
 
+
+
+
 export const UpdateSpot = () => {
     // console.log({spotId})
     const dispatch = useDispatch()
@@ -24,11 +27,23 @@ export const UpdateSpot = () => {
     const [description, setDescription] = useState(data.description)
     const [price, setPrice] = useState(data.price)
     const [errors, setErrors] = useState({});
+    // const[bool, setBool]= useState(false)
+    // const [descriptionErr, setDescriptionErr] = useState('')
 
+    // const handleDescription = (e)=>{
+    //     setDescription(e.target.value)
+    //     if(e.target.value.length < 30){
+    //         setDescriptionErr('description needs a minimum of thirty characters')
+    //         setBool(true)
+    //     }else{
+    //         setDescriptionErr('')
+    //         setBool(false)
+    //     }
+    // }
 
     const handlesubmit = async (e) => {
         e.preventDefault()
-
+        setErrors({})
         const reset = () => {
             setAddress('')
             setCity('')
@@ -61,14 +76,14 @@ export const UpdateSpot = () => {
                 const data = await res.json();
                 // console.log(data)
                 if (data && data.errors) {
-                    setErrors(data.errors);
+                    setErrors(data.errors)
                     // console.log(errors)
                 }
             }
         )
         // console.log(updatedSpot)
 
-        if (!errors.length) {
+        if (updatedSpot) {
             reset()
             navigate(`/spots/${updatedSpot.id}`)
         }
@@ -137,8 +152,11 @@ export const UpdateSpot = () => {
                         <label>
                             <p className='error'>{errors.lng && `${errors.lng}`}</p>
                             Longitude
-                            <input type="text"
+                            <input type="number"
                             required
+                            min = '-180'
+                            max = '180'
+                            step = '0.000001'
                             value={lng}
                             placeholder='longitude'
                                 // Set the longitude variable to the value in the input box
@@ -147,8 +165,11 @@ export const UpdateSpot = () => {
                         <label>
                             <p className='error'>{errors.lat && `${errors.lat}`}</p>
                             Latitude
-                            <input type="text"
+                            <input type="number"
                             required
+                            min = '-90'
+                            max = '90'
+                            step = '0.000001'
                             value={lat}
                             placeholder='latitude'
                                 // Set the latitude variable to the value in the input box
@@ -166,7 +187,7 @@ export const UpdateSpot = () => {
                             <textarea
                             required
                             value={description}
-                            placeholder='description'
+                            placeholder='description needs a minimum of thirty characters'
                                 // Set the description variable to the value in the input box
                                 onChange={(e) => setDescription(e.target.value)}></textarea>
                         </label>
@@ -209,7 +230,7 @@ export const UpdateSpot = () => {
                         </label>
                     </div>
                     <div>
-                        <button type='submit'>Update Spot</button>
+                        <button type='submit' >Update Spot</button>
                     </div>
                 </form>
             </div>
