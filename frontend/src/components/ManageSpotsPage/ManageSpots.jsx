@@ -1,6 +1,6 @@
 import { useEffect} from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { Link } from "react-router-dom"
+import { Link, NavLink } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 import { fetchUserSpots } from '../../store/spotsReducer'
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem"
@@ -21,6 +21,15 @@ const ManageSpots = () => {
         navigate(`../spots/${spot.id}/edit`, {state: spot})
     }
 
+    if(spots){
+        if(spots.length === 0){
+            return(
+                <>
+    <NavLink className='Link' to='/spots' >Create a new spot</NavLink>
+                </>
+            )
+        }
+    }
 
     return (
         <>

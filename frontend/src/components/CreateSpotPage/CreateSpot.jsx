@@ -121,7 +121,6 @@ const CreateSpot = () => {
     return (
         <>
             <div className="form-container">
-                <p>Create a spot!</p>
                 <h1>Create a new spot</h1>
                 <p>Where&apos;s your place located?</p>
                 <p>Guests will only get your exact address once they&apos;ve booked a reservation</p>
