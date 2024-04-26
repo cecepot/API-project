@@ -107,7 +107,7 @@ export const UpdateSpot = () => {
                         <label>
                             Country
                             <input type="text"
-                            required
+                            // required
                             value={country}
                             placeholder='country'
                                 // Set the country variable to the value in the input box
@@ -119,7 +119,7 @@ export const UpdateSpot = () => {
                             <p className='error'>{errors.address && `${errors.address}`}</p>
                             Street Address
                             <input type="text"
-                            required
+                            // required
                             value={address}
                             placeholder='address'
                                 // Set the country variable to the value in the input box
@@ -131,7 +131,7 @@ export const UpdateSpot = () => {
                             <p className='error'>{errors.city && `${errors.city}`}</p>
                             city
                             <input type="text"
-                            required
+                            // required
                             value={city}
                             placeholder='city'
                                 // Set the city variable to the value in the input box
@@ -141,7 +141,7 @@ export const UpdateSpot = () => {
                             <p className='error'>{errors.state && `${errors.state}`}</p>
                             State
                             <input type="text"
-                            required
+                            // required
                             value={state}
                             placeholder='state'
                                 // Set the state variable to the value in the input box
@@ -152,11 +152,11 @@ export const UpdateSpot = () => {
                         <label>
                             <p className='error'>{errors.lng && `${errors.lng}`}</p>
                             Longitude
-                            <input type="number"
-                            required
-                            min = '-180'
-                            max = '180'
-                            step = '0.000001'
+                            <input type="text"
+                            // required
+                            // min = '-180'
+                            // max = '180'
+                            // step = '0.000001'
                             value={lng}
                             placeholder='longitude'
                                 // Set the longitude variable to the value in the input box
@@ -165,17 +165,18 @@ export const UpdateSpot = () => {
                         <label>
                             <p className='error'>{errors.lat && `${errors.lat}`}</p>
                             Latitude
-                            <input type="number"
-                            required
-                            min = '-90'
-                            max = '90'
-                            step = '0.000001'
+                            <input type="text"
+                            // required
+                            // min = '-90'
+                            // max = '90'
+                            // step = '0.000001'
                             value={lat}
                             placeholder='latitude'
                                 // Set the latitude variable to the value in the input box
                                 onChange={(e) => setLat(e.target.value)} />
                         </label>
                     </div>
+                    <hr />
                     <div>
                         <p>Describe your place to guests</p>
                         <p>Mention the best features of your space, any special amentities like
@@ -185,7 +186,7 @@ export const UpdateSpot = () => {
                         <label>
                             <p className='error'>{errors.description && `${errors.description}`}</p>
                             <textarea
-                            required
+                            // required
                             value={description}
                             placeholder='description needs a minimum of thirty characters'
                                 // Set the description variable to the value in the input box
@@ -201,13 +202,14 @@ export const UpdateSpot = () => {
                         <label>
                             <p className='error'>{errors.name && `${errors.name}`}</p>
                             <textarea
-                            required
+                            // required
                             value={name}
                             placeholder='name of your spot'
                                 // Set the name variable to the value in the input box
                                 onChange={(e) => setName(e.target.value)}></textarea>
                         </label>
                     </div>
+                    <hr />
                     <div>
                         <p>Set a base price for your spot</p>
                         <p>Competitive pricing can help your listing stand out and rank higher
@@ -217,10 +219,10 @@ export const UpdateSpot = () => {
                         <label>
                             <p className='error'>{errors.price && `${errors.price}`}</p>
                             $<input
-                            type = 'number'
-                            step="0.01"
-                            min = '1.00'
-                            required
+                            type = 'text'
+                            // step="0.01"
+                            // min = '1.00'
+                            // required
                             value={price}
                             placeholder='price per night (USD)'
                                 // Set the description variable to the value in the input box
