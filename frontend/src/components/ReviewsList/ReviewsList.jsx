@@ -15,7 +15,6 @@ const ReviewsList = ({spot}) => {
     // console.log(spotId)
     const dispatch = useDispatch()
     // console.log(spotId)
-
     const user = useSelector((state) => state.session.user)
     let showButton = true
     if(!user){
@@ -28,6 +27,11 @@ const ReviewsList = ({spot}) => {
 
     const reviews = useSelector((state) => state.reviewState.reviews.Reviews)
     // console.log(reviews)
+    reviews && reviews.map((review)=>{
+        if(review.userId === userId){
+            showButton = false
+        }
+    })
     const sortedReviews = reviews && reviews.sort((a, b)=>b.id - a.id)
     // console.log(sortedReviews)
 
@@ -38,7 +42,7 @@ const ReviewsList = ({spot}) => {
 
     return (
         <>
-            <h1 className='adjacent'>reviews <span><StarRating rating={spot.avgStarRating}/></span>.{spot.numReviews > 1 || spot.numReviews === 0 ? <span className='fit'>{spot.numReviews} reviews</span> : <span className='fit'>{spot.numReviews} review</span>}</h1>
+            <h1 className='adjacent'>reviews <span><StarRating rating={spot.avgStarRating}/></span>.{spot.numReviews > 1 ? <span className='fit'>{spot.numReviews} reviews</span> : <span className='fit'>{spot.numReviews} review</span>}</h1>
             {showButton &&
                 <button>
                     <OpenModalMenuItem
@@ -47,9 +51,10 @@ const ReviewsList = ({spot}) => {
                     />
                 </button>
             }
-            {(reviews && reviews.length === 0) && <p>Be the first to post a review!</p>}
+             {showButton && <p>Be the first to post a review!</p>}
             {
                 reviews && sortedReviews.map((review) => {
+
                     return (<div key={review.id}>
                         <p>{review && review.User.firstName}</p>
                         <p>{review && new Date((review.createdAt).split(' ')[0]).toLocaleDateString('en-us',{month:'long', year:'numeric'})}</p>
