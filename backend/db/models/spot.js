@@ -120,7 +120,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(5000),
       allownull: false,
       validate: {
-        notEmpty: true
+        notEmpty: true,
+        len: [30, 5000]
       }
     },
     price: {
@@ -128,7 +129,7 @@ module.exports = (sequelize, DataTypes) => {
       allownull: false,
       validate: {
         notEmpty: true,
-        min: 0
+        min: 1
       }
     },
   },
