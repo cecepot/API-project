@@ -130,7 +130,7 @@ const CreateSpot = () => {
                         <label>
                             Country
                             <input type="text"
-                            required
+                            // required
                             value={country}
                             placeholder='country'
                                 // Set the country variable to the value in the input box
@@ -142,7 +142,7 @@ const CreateSpot = () => {
                             <p className='error'>{errors.address && `${errors.address}`}</p>
                             Street Address
                             <input type="text"
-                            required
+                            // required
                             value={address}
                             placeholder='address'
                                 // Set the country variable to the value in the input box
@@ -154,7 +154,7 @@ const CreateSpot = () => {
                             <p className='error'>{errors.city && `${errors.city}`}</p>
                             city
                             <input type="text"
-                             required
+                            //  required
                              value={city}
                              placeholder='city'
                                 // Set the city variable to the value in the input box
@@ -164,7 +164,7 @@ const CreateSpot = () => {
                             <p className='error'>{errors.state && `${errors.state}`}</p>
                             State
                             <input type="text"
-                            required
+                            // required
                             placeholder='state'
                             value={state}
                                 // Set the state variable to the value in the input box
@@ -175,10 +175,10 @@ const CreateSpot = () => {
                         <label>
                             <p className='error'>{errors.lng && `${errors.lng}`}</p>
                             Longitude
-                            <input type="number"
-                             min = '-180'
-                             max = '180'
-                             required
+                            <input type="text"
+                            //  min = '-180'
+                            //  max = '180'
+                            //  required
                              value={lng}
                                 // Set the longitude variable to the value in the input box
                                 onChange={(e) => setLng(e.target.value)} />
@@ -186,10 +186,10 @@ const CreateSpot = () => {
                         <label>
                             <p className='error'>{errors.lat && `${errors.lat}`}</p>
                             Latitude
-                            <input type="number"
-                            min = '-90'
-                            max = '90'
-                            required
+                            <input type="text"
+                            // min = '-90'
+                            // max = '90'
+                            // required
                             value={lat}
                                 // Set the latitude variable to the value in the input box
                                 onChange={(e) => setLat(e.target.value)} />
@@ -205,9 +205,9 @@ const CreateSpot = () => {
                         <label>
                             <p className='error'>{errors.description && `${errors.description}`}</p>
                             <textarea placeholder='Please write at least 30 characters'
-                            required
+                            // required
                             value={description}
-                            minLength= '30'
+                            // minLength= '30'
                                 // Set the description variable to the value in the input box
                                 onChange={(e) => setDescription(e.target.value)}></textarea>
                         </label>
@@ -222,8 +222,8 @@ const CreateSpot = () => {
                         <label>
                             <p className='error'>{errors.name && `${errors.name}`}</p>
                             <textarea placeholder='Name of your spot'
-                            required
-                            maxLength= '50'
+                            // required
+                            // maxLength= '50'
                             value={name}
                                 // Set the name variable to the value in the input box
                                 onChange={(e) => setName(e.target.value)}></textarea>
@@ -239,11 +239,11 @@ const CreateSpot = () => {
                         <label>
                             <p className='error'>{errors.price && `${errors.price}`}</p>
                             $<input
-                            type='number'
+                            type='text'
                             placeholder='Price per night (USD)'
-                            required
-                            min = '1'
-                            step='0.01'
+                            // required
+                            // min = '1'
+                            // step='0.01'
                             value={price}
                                 // Set the description variable to the value in the input box
                                 onChange={(e) => setPrice(e.target.value)}></input>

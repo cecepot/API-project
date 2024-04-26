@@ -26,27 +26,37 @@ const validateSpot = [
         .exists({ checkFalsy: true })
         .withMessage('Country is required'),
     check('lat')
-        .notEmpty()
         .exists({ checkFalsy: true })
         .isFloat({ min: -90, max: 90 })//you should not be using is lenght.Try isfloat instead
-        .withMessage('Latitude must be within -90 and 90'),
+        .withMessage('Latitude must be within -90 and 90')
+        .notEmpty()
+        .withMessage('Latitude is required'),
     check('lng')
-        .notEmpty()
-        .exists({ checkFalsy: true })
         .isFloat({ min: -180, max: 180 })
-        .withMessage('Longitude must be within -180 and 180'),
-    check('name')
+        .withMessage('Longitude must be within -180 and 180')
         .notEmpty()
         .exists({ checkFalsy: true })
-        .withMessage('Name must be less than 50 characters'),
+        .withMessage('Longitude is required'),
+    check('name')
+        .isLength({ max: 50 })  //made changes here
+        .withMessage('Name must be less than 50 characters')
+        .isLength({ min: 2 })
+        .withMessage('Name must be at least 2 characters')
+        .notEmpty()
+        .exists({ checkFalsy: true })
+        .withMessage('Name is required'),
     check('description')
+        .isLength({ min: 30 })
+        .withMessage('Description must be at least 30 characters')
+        .notEmpty()
         .exists({ checkFalsy: true })
         .withMessage('Description is required'),
     check('price')
+        .isFloat({ min: 1 })
+        .withMessage('Price per day must be a positive number')
         .notEmpty()
         .exists({ checkFalsy: true })
-        .isFloat({ min: 0 })
-        .withMessage('Price per day must be a positive number'),
+        .withMessage('Price is required'),
     handleValidationErrors
 ];
 const validateReview = [
@@ -327,8 +337,8 @@ router.get('/:spotId', async (req, res, next) => {
     /*~()Find the average rating of the spot~*/
     let sum = 0
     allReviews.forEach((review) => {
-         /*~()Formatting stars to return as a number~*/
-         review.stars = parseInt(review.stars)
+        /*~()Formatting stars to return as a number~*/
+        review.stars = parseInt(review.stars)
         sum += review.stars
     })
     /*~()Store the average rating in a variable~*/
