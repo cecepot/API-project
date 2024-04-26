@@ -53,7 +53,7 @@ const CreateReviewModal = ({id}) => {
                 <p className='error'>{errors.review && `${errors.review}`}</p>
                     <label>
                         {/* <p className='error'>{errors.description && `${errors.description}`}</p> */}
-                        <textarea placeholder='just a quick review'
+                        <textarea placeholder='Leave your review here ...'
                             required
                             onChange={e=>setReviewText(e.target.value)}
                             // value={description}

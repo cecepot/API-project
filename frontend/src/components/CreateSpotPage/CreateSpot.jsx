@@ -123,8 +123,8 @@ const CreateSpot = () => {
             <div className="form-container">
                 <p>Create a spot!</p>
                 <h1>Create a new spot</h1>
-                <p>Where&apos;s your place loacated?</p>
-                <p>Guests will only get your exact address once theyve booked a reservation</p>
+                <p>Where&apos;s your place located?</p>
+                <p>Guests will only get your exact address once they&apos;ve booked a reservation</p>
                 <form onSubmit={handlesubmit}>
                     <div>
                         <p className='error'>{errors.country && `${errors.country}`}</p>
@@ -196,6 +196,7 @@ const CreateSpot = () => {
                                 onChange={(e) => setLat(e.target.value)} />
                         </label>
                     </div>
+                    <hr />
                     <div>
                         <p>Describe your place to guests</p>
                         <p>Mention the best features of your space, any special amentities like
@@ -212,6 +213,7 @@ const CreateSpot = () => {
                                 onChange={(e) => setDescription(e.target.value)}></textarea>
                         </label>
                     </div>
+                    <hr />
                     <div>
                         <p>Create a title for your spot</p>
                         <p>Catch guests&apos; attention with a spot title that highlights what makes
@@ -228,6 +230,7 @@ const CreateSpot = () => {
                                 onChange={(e) => setName(e.target.value)}></textarea>
                         </label>
                     </div>
+                    <hr />
                     <div>
                         <p>Set a base price for your spot</p>
                         <p>Competitive pricing can help your listing stand out and rank higher
@@ -247,6 +250,7 @@ const CreateSpot = () => {
                                 onChange={(e) => setPrice(e.target.value)}></input>
                         </label>
                     </div>
+                    <hr />
                     <div>
                         <p>Liven up your spot with photos</p>
                         <p>Submit a link to at least one photo to publish your spot.</p>
