@@ -42,7 +42,7 @@ const ReviewsList = ({spot}) => {
 
     return (
         <>
-            <h1 className='adjacent'>reviews <span><StarRating rating={spot.avgStarRating}/></span>.{spot.numReviews > 1 ? <span className='fit'>{spot.numReviews} reviews</span> : <span className='fit'>{spot.numReviews} review</span>}</h1>
+            <h1 className='adjacent'>reviews <span><StarRating rating={spot.avgStarRating}/></span>{spot.numReviews!== 0 && (spot.numReviews > 1 ? <span className='fit'> . {spot.numReviews} reviews</span> : <span className='fit'> . {spot.numReviews} review</span>)}</h1>
             {showButton &&
                 <button>
                     <OpenModalMenuItem
