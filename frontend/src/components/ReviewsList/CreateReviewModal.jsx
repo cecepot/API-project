@@ -18,7 +18,7 @@ const CreateReviewModal = ({ id }) => {
     const [class3, setClass3] = useState('empty')
     const [class4, setClass4] = useState('empty')
     const [class5, setClass5] = useState('empty')
-
+    const [disabled, setDisabled] = useState(true)
     const dispatch = useDispatch()
     // console.log(id)
 
@@ -33,7 +33,13 @@ const CreateReviewModal = ({ id }) => {
     //         setStarRating(number)
     //     }
     // },[starRating])
-
+    useEffect(()=>{
+        if(reviewText.length >= 10 && starRating >= 1){
+            setDisabled(false)
+        }else{
+            setDisabled(true)
+        }
+    },[reviewText, disabled, starRating])
 
     useEffect(() => {
         if (activeRating == 1 || starRating >= 1) {
@@ -154,7 +160,7 @@ const CreateReviewModal = ({ id }) => {
                             </div>
                     </div>
                 </div>
-                <button type="submit">Submit Your Review</button>
+                <button type="submit" disabled={disabled}>Submit Your Review</button>
             </form>
         </div>
     )

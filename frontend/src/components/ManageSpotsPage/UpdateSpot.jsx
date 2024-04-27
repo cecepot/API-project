@@ -99,7 +99,7 @@ export const UpdateSpot = () => {
         <>
             <div className="form-container">
                 <h1>Update your Spot</h1>
-                <p>Where&apos;s your place loacated?</p>
+                <h2>Where&apos;s your place loacated?</h2>
                 <p>Guests will only get your exact address once theyve booked a reservation</p>
                 <form onSubmit={handlesubmit}>
                     <div>
@@ -129,7 +129,7 @@ export const UpdateSpot = () => {
                     <div className='side-by-side'>
                         <label>
                             <p className='error'>{errors.city && `${errors.city}`}</p>
-                            city
+                            City
                             <input type="text"
                             // required
                             value={city}
@@ -178,7 +178,7 @@ export const UpdateSpot = () => {
                     </div>
                     <hr />
                     <div>
-                        <p>Describe your place to guests</p>
+                        <h2>Describe your place to guests</h2>
                         <p>Mention the best features of your space, any special amentities like
                             fast wifi or parking, and what you love about the neighborhood.</p>
                     </div>
@@ -194,7 +194,7 @@ export const UpdateSpot = () => {
                         </label>
                     </div>
                     <div>
-                        <p>Create a title for your spot</p>
+                        <h2>Create a title for your spot</h2>
                         <p>Catch guests&apos; attention with a spot title that highlights what makes
                             your place special.</p>
                     </div>
@@ -211,7 +211,7 @@ export const UpdateSpot = () => {
                     </div>
                     <hr />
                     <div>
-                        <p>Set a base price for your spot</p>
+                        <h2>Set a base price for your spot</h2>
                         <p>Competitive pricing can help your listing stand out and rank higher
                             in search results</p>
                     </div>

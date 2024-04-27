@@ -34,7 +34,7 @@ const SpotDetails = () => {
                 <div className='reserve-card'>
                     <div className='card-upper'>
                         <p>${currentSpot && currentSpot.price} night</p>
-                        <p className='adjacent upper-left'>{currentSpot ? <StarRating rating={currentSpot.avgStarRating}/> : <StarRating rating={false}/> }  { currentSpot && (currentSpot.numReviews!== 0  && (currentSpot.numReviews > 1 ? <span className='fit'> . {currentSpot.numReviews} reviews</span> : <span className='fit'> . {currentSpot.numReviews} review</span>))}</p>
+                        <p className='row upper-left'>{currentSpot ? <StarRating rating={currentSpot.avgStarRating}/> : <StarRating rating={false}/> }  { currentSpot && (currentSpot.numReviews!== 0  && (currentSpot.numReviews > 1 ? <span className='adjacent full'><span> . </span>{currentSpot.numReviews} reviews</span> : <span className='adjacent full'><span> . </span>{currentSpot.numReviews} review</span>))}</p>
                     </div>
                     <div className='button-div'>
                         <button onClick={e=>{e.preventDefault; alert('Feature coming soon')}} className='reserve-button'>Reserve</button>

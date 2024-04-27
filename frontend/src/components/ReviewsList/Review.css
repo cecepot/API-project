@@ -9,3 +9,11 @@
 .row {
   display: flex;
 }
+
+.width{
+  width: 20%;
+}
+
+.full{
+  width: 100%;
+}
