@@ -41,8 +41,8 @@ useEffect(()=>{
     e.preventDefault()
     // alert('howdy!')
     setErrors({});
-    const credential ='FakeUser1'
-   const password = 'password2'
+    const credential ='Demo-lition'
+   const password = 'password'
     return dispatch(sessionActions.login({credential, password}))
     .then(closeModal)
       .catch(async (res) => {
