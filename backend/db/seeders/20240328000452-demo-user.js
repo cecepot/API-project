@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     await User.bulkCreate([
       {
         email: 'demo@user.io',
@@ -21,29 +21,55 @@ module.exports = {
         lastName: 'Lition'
       },
       {
-        email: 'user1@user.io',
-        username: 'FakeUser1',
-        hashedPassword: bcrypt.hashSync('password2'),
-        //ADD FIRSTNAME AND LASTNAME TO SEED
-        firstName: 'Fake',
-        lastName: 'User'
+        email: 'naruto@leafvillage.io',
+        username: 'NarutoUzumaki',
+        hashedPassword: bcrypt.hashSync('nine-tails'),
+        firstName: 'Naruto',
+        lastName: 'Uzumaki'
       },
       {
-        email: 'user2@user.io',
-        username: 'FakeUser2',
-        hashedPassword: bcrypt.hashSync('password3'),
-        //ADD FIRSTNAME AND LASTNAME TO SEED
-        firstName: 'FakeTwo',
-        lastName: 'UserTwo'
+        email: 'sasuke@uchiha.io',
+        username: 'SasukeUchiha',
+        hashedPassword: bcrypt.hashSync('revenge123'),
+        firstName: 'Sasuke',
+        lastName: 'Uchiha'
+      },
+      {
+        email: 'sakura@haruno.io',
+        username: 'SakuraHaruno',
+        hashedPassword: bcrypt.hashSync('innerstrength'),
+        firstName: 'Sakura',
+        lastName: 'Haruno'
+      },
+      {
+        email: 'ichigo@kurosaki.io',
+        username: 'IchigoKurosaki',
+        hashedPassword: bcrypt.hashSync('zangetsu'),
+        firstName: 'Ichigo',
+        lastName: 'Kurosaki'
+      },
+      {
+        email: 'rukia@kuchiki.io',
+        username: 'RukiaKuchiki',
+        hashedPassword: bcrypt.hashSync('sode no shirayuki'),
+        firstName: 'Rukia',
+        lastName: 'Kuchiki'
+      },
+      {
+        email: 'byakuya@kuchiki.io',
+        username: 'ByakuyaKuchiki',
+        hashedPassword: bcrypt.hashSync('senbonzakura'),
+        firstName: 'Byakuya',
+        lastName: 'Kuchiki'
       }
     ], { validate: true });
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     options.tableName = 'Users';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      username: { [Op.in]: ['Demo-lition', 'FakeUser1', 'FakeUser2'] }
+      username: { [Op.in]: ['Demo-lition', 'NarutoUzumaki', 'SasukeUchiha', 'SakuraHaruno', 'RukiaKuchiki', 'ByakuyaKuchiki'] }
     }, {});
   }
 };

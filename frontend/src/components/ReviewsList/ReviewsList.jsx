@@ -28,7 +28,7 @@ const ReviewsList = ({spot}) => {
     const reviews = useSelector((state) => state.reviewState.reviews.Reviews)
     // console.log(reviews)
     reviews && reviews.map((review)=>{
-        if(review.userId === userId){
+        if(review.userId == userId){
             showButton = false
         }
     })
