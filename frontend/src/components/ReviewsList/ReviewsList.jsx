@@ -17,6 +17,9 @@ const ReviewsList = ({spot}) => {
     // console.log(spotId)
     const user = useSelector((state) => state.session.user)
     let showButton = true
+    let showText = false
+
+
     if(!user){
         showButton = false
     }
@@ -25,13 +28,26 @@ const ReviewsList = ({spot}) => {
     }
     const userId = user && user.id
 
+
+
     const reviews = useSelector((state) => state.reviewState.reviews.Reviews)
     // console.log(reviews)
-    reviews && reviews.map((review)=>{
-        if(review.userId == userId){
-            showButton = false
-        }
-    })
+
+    if(reviews.length === 0){
+        showText = true
+    }
+
+    if (user){
+        reviews && reviews.map((review)=>{
+            if((userId !== spot.ownerId) && review.userId == userId)
+            {showButton = false}
+        })
+    }
+    // reviews && reviews.map((review)=>{
+    //     if(review.userId == userId){
+    //         showButton = false
+    //     }
+    // })
     const sortedReviews = reviews && reviews.sort((a, b)=>b.id - a.id)
     // console.log(sortedReviews)
 
@@ -51,7 +67,7 @@ const ReviewsList = ({spot}) => {
                     />
                 </button>
             }
-             {showButton && <p>Be the first to post a review!</p>}
+             {showText && <p>Be the first to post a review!</p>}
             {
                 reviews && sortedReviews.map((review) => {
 
