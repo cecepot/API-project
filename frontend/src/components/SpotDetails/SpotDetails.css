@@ -13,25 +13,27 @@
     height: 100%;
 }
 
-.image-grid img:nth-child(1) {
+.a {
     grid-area: a;
 }
 
-.image-grid img:nth-child(2) {
+.b {
     grid-area: b;
 }
 
-.image-grid img:nth-child(3) {
+.c {
     grid-area: c;
 }
 
-.image-grid img:nth-child(4) {
+.d {
     grid-area: d;
 }
 
-.image-grid img:nth-child(5) {
+.e {
     grid-area: e;
 }
+
+
 
 img {
     height: 100%;

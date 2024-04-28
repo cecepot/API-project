@@ -5,6 +5,8 @@ import { useEffect } from 'react'
 import { fetchCurrentSpot } from '../../store/spotsReducer'
 import ReviewsList from "../ReviewsList/ReviewsList"
 import StarRating from '../StarRating'
+import SpotImage from './SpotImage'
+
 
 const SpotDetails = () => {
     const { spotId } = useParams()
@@ -16,17 +18,17 @@ const SpotDetails = () => {
     }, [dispatch, spotId])
 
     const currentSpot = useSelector((state) => state.spotState.spot)
-    //    console.log(currentSpot)
+
+
+
     return (
-        <div className='spot-deets'>
+        <div>
             <div>
                 <div>
                     <h1 className='vt323-regular'>{currentSpot && currentSpot.name}</h1>
                     <p>{currentSpot && currentSpot.city}, {currentSpot && currentSpot.state}, {currentSpot && currentSpot.country}</p>
-                    <div className='image-grid' >
-                        {currentSpot && (currentSpot.SpotImages && currentSpot.SpotImages.map((image) => {
-                            return <img loading='lazy' key={image.id} src={`${image.url}`} alt="" />
-                        }))}
+                    <div>
+                    {currentSpot && <SpotImage spot ={currentSpot}/>}
                     </div>
                 </div>
                 <div className='spot-info'>
