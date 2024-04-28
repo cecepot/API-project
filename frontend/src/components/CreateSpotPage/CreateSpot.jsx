@@ -1,9 +1,8 @@
 import './CreateSpot.css'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { CreatNewSpot} from '../../store/spotsReducer'
+import { CreatNewSpot } from '../../store/spotsReducer'
 import { useNavigate } from 'react-router-dom'
-import { fetchCurrentSpot } from '../../store/spotsReducer'
 
 
 const CreateSpot = () => {
@@ -108,11 +107,10 @@ const CreateSpot = () => {
         )
 
 
-            if(newSpot){
-                reset()
-                await dispatch(fetchCurrentSpot(newSpot.id))
-                 navigate(`/spots/${newSpot.id}`)
-            }
+        if (newSpot) {
+            reset()
+            navigate(`/spots/${newSpot.id}`)
+        }
 
 
         // console.log({newSpot})
@@ -129,16 +127,16 @@ const CreateSpot = () => {
                 <h1>Create a new spot</h1>
                 <h2>Where&apos;s your place located?</h2>
                 <p>Guests will only get your exact address once they&apos;ve booked a reservation</p>
-                <form  className='column'onSubmit={handlesubmit}>
+                <form className='column' onSubmit={handlesubmit}>
                     <div className='color'>
                         <p className='error'>{errors.country && `${errors.country}`}</p>
                         <label>
                             Country
                             <br />
                             <input className='label' type="text"
-                            // required
-                            value={country}
-                            placeholder='country'
+                                // required
+                                value={country}
+                                placeholder='country'
                                 // Set the country variable to the value in the input box
                                 onChange={(e) => setCountry(e.target.value)} />
                         </label>
@@ -149,9 +147,9 @@ const CreateSpot = () => {
                             Street Address
                             <br />
                             <input className='label' type="text"
-                            // required
-                            value={address}
-                            placeholder='address'
+                                // required
+                                value={address}
+                                placeholder='address'
                                 // Set the country variable to the value in the input box
                                 onChange={(e) => setAddress(e.target.value)} />
                         </label>
@@ -162,9 +160,9 @@ const CreateSpot = () => {
                             City
                             <br />
                             <input className='label' type="text"
-                            //  required
-                             value={city}
-                             placeholder='city'
+                                //  required
+                                value={city}
+                                placeholder='city'
                                 // Set the city variable to the value in the input box
                                 onChange={(e) => setCity(e.target.value)} />
                         </label>
@@ -173,9 +171,9 @@ const CreateSpot = () => {
                             State
                             <br />
                             <input className='label' type="text"
-                            // required
-                            placeholder='state'
-                            value={state}
+                                // required
+                                placeholder='state'
+                                value={state}
                                 // Set the state variable to the value in the input box
                                 onChange={(e) => setState(e.target.value)} />
                         </label>
@@ -186,11 +184,11 @@ const CreateSpot = () => {
                             Longitude
                             <br />
                             <input className='label' type="text"
-                            placeholder='longitude'
-                            //  min = '-180'
-                            //  max = '180'
-                            //  required
-                             value={lng}
+                                placeholder='longitude'
+                                //  min = '-180'
+                                //  max = '180'
+                                //  required
+                                value={lng}
                                 // Set the longitude variable to the value in the input box
                                 onChange={(e) => setLng(e.target.value)} />
                         </label>
@@ -199,11 +197,11 @@ const CreateSpot = () => {
                             Latitude
                             <br />
                             <input className='label' type="text"
-                            placeholder='latitude'
-                            // min = '-90'
-                            // max = '90'
-                            // required
-                            value={lat}
+                                placeholder='latitude'
+                                // min = '-90'
+                                // max = '90'
+                                // required
+                                value={lat}
                                 // Set the latitude variable to the value in the input box
                                 onChange={(e) => setLat(e.target.value)} />
                         </label>
@@ -218,9 +216,9 @@ const CreateSpot = () => {
                         <label>
                             <p className='error'>{errors.description && `${errors.description}`}</p>
                             <textarea className='label' placeholder='Please write at least 30 characters'
-                            // required
-                            value={description}
-                            // minLength= '30'
+                                // required
+                                value={description}
+                                // minLength= '30'
                                 // Set the description variable to the value in the input box
                                 onChange={(e) => setDescription(e.target.value)}></textarea>
                         </label>
@@ -235,9 +233,9 @@ const CreateSpot = () => {
                         <label>
                             <p className='error'>{errors.name && `${errors.name}`}</p>
                             <textarea className='label' placeholder='Name of your spot'
-                            // required
-                            // maxLength= '50'
-                            value={name}
+                                // required
+                                // maxLength= '50'
+                                value={name}
                                 // Set the name variable to the value in the input box
                                 onChange={(e) => setName(e.target.value)}></textarea>
                         </label>
@@ -252,12 +250,12 @@ const CreateSpot = () => {
                         <label>
                             <p className='error'>{errors.price && `${errors.price}`}</p>
                             $<input className='label'
-                            type='text'
-                            placeholder='Price per night (USD)'
-                            // required
-                            // min = '1'
-                            // step='0.01'
-                            value={price}
+                                type='text'
+                                placeholder='Price per night (USD)'
+                                // required
+                                // min = '1'
+                                // step='0.01'
+                                value={price}
                                 // Set the description variable to the value in the input box
                                 onChange={(e) => setPrice(e.target.value)}></input>
                         </label>
@@ -271,8 +269,8 @@ const CreateSpot = () => {
                         <label>
                             <p className='error'>{imageError && `${imageError}`}</p>
                             <input className='label' type="url" placeholder='Preview Image URL'
-                            required
-                            value={previewImage}
+                                required
+                                value={previewImage}
                                 onChange={(e) => setPreviewImage(e.target.value)} />
                         </label>
                     </div>
