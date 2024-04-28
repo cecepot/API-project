@@ -60,7 +60,7 @@ const ReviewsList = ({ spot }) => {
     return (
         <>
             <h1 className='adjacent'>reviews <span><StarRating rating={spot.avgStarRating} /></span>{spot.numReviews !== 0 && (spot.numReviews > 1 ? <span className='adjacent width'><span> . </span><span className='adjacent'>{spot.numReviews} reviews</span></span> : <span className='adjacent width'><span> . </span><span className='adjacent'>{spot.numReviews} review</span></span>)}</h1>
-            <hr />
+            <hr className='bottom' />
             {showButton &&
                 <button className='red hover'>
                     <OpenModalMenuItem
@@ -75,7 +75,7 @@ const ReviewsList = ({ spot }) => {
                     reviews && sortedReviews.map((review) => {
 
                         return (
-                            <div key={review.id} className='inner-container'>
+                            <div key={review.id} className='inner-container bottom'>
 
                                 <h3>{review && review.User.firstName}</h3>
                                 <p>{review && new Date((review.createdAt).split(' ')[0]).toLocaleDateString('en-us', { month: 'long', year: 'numeric' })}</p>

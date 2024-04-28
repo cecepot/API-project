@@ -21,7 +21,7 @@ const SpotDetails = () => {
         <div>
             <h1 className='vt323-regular'>{currentSpot && currentSpot.name}</h1>
             <p>{currentSpot && currentSpot.city}, {currentSpot && currentSpot.state}, {currentSpot && currentSpot.country}</p>
-            <div className='image-grid' >
+            <div className='image-grid bottom' >
                 {currentSpot && currentSpot.SpotImages.map((image) => {
                     return <img key={image.id} src={`${image.url}`} alt="" />
                 })}
@@ -36,12 +36,12 @@ const SpotDetails = () => {
                         <p><b>${currentSpot && currentSpot.price}</b> night</p>
                         <p className='row upper-left'>{currentSpot ? <StarRating rating={currentSpot.avgStarRating}/> : <StarRating rating={false}/> }  { currentSpot && (currentSpot.numReviews!== 0  && (currentSpot.numReviews > 1 ? <span className='adjacent full'><span> . </span>{currentSpot.numReviews} reviews</span> : <span className='adjacent full'><span> . </span>{currentSpot.numReviews} review</span>))}</p>
                     </div>
-                    <div className='button-div'>
+                    <div className='button-div bottom'>
                         <button onClick={e=>{e.preventDefault; alert('Feature coming soon')}} className=' red hover reserve-button'>Reserve</button>
                     </div>
                 </div>
             </div>
-            <div>
+            <div className='bottom'>
             {currentSpot && <ReviewsList spot={currentSpot}/>}
             </div>
         </div>

@@ -17,7 +17,7 @@ function Navigation({ isLoaded }) {
             src="https://res.cloudinary.com/dv9oyy79u/image/upload/v1714314775/image_35_-fotor-bg-remover-20240428103237_migdho.png"
             alt="soul society logo"
           />
-          <h1 className="navbar-title vt323-regular hover">SoulSociety</h1>
+          <h1 className="navbar-title vt323-regular hover">SOULSOCIETY</h1>
         </div>
         </NavLink>
         {/* <NavLink to="/">Home</NavLink> */}

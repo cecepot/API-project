@@ -42,10 +42,11 @@ img {
 
 } */
 .reserve-card {
-    border: 1px solid rgb(0, 0, 0);
+    border: 1px solid palevioletred;
     width: 40%;
     padding: 1em;
     border-radius: 6px;
+    background-color: rgba(128, 128, 128, 0.484);
 }
 
 .info-upper {
@@ -82,3 +83,6 @@ img {
     width: 50%;
 }
 
+.bottom{
+    margin: 1em 0;
+}
