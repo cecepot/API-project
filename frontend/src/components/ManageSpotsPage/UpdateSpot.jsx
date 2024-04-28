@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { updateCurrentSpot, fetchCurrentSpot } from '../../store/spotsReducer'
-import { fetchReviews } from '../../store/reviewsReducer'
+import { updateCurrentSpot} from '../../store/spotsReducer'
+
 
 
 
@@ -85,8 +85,6 @@ export const UpdateSpot = () => {
 
         if (updatedSpot) {
             reset()
-            dispatch(fetchCurrentSpot(updatedSpot.id))
-            dispatch(fetchReviews(updatedSpot.id))
             navigate(`/spots/${updatedSpot.id}`)
         }
 

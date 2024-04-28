@@ -1,9 +1,9 @@
 import './CreateSpot.css'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { CreatNewSpot, fetchCurrentSpot } from '../../store/spotsReducer'
+import { CreatNewSpot} from '../../store/spotsReducer'
 import { useNavigate } from 'react-router-dom'
-import { fetchReviews } from '../../store/reviewsReducer'
+
 
 
 const CreateSpot = () => {
@@ -109,8 +109,6 @@ const CreateSpot = () => {
 
         if (newSpot) {
             reset()
-            dispatch(fetchCurrentSpot(newSpot.id))
-            dispatch(fetchReviews(newSpot.id))
             navigate(`/spots/${newSpot.id}`)
         }
 
