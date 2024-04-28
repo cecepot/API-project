@@ -48,24 +48,24 @@ function ProfileButton({ user }) {
     <>
     <div className='adjacent'>
       {user &&  <NavLink className='Link vt323-regular' to='/spots' >Create a new spot</NavLink>} {/*link to creating a spot*/}
-      <button className='adjacent profile-button' onClick={toggleMenu}>
+      <button className='adjacent profile-button red hover' onClick={toggleMenu}>
         <IoIosMenu />
         <i className="fas fa-user-circle" />
       </button>
     </div>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
-          <>
-            <li>{user.username}</li>
-            <li>Hello, {user.firstName}</li>  {/* ADD A GREETING WHEN THE USER IS LOGGED IN */}
-            <li>{user.email}</li>
-            <NavLink to='/spots/current'>manage spots</NavLink>
-            <li>
-              <button onClick={logout}>Log Out</button>
+          <div className='menu-box vt323-regular'>
+            <li className='no-dot'>{user.username}</li>
+            <li className='no-dot'>Hello, {user.firstName}</li>  {/* ADD A GREETING WHEN THE USER IS LOGGED IN */}
+            <li className='no-dot'>{user.email}</li>
+            <NavLink to='/spots/current' className='no-dot Link menu-link'>manage spots</NavLink>
+            <li className='no-dot'>
+              <button className='red hover' onClick={logout}>Log Out</button>
             </li>
-          </>
+          </div >
         ) : (
-          <>
+          <div className='menu-box'>
             <OpenModalMenuItem
               itemText="Log In"
               onItemClick={closeMenu}
@@ -76,7 +76,7 @@ function ProfileButton({ user }) {
               onItemClick={closeMenu}
               modalComponent={<SignupFormModal />}
             />
-          </>
+          </div >
         )}
       </ul>
     </>

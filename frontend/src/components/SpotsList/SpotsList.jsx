@@ -25,10 +25,10 @@ const SpotsList = () => {
                 {/* The logical && operator ensures that the state is not null before calling map on the spots */}
                 {spots && spots.map((spot) => {
                     return <Link to={`spots/${spot.id}`} key={spot.id} className="Link">
-                        <li className="spot-container">
+                        <li className="spot-container hover">
                             <div className="tooltip-container">
                                 <img src={`${spot.previewImage}`} alt="" />
-                                <p className="spot-name">{spot.name}</p>
+                                <p className="spot-name vt323-regular font-size">{spot.name}</p>
                             </div>
                             <div className="details">
                                 <div className="upper-details">

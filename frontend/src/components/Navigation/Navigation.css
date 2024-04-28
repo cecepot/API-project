@@ -8,13 +8,13 @@
 }
 
 .nav-bar{
-  border-bottom:1px solid grey;
+  border-bottom:3px solid grey;
   display: flex;
   justify-content: space-between;
   list-style-type: none;
   align-items: center;
-  height: 4em;
   width: 100%;
+  border-bottom-style: dotted;
 }
 
 .no-dot{
@@ -23,7 +23,7 @@
 
 .logo {
   height: 100%;
-  width: 8em;
+  width: 6em;
 
 }
 
@@ -39,3 +39,24 @@
   font-style: normal;
 }
 
+.menu-box{
+  background-color: rgb(249, 239, 225);
+  padding: 1em;
+  border-radius: 1em;
+  text-align: center;
+}
+
+.red{
+  background-color: rgb(255, 157, 173);
+  padding: 0.5em;
+  border: 2px solid gray;
+  border-radius: 6px;
+}
+
+.menu-link{
+  color: palevioletred;
+}
+
+.menu-link:hover{
+  text-shadow:1px 1px 2px grey;
+}
