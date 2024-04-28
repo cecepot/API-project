@@ -22,9 +22,9 @@ const SpotDetails = () => {
             <h1 className='vt323-regular'>{currentSpot && currentSpot.name}</h1>
             <p>{currentSpot && currentSpot.city}, {currentSpot && currentSpot.state}, {currentSpot && currentSpot.country}</p>
             <div className='image-grid bottom' >
-                {currentSpot &&  currentSpot.SpotImages.map((image) => {
+                {currentSpot &&  (currentSpot.SpotImages && currentSpot.SpotImages.map((image) => {
                     return <img key={image.id} src={`${image.url}`} alt="" />
-                })}
+                }))}
             </div>
             <div className='spot-info'>
                 <div className='info-upper'>
