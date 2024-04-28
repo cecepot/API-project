@@ -4,7 +4,7 @@
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     grid-template-areas: 'a a b c'
-        'a a d e';
+                         'a a d e';
     gap: 1%;
 }
 
