@@ -32,3 +32,10 @@
   height: 3em;
   border-radius: 3em;
 }
+
+.vt323-regular {
+  font-family: "VT323", monospace;
+  font-weight: 400;
+  font-style: normal;
+}
+

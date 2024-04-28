@@ -16,7 +16,7 @@ function Navigation({ isLoaded }) {
             src="https://res.cloudinary.com/dv9oyy79u/image/upload/v1714093936/31758_recreate_this_exact_image_but_with_a_white_backgro_xl-1024-v1-0-fotor-bg-remover-20240425211145_k5r5y2.png"
             alt="soul society logo"
           />
-          <h2 className="navbar-title">Soul Society</h2>
+          <h2 className="navbar-title vt323-regular">Soul Society</h2>
         </div>
         </NavLink>
         {/* <NavLink to="/">Home</NavLink> */}

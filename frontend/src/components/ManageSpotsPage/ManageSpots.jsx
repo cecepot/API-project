@@ -25,7 +25,7 @@ const ManageSpots = () => {
         if(spots.length === 0){
             return(
                 <>
-    <NavLink className='Link' to='/spots' >Create a new spot</NavLink>
+    <NavLink className='Link vt323-regular' to='/spots' >Create a new spot</NavLink>
                 </>
             )
         }
@@ -33,7 +33,7 @@ const ManageSpots = () => {
 
     return (
         <>
-            <h1>Manage Spots</h1>
+            <h1 className="vt323-regular">Manage Spots</h1>
             <ul className="tiles">
                 {/* The logical && operator ensures that the state is not null before calling map on the spots */}
                 {spots && spots.map((spot) => {

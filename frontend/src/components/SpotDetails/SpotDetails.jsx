@@ -19,7 +19,7 @@ const SpotDetails = () => {
     //    console.log(currentSpot)
     return (
         <>
-            <h1>{currentSpot && currentSpot.name}</h1>
+            <h1 className='vt323-regular'>{currentSpot && currentSpot.name}</h1>
             <p>{currentSpot && currentSpot.city}, {currentSpot && currentSpot.state}, {currentSpot && currentSpot.country}</p>
             <div className='image-grid' >
                 {currentSpot && currentSpot.SpotImages.map((image) => {
