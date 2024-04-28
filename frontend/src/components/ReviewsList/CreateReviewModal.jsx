@@ -125,7 +125,8 @@ const CreateReviewModal = ({ id }) => {
     return (
         <div >
             <form onSubmit={handleSubmit}>
-                <h1>How was your stay?</h1>
+                <h1 className="black">How was your stay?</h1>
+                <p className="gray">In more than 10 characters, tell us about your stay</p>
                 <div>
                     <p className='error'>{oneReviewError && `${oneReviewError}`}</p>
                     <p className='error'>{errors.review && `${errors.review}`}</p>

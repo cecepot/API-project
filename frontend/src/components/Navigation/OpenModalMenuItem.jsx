@@ -15,7 +15,7 @@ function OpenModalMenuItem({
   };
 
   return (
-    <li className='no-dot' onClick={onClick}>{itemText}</li>
+    <li className='no-dot menu-link cursor' onClick={onClick}>{itemText}</li>
   );
 }
 

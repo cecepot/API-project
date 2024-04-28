@@ -10,7 +10,7 @@ import DeleteReviewModal from './DeleteReviewModal'
 
 
 
-const ReviewsList = ({spot}) => {
+const ReviewsList = ({ spot }) => {
     const { spotId } = useParams()
     // console.log(spotId)
     const dispatch = useDispatch()
@@ -20,10 +20,10 @@ const ReviewsList = ({spot}) => {
     let showText = false
 
 
-    if(!user){
+    if (!user) {
         showButton = false
     }
-    if(user && user.id == spot.ownerId){
+    if (user && user.id == spot.ownerId) {
         showButton = false
     }
     const userId = user && user.id
@@ -33,16 +33,15 @@ const ReviewsList = ({spot}) => {
     const reviews = useSelector((state) => state.reviewState.reviews.Reviews)
     // console.log(reviews)
 
-    if(reviews){
-        if(reviews.length === 0 && userId !== spot.ownerId){
+    if (reviews) {
+        if (reviews.length === 0 && userId !== spot.ownerId) {
             showText = true
         }
     }
 
-    if (user){
-        reviews && reviews.map((review)=>{
-            if((userId !== spot.ownerId) && review.userId == userId)
-            {showButton = false}
+    if (user) {
+        reviews && reviews.map((review) => {
+            if ((userId !== spot.ownerId) && review.userId == userId) { showButton = false }
         })
     }
     // reviews && reviews.map((review)=>{
@@ -50,7 +49,7 @@ const ReviewsList = ({spot}) => {
     //         showButton = false
     //     }
     // })
-    const sortedReviews = reviews && reviews.sort((a, b)=>b.id - a.id)
+    const sortedReviews = reviews && reviews.sort((a, b) => b.id - a.id)
     // console.log(sortedReviews)
 
     useEffect(() => {
@@ -60,36 +59,41 @@ const ReviewsList = ({spot}) => {
 
     return (
         <>
-            <h1 className='adjacent'>reviews <span><StarRating rating={spot.avgStarRating}/></span>{spot.numReviews!== 0 && (spot.numReviews > 1 ? <span className='adjacent width'><span> . </span><span className='adjacent'>{spot.numReviews} reviews</span></span> : <span className='adjacent width'><span> . </span><span className='adjacent'>{spot.numReviews} review</span></span>)}</h1>
+            <h1 className='adjacent'>reviews <span><StarRating rating={spot.avgStarRating} /></span>{spot.numReviews !== 0 && (spot.numReviews > 1 ? <span className='adjacent width'><span> . </span><span className='adjacent'>{spot.numReviews} reviews</span></span> : <span className='adjacent width'><span> . </span><span className='adjacent'>{spot.numReviews} review</span></span>)}</h1>
+            <hr />
             {showButton &&
-                <button>
+                <button className='red hover'>
                     <OpenModalMenuItem
                         itemText='Post Your Review'
                         modalComponent={<CreateReviewModal id={spotId} />}
                     />
                 </button>
             }
-             {showText && <p>Be the first to post a review!</p>}
-            {
-                reviews && sortedReviews.map((review) => {
+            {showText && <p>Be the first to post a review!</p>}
+            <div>
+                {
+                    reviews && sortedReviews.map((review) => {
 
-                    return (<div key={review.id}>
-                        <p>{review && review.User.firstName}</p>
-                        <p>{review && new Date((review.createdAt).split(' ')[0]).toLocaleDateString('en-us',{month:'long', year:'numeric'})}</p>
-                        <p>{review && review.review}</p>
-                        {
-                            userId == review.userId &&
-                            <button >
-                                <OpenModalMenuItem
-                                itemText='Delete'
-                                modalComponent={<DeleteReviewModal id ={review.id} spotId ={review.spotId}/>}
-                                />
-                            </button>
-                        }
-                    </div>
-                    )
-                })
-            }
+                        return (
+                            <div key={review.id} className='inner-container'>
+
+                                <h3>{review && review.User.firstName}</h3>
+                                <p>{review && new Date((review.createdAt).split(' ')[0]).toLocaleDateString('en-us', { month: 'long', year: 'numeric' })}</p>
+                                <p>{review && review.review}</p>
+                                {
+                                    userId == review.userId &&
+                                    <button className='red hover'>
+                                        <OpenModalMenuItem
+                                            itemText='Delete'
+                                            modalComponent={<DeleteReviewModal id={review.id} spotId={review.spotId} />}
+                                        />
+                                    </button>
+                                }
+                            </div>
+                        )
+                    })
+                }
+            </div>
         </>
     )
 }

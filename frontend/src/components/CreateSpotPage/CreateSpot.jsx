@@ -124,12 +124,13 @@ const CreateSpot = () => {
                 <h1>Create a new spot</h1>
                 <h2>Where&apos;s your place located?</h2>
                 <p>Guests will only get your exact address once they&apos;ve booked a reservation</p>
-                <form onSubmit={handlesubmit}>
-                    <div>
+                <form  className='column'onSubmit={handlesubmit}>
+                    <div className='color'>
                         <p className='error'>{errors.country && `${errors.country}`}</p>
                         <label>
                             Country
-                            <input type="text"
+                            <br />
+                            <input className='label' type="text"
                             // required
                             value={country}
                             placeholder='country'
@@ -137,11 +138,12 @@ const CreateSpot = () => {
                                 onChange={(e) => setCountry(e.target.value)} />
                         </label>
                     </div>
-                    <div>
+                    <div className='color'>
                         <label>
                             <p className='error'>{errors.address && `${errors.address}`}</p>
                             Street Address
-                            <input type="text"
+                            <br />
+                            <input className='label' type="text"
                             // required
                             value={address}
                             placeholder='address'
@@ -149,11 +151,12 @@ const CreateSpot = () => {
                                 onChange={(e) => setAddress(e.target.value)} />
                         </label>
                     </div>
-                    <div className='side-by-side'>
+                    <div className='side-by-side color'>
                         <label>
                             <p className='error'>{errors.city && `${errors.city}`}</p>
                             City
-                            <input type="text"
+                            <br />
+                            <input className='label' type="text"
                             //  required
                              value={city}
                              placeholder='city'
@@ -163,7 +166,8 @@ const CreateSpot = () => {
                         <label>
                             <p className='error'>{errors.state && `${errors.state}`}</p>
                             State
-                            <input type="text"
+                            <br />
+                            <input className='label' type="text"
                             // required
                             placeholder='state'
                             value={state}
@@ -171,11 +175,13 @@ const CreateSpot = () => {
                                 onChange={(e) => setState(e.target.value)} />
                         </label>
                     </div>
-                    <div className='side-by-side'>
+                    <div className='side-by-side color'>
                         <label>
                             <p className='error'>{errors.lng && `${errors.lng}`}</p>
                             Longitude
-                            <input type="text"
+                            <br />
+                            <input className='label' type="text"
+                            placeholder='longitude'
                             //  min = '-180'
                             //  max = '180'
                             //  required
@@ -186,7 +192,9 @@ const CreateSpot = () => {
                         <label>
                             <p className='error'>{errors.lat && `${errors.lat}`}</p>
                             Latitude
-                            <input type="text"
+                            <br />
+                            <input className='label' type="text"
+                            placeholder='latitude'
                             // min = '-90'
                             // max = '90'
                             // required
@@ -204,7 +212,7 @@ const CreateSpot = () => {
                     <div>
                         <label>
                             <p className='error'>{errors.description && `${errors.description}`}</p>
-                            <textarea placeholder='Please write at least 30 characters'
+                            <textarea className='label' placeholder='Please write at least 30 characters'
                             // required
                             value={description}
                             // minLength= '30'
@@ -221,7 +229,7 @@ const CreateSpot = () => {
                     <div>
                         <label>
                             <p className='error'>{errors.name && `${errors.name}`}</p>
-                            <textarea placeholder='Name of your spot'
+                            <textarea className='label' placeholder='Name of your spot'
                             // required
                             // maxLength= '50'
                             value={name}
@@ -238,7 +246,7 @@ const CreateSpot = () => {
                     <div>
                         <label>
                             <p className='error'>{errors.price && `${errors.price}`}</p>
-                            $<input
+                            $<input className='label'
                             type='text'
                             placeholder='Price per night (USD)'
                             // required
@@ -257,7 +265,7 @@ const CreateSpot = () => {
                     <div>
                         <label>
                             <p className='error'>{imageError && `${imageError}`}</p>
-                            <input type="url" placeholder='Preview Image URL'
+                            <input className='label' type="url" placeholder='Preview Image URL'
                             required
                             value={previewImage}
                                 onChange={(e) => setPreviewImage(e.target.value)} />
@@ -265,30 +273,30 @@ const CreateSpot = () => {
                     </div>
                     <div>
                         <label>
-                            <input type="url" placeholder='Image URL'
+                            <input className='label' type="url" placeholder='Image URL'
                                 onChange={(e) => setImage1(e.target.value)} />
                         </label>
                     </div>
                     <div>
                         <label>
-                            <input type="url" placeholder='Image URL'
+                            <input className='label' type="url" placeholder='Image URL'
                                 onChange={(e) => setImage2(e.target.value)} />
                         </label>
                     </div>
                     <div>
                         <label>
-                            <input type="url" placeholder='Image URL'
+                            <input className='label' type="url" placeholder='Image URL'
                                 onChange={(e) => setImage3(e.target.value)} />
                         </label>
                     </div>
                     <div>
                         <label>
-                            <input type="url" placeholder='Image URL'
+                            <input className='label' type="url" placeholder='Image URL'
                                 onChange={(e) => setImage4(e.target.value)} />
                         </label>
                     </div>
                     <div>
-                        <button type='submit'>Create Spot</button>
+                        <button type='submit' className='red hover'>Create Spot</button>
                     </div>
                 </form>
             </div>

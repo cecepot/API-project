@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useNavigate, useLocation} from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { updateCurrentSpot } from '../../store/spotsReducer'
 
 
@@ -67,7 +67,7 @@ export const UpdateSpot = () => {
         if (lng) Spotpayload.lng = lng
         if (name) Spotpayload.name = name
         if (description) Spotpayload.description = description
-        if (price){Spotpayload.price =price}
+        if (price) { Spotpayload.price = price }
         // console.log(previewImage)
 
 
@@ -101,80 +101,94 @@ export const UpdateSpot = () => {
                 <h1>Update your Spot</h1>
                 <h2>Where&apos;s your place loacated?</h2>
                 <p>Guests will only get your exact address once theyve booked a reservation</p>
-                <form onSubmit={handlesubmit}>
-                    <div>
+                <form className='column' onSubmit={handlesubmit}>
+                    <div className='color'>
                         <p className='error'>{errors.country && `${errors.country}`}</p>
                         <label>
                             Country
-                            <input type="text"
-                            // required
-                            value={country}
-                            placeholder='country'
+                            <br />
+                            <input className='label' type="text"
+                                // required
+                                value={country}
+                                placeholder='country'
                                 // Set the country variable to the value in the input box
                                 onChange={(e) => setCountry(e.target.value)} />
                         </label>
                     </div>
-                    <div>
-                        <label>
-                            <p className='error'>{errors.address && `${errors.address}`}</p>
+                    <div className='color'>
+                        <p className='error'>{errors.address && `${errors.address}`}</p>
+                        <label className='label-width'>
                             Street Address
-                            <input type="text"
-                            // required
-                            value={address}
-                            placeholder='address'
-                                // Set the country variable to the value in the input box
+                            <br />
+                            <input className='label' type="text"
+                                // required
+                                value={address}
+                                placeholder='address'
+                                // Set the country variab3le to the value in the input box
                                 onChange={(e) => setAddress(e.target.value)} />
                         </label>
                     </div>
-                    <div className='side-by-side'>
-                        <label>
+                    <div className='side-by-side color'>
+
+                        <label >
                             <p className='error'>{errors.city && `${errors.city}`}</p>
                             City
-                            <input type="text"
-                            // required
-                            value={city}
-                            placeholder='city'
+                            <br />
+                            <input className='label' type="text"
+                                // required
+                                value={city}
+                                placeholder='city'
                                 // Set the city variable to the value in the input box
                                 onChange={(e) => setCity(e.target.value)} />
                         </label>
-                        <label>
+
+
+                        <label className='color'>
                             <p className='error'>{errors.state && `${errors.state}`}</p>
                             State
-                            <input type="text"
-                            // required
-                            value={state}
-                            placeholder='state'
+                            <br />
+                            <input className='label' type="text"
+                                // required
+                                value={state}
+                                placeholder='state'
                                 // Set the state variable to the value in the input box
                                 onChange={(e) => setState(e.target.value)} />
                         </label>
+
                     </div>
-                    <div className='side-by-side'>
-                        <label>
+                    <div className='side-by-side color'>
+
+                        <label >
                             <p className='error'>{errors.lng && `${errors.lng}`}</p>
                             Longitude
-                            <input type="text"
-                            // required
-                            // min = '-180'
-                            // max = '180'
-                            // step = '0.000001'
-                            value={lng}
-                            placeholder='longitude'
+                            <br />
+                            <input className='label' type="text"
+                                // required
+                                // min = '-180'
+                                // max = '180'
+                                // step = '0.000001'
+                                value={lng}
+                                placeholder='longitude'
                                 // Set the longitude variable to the value in the input box
                                 onChange={(e) => setLng(e.target.value)} />
                         </label>
+
+
                         <label>
                             <p className='error'>{errors.lat && `${errors.lat}`}</p>
                             Latitude
-                            <input type="text"
-                            // required
-                            // min = '-90'
-                            // max = '90'
-                            // step = '0.000001'
-                            value={lat}
-                            placeholder='latitude'
+                            <br />
+                            <input className='label' type="text"
+                                // required
+                                // min = '-90'
+                                // max = '90'
+                                // step = '0.000001'
+                                value={lat}
+                                placeholder='latitude'
                                 // Set the latitude variable to the value in the input box
                                 onChange={(e) => setLat(e.target.value)} />
                         </label>
+
                     </div>
                     <hr />
                     <div>
@@ -185,10 +199,10 @@ export const UpdateSpot = () => {
                     <div>
                         <label>
                             <p className='error'>{errors.description && `${errors.description}`}</p>
-                            <textarea
-                            // required
-                            value={description}
-                            placeholder='description needs a minimum of thirty characters'
+                            <textarea className='label'
+                                // required
+                                value={description}
+                                placeholder='description needs a minimum of thirty characters'
                                 // Set the description variable to the value in the input box
                                 onChange={(e) => setDescription(e.target.value)}></textarea>
                         </label>
@@ -201,10 +215,10 @@ export const UpdateSpot = () => {
                     <div>
                         <label>
                             <p className='error'>{errors.name && `${errors.name}`}</p>
-                            <textarea
-                            // required
-                            value={name}
-                            placeholder='name of your spot'
+                            <textarea className='label'
+                                // required
+                                value={name}
+                                placeholder='name of your spot'
                                 // Set the name variable to the value in the input box
                                 onChange={(e) => setName(e.target.value)}></textarea>
                         </label>
@@ -218,21 +232,21 @@ export const UpdateSpot = () => {
                     <div>
                         <label>
                             <p className='error'>{errors.price && `${errors.price}`}</p>
-                            $<input
-                            type = 'text'
-                            // step="0.01"
-                            // min = '1.00'
-                            // required
-                            value={price}
-                            placeholder='price per night (USD)'
+                            $<input className='label'
+                                type='text'
+                                // step="0.01"
+                                // min = '1.00'
+                                // required
+                                value={price}
+                                placeholder='price per night (USD)'
                                 // Set the description variable to the value in the input box
                                 onChange={(e) => {
                                     setPrice(e.target.value)
-                                    } }></input>
+                                }}></input>
                         </label>
                     </div>
                     <div>
-                        <button type='submit' >Update Spot</button>
+                        <button type='submit' className='red hover'>Update Spot</button>
                     </div>
                 </form>
             </div>

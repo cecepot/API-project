@@ -1,19 +1,27 @@
 .rating-input .filled {
-  color: saddlebrown;
+  color: palevioletred;
 }
 
 .rating-input .empty {
-  color: burlywood;
+  color: pink;
 }
 
 .row {
   display: flex;
 }
 
-.width{
+.width {
   width: 20%;
 }
 
-.full{
+.full {
   width: 100%;
+}
+
+.inner-container{
+  width: 30%;
+  text-align: justify;
+  background-color: rgba(128, 128, 128, 0.073);
+  padding: 1em;
+  border-radius: 6px;
 }

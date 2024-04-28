@@ -26,9 +26,9 @@ const DeleteSpotModal = ({currentSpot}) => {
     }
 
     return (
-        <div >
-            <h1>Confirm Delete</h1>
-            <p>Are you sure you want to remove this spot
+        <div className="form-container">
+            <h1 className='black'>Confirm Delete</h1>
+            <p className='black'>Are you sure you want to remove this spot
                 from the listings?
             </p>
             <div>

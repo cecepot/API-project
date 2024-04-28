@@ -21,6 +21,9 @@ const SpotsList = () => {
 
     return (
         <>
+            <div className='main-image-container'>
+                <img className='main-image' src="https://res.cloudinary.com/dv9oyy79u/image/upload/v1714330065/image_47_exbrvp.jpg" alt="" />
+            </div>
             <ul className="tiles">
                 {/* The logical && operator ensures that the state is not null before calling map on the spots */}
                 {spots && spots.map((spot) => {
@@ -33,7 +36,7 @@ const SpotsList = () => {
                             <div className="details">
                                 <div className="upper-details">
                                     <p>{spot.city}, {spot.state}</p>
-                                    <p>{spot.avgRating ? <StarRating rating={spot.avgRating}/> : <StarRating rating={false}/> }</p>
+                                    <p>{spot.avgRating ? <StarRating rating={spot.avgRating} /> : <StarRating rating={false} />}</p>
                                 </div>
                                 <p><b>${spot.price}</b> night</p>
                             </div>

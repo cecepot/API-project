@@ -55,13 +55,13 @@ const ManageSpots = () => {
                                 </li>
                             </Link>
                             <div>
-                                <button onClick={(e)=>{
+                                <button className='red hover'onClick={(e)=>{
                                     e.preventDefault()
                                     // console.log(spot)
                                     // const clickedSpot = spot
                                     handleClick(spot)
                                 }}>Update</button>
-                                <button>
+                                <button className='red hover'>
                                     <OpenModalMenuItem
                                         itemText='Delete'
                                         modalComponent={<DeleteSpotModal currentSpot={spot}/>} />

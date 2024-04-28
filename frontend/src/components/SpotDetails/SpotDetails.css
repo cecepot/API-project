@@ -1,11 +1,11 @@
 .image-grid {
     display: grid;
-    width: 1000px;
+    width: 100%;
     /* grid-template-columns: 2fr 1fr 1fr;
     grid-template-rows: repeat(2, 1fr);
     grid-auto-flow: row; */
     grid-template-areas: 'a a b c'
-                         'a a d e';
+        'a a d e';
     gap: 1%;
 }
 
@@ -35,6 +35,7 @@ img {
 
 .spot-info {
     display: flex;
+    justify-content: space-between;
 }
 
 /* .description{
@@ -43,11 +44,16 @@ img {
 .reserve-card {
     border: 1px solid rgb(0, 0, 0);
     width: 40%;
-    height: 30%;
+    padding: 1em;
+    border-radius: 6px;
 }
 
 .info-upper {
-    width: 60%;
+    width: 50%;
+    text-align: justify;
+    background-color: rgba(128, 128, 128, 0.073);
+    padding: 1em;
+    border-radius: 6px;
 }
 
 .card-upper {
@@ -75,3 +81,4 @@ img {
 .upper-left {
     width: 50%;
 }
+

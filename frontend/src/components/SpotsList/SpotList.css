@@ -66,5 +66,15 @@ cursor: pointer;
 }
 
 .hover:hover{
-    transform: scale(1.2);
+    transform: scale(1.1);
 }
+
+.main-image{
+    width: 100%;
+    z-index: 2;
+    height: 100%;
+  }
+
+  .main-image-container{
+    height: 35em;
+  }

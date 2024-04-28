@@ -55,8 +55,8 @@ useEffect(()=>{
 
   return (
     <>
-      <h1>Log In</h1>
-      <form onSubmit={handleSubmit}>
+      <h1 className='black'>Log In</h1>
+      <form className='form-container' onSubmit={handleSubmit}>
         <div>
           <input
             placeholder='Username or Email'
@@ -80,7 +80,7 @@ useEffect(()=>{
           <button type="submit" disabled={disabled}>Log In</button>
         </div>
         <div>
-          <button onClick={handleClick}>Log in as Demo User</button>
+          <button className='hover red' onClick={handleClick}>Log in as Demo User</button>
         </div>
       </form>
     </>

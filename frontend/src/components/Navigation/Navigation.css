@@ -8,13 +8,13 @@
 }
 
 .nav-bar{
-  border-bottom:3px solid grey;
+  /* border-bottom:3px solid grey */
   display: flex;
   justify-content: space-between;
   list-style-type: none;
   align-items: center;
   width: 100%;
-  border-bottom-style: dotted;
+  padding-bottom: 1em;
 }
 
 .no-dot{
@@ -23,7 +23,7 @@
 
 .logo {
   height: 100%;
-  width: 6em;
+  width: 4em;
 
 }
 
@@ -47,16 +47,20 @@
 }
 
 .red{
-  background-color: rgb(255, 157, 173);
+  background-color: rgb(249, 186, 196);
   padding: 0.5em;
   border: 2px solid gray;
   border-radius: 6px;
 }
 
 .menu-link{
-  color: palevioletred;
+  color: rgb(86, 3, 30);
 }
 
-.menu-link:hover{
-  text-shadow:1px 1px 2px grey;
+.color{
+  color: aliceblue;
+}
+
+.cursor{
+  cursor: pointer;
 }

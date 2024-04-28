@@ -47,7 +47,7 @@ function ProfileButton({ user }) {
   return (
     <>
     <div className='adjacent'>
-      {user &&  <NavLink className='Link vt323-regular' to='/spots' >Create a new spot</NavLink>} {/*link to creating a spot*/}
+      {user &&  <NavLink className='Link vt323-regular color hover' to='/spots' >Create a new spot</NavLink>} {/*link to creating a spot*/}
       <button className='adjacent profile-button red hover' onClick={toggleMenu}>
         <IoIosMenu />
         <i className="fas fa-user-circle" />
