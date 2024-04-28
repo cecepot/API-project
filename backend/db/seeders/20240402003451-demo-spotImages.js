@@ -147,11 +147,6 @@ module.exports = {
         preview: true,
       },
       {
-        spotId: 5,
-        url: 'https://res.cloudinary.com/dv9oyy79u/image/upload/v1714272283/image_29_fxmfmb.jpg',
-        preview: true,
-      },
-      {
         spotId: 6,
         url: 'https://res.cloudinary.com/dv9oyy79u/image/upload/v1714270917/image_7_k4ft7u.jpg',
         preview: true,
