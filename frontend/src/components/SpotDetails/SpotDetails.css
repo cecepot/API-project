@@ -1,4 +1,7 @@
-
+.spot-deets{
+    display: flex;
+    flex-direction: column;
+}
 .image-grid {
     display: grid;
     width: 100%;

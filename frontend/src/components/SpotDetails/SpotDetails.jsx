@@ -18,7 +18,7 @@ const SpotDetails = () => {
     const currentSpot = useSelector((state) => state.spotState.spot)
     //    console.log(currentSpot)
     return (
-        <div>
+        <div className='spot-deets'>
             <div>
                 <div>
                     <h1 className='vt323-regular'>{currentSpot && currentSpot.name}</h1>
