@@ -25,7 +25,7 @@ const ManageSpots = () => {
         if(spots.length === 0){
             return(
                 <>
-    <NavLink className='Link vt323-regular' to='/spots' >Create a new spot</NavLink>
+    <NavLink className='Link vt323-regular color' to='/spots' ><h1>Create a new spot</h1></NavLink>
                 </>
             )
         }
