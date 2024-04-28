@@ -33,7 +33,7 @@ const ReviewsList = ({ spot }) => {
     const reviews = useSelector((state) => state.reviewState.reviews.Reviews)
     // console.log(reviews)
 
-    if (reviews) {
+    if (user && reviews) {
         if (reviews.length === 0 && userId !== spot.ownerId) {
             showText = true
         }
