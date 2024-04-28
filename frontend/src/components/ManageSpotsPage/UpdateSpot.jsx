@@ -83,10 +83,10 @@ export const UpdateSpot = () => {
         )
         // console.log(updatedSpot)
 
-        if (updatedSpot) {
-            reset()
-            navigate(`/spots/${updatedSpot.id}`)
-        }
+
+            updatedSpot && reset()
+            updatedSpot && navigate(`/spots/${updatedSpot.id}`)
+
 
 
     }

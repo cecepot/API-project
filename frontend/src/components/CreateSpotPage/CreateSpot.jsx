@@ -107,10 +107,10 @@ const CreateSpot = () => {
             }
         )
 
-        if (newSpot) {
-            reset()
-            navigate(`/spots/${newSpot.id}`)
-        }
+
+            newSpot && reset()
+            newSpot && navigate(`/spots/${newSpot.id}`)
+
 
         // console.log({newSpot})
 
