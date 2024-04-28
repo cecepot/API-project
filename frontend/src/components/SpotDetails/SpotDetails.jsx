@@ -18,7 +18,7 @@ const SpotDetails = () => {
     }, [dispatch, spotId])
 
     const currentSpot = useSelector((state) => state.spotState.spot)
-
+    console.log(useSelector((state) => state.spotState))
 
 
     return (
