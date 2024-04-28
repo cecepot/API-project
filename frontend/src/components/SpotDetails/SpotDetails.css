@@ -32,19 +32,11 @@ img {
     width: 100%;
 }
 
-.image-grid img:first-child {
-    grid-column: span 2;
-    grid-row: span 2;
-  }
-
 .spot-info {
     display: flex;
     justify-content: space-between;
 }
 
-/* .description{
-
-} */
 .reserve-card {
     border: 1px solid palevioletred;
     width: 40%;

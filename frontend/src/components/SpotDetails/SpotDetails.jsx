@@ -10,19 +10,19 @@ const SpotDetails = () => {
     const { spotId } = useParams()
     const dispatch = useDispatch()
     // console.log(spotId)
-    const currentSpot = useSelector((state) => state.spotState.spot)
 
     useEffect(() => {
         dispatch(fetchCurrentSpot(spotId))
     }, [dispatch, spotId])
 
+    const currentSpot = useSelector((state) => state.spotState.spot)
     //    console.log(currentSpot)
     return (
         <div>
             <h1 className='vt323-regular'>{currentSpot && currentSpot.name}</h1>
             <p>{currentSpot && currentSpot.city}, {currentSpot && currentSpot.state}, {currentSpot && currentSpot.country}</p>
             <div className='image-grid bottom' >
-                {currentSpot && currentSpot.SpotImages.map((image) => {
+                {currentSpot &&  currentSpot.SpotImages.map((image) => {
                     return <img key={image.id} src={`${image.url}`} alt="" />
                 })}
             </div>
