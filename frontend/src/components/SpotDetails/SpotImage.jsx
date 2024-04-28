@@ -1,22 +1,22 @@
 
 
 const SpotImage = ({spot}) =>{
-    console.log(spot)
+    // console.log(spot)
     let imageArray
-    if (spot.SpotImages){
+    if (spot && spot.SpotImages){
         imageArray = [...spot.SpotImages]
     }
- console.log(imageArray)
+//  console.log(imageArray)
 
 
 return(
     <>
    <div className="image-grid">
-    {imageArray[0] && <img className="a" src={imageArray[0].url} alt="" /> }
-    {imageArray[1] && <img className="b" src={imageArray[1].url} alt="" /> }
-    {imageArray[2] && <img className="c" src={imageArray[2].url} alt="" /> }
-    {imageArray[3] && <img className="d" src={imageArray[3].url} alt="" /> }
-    {imageArray[4] && <img className="e" src={imageArray[4].url} alt="" /> }
+    {imageArray && (imageArray[0] && <img loading="lazy" className="a" src={imageArray[0].url} alt="" /> )}
+    {imageArray && (imageArray[1] && <img loading="lazy" className="b" src={imageArray[1].url} alt="" /> )}
+    {imageArray && (imageArray[2] && <img loading="lazy" className="c" src={imageArray[2].url} alt="" /> )}
+    {imageArray && (imageArray[3] && <img loading="lazy" className="d" src={imageArray[3].url} alt="" /> )}
+    {imageArray && (imageArray[4] && <img loading="lazy" className="e" src={imageArray[4].url} alt="" /> )}
    </div>
     </>
 )
