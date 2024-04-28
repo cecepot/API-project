@@ -23,7 +23,7 @@ const SpotDetails = () => {
                 <div>
                     <h1 className='vt323-regular'>{currentSpot && currentSpot.name}</h1>
                     <p>{currentSpot && currentSpot.city}, {currentSpot && currentSpot.state}, {currentSpot && currentSpot.country}</p>
-                    <div className='image-grid bottom' >
+                    <div className='image-grid' >
                         {currentSpot && (currentSpot.SpotImages && currentSpot.SpotImages.map((image) => {
                             return <img loading='lazy' key={image.id} src={`${image.url}`} alt="" />
                         }))}
