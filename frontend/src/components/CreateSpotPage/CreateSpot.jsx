@@ -1,8 +1,10 @@
 import './CreateSpot.css'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { CreatNewSpot } from '../../store/spotsReducer'
+import { CreatNewSpot, fetchCurrentSpot } from '../../store/spotsReducer'
 import { useNavigate } from 'react-router-dom'
+import { fetchReviews } from '../../store/reviewsReducer'
+
 
 const CreateSpot = () => {
     const dispatch = useDispatch()
@@ -97,16 +99,18 @@ const CreateSpot = () => {
         newSpot = await dispatch(CreatNewSpot(Spotpayload, allImages)).catch(
             async (res) => {
                 const data = await res.json();
-                console.log(data)
+                // console.log(data)
                 if (data && data.errors) {
                     setErrors(data.errors);
-                    console.log(errors)
+                    // console.log(errors)
                 }
             }
         )
 
         if (newSpot) {
             reset()
+            dispatch(fetchCurrentSpot(newSpot.id))
+            dispatch(fetchReviews(newSpot.id))
             navigate(`/spots/${newSpot.id}`)
         }
 

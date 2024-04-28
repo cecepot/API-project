@@ -24,7 +24,7 @@ const CreateReviewModal = ({ id }) => {
 
     const { closeModal } = useModal();
 
-    console.log(starRating)
+    // console.log(starRating)
 
 
     // useEffect(()=>{
@@ -99,7 +99,7 @@ const CreateReviewModal = ({ id }) => {
         const reviewPayload = {}
         if (reviewText) reviewPayload.review = reviewText
         if (starRating) reviewPayload.stars = starRating
-        console.log(reviewPayload)
+        // console.log(reviewPayload)
 
         const newReview = await dispatch(createNewReview(reviewPayload, id)).catch(
             async (res) => {
